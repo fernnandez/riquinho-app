@@ -48,9 +48,9 @@ export class AppConfigService extends ConfigService {
       migrationsTableName: 'database_migrations',
       // subscribers: [path.resolve(srcPath, '**', '*.subscriber.ts')],
       migrationsRun: this.get<string>('NODE_ENV') !== 'test',
-      migrations: [path.resolve(srcPath, 'data', 'migrations', '*.ts')],
+      migrations: ['../data/migrations/*.ts'],
       cli: {
-        migrationsDir: path.resolve(srcPath, 'data', 'migrations'),
+        migrationsDir: '../data/migrations',
       },
     };
   }
