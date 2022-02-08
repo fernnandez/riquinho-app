@@ -1,0 +1,11 @@
+#modules
+node_modules/
+
+#dist and buid
+dist/
+build/
+
+#envs
+.env
+.env.development
+.env.example
