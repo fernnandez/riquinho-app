@@ -1,13 +1,6 @@
 {
-  "type": "postgres",
-  "host": "localhost",
-  "port": 5432,
-  "username": "postgres",
-  "password": "qwe123",
-  "database": "riquinho",
-  "entities": ["./src/**/*.entity.{js,ts}"],
-  "migrationsTableName": "migration_table",
   "migrations": ["./src/data/migrations/*.ts"],
+  "migrationsTableName": "database_migrations",
   "cli": {
     "migrationsDir": "./src/data/migrations"
   }
