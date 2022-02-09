@@ -21,7 +21,7 @@
     "migration:revert": "ts-node -r dotenv/config ./node_modules/typeorm/cli.js migration:revert",
     "db:reload": "npm run schema:drop && npm run migration:run",
     "test:db:reload": "cross-env NODE_ENV=test npm run schema:drop && cross-env NODE_ENV=test npm run migration:run && cross-env NODE_ENV=test npm run test:fixtures",
-    "test:fixtures": "cross-env NODE_ENV=test ts-node ./src/data/db.truncate.ts && fixtures -d ./src/data/fixtures --config ./ormconfig.js --require ts-node/register --debug",
+    "test:fixtures": "cross-env NODE_ENV=test ts-node ./src/data/db.truncate.ts && fixtures -d ./test/helpers/fixtures --config ./ormconfig.js --require ts-node/register --debug",
     "test:all": "npm run test:db:reload && npm run test",
     "test": "cross-env NODE_ENV=test jest --runInBand",
     "test:watch": "jest --watch",
@@ -75,8 +75,13 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
+    "modulePaths": [
+      "<rootDir>",
+      "src"
+    ],
+    "testMatch": [
+      "<rootDir>/test/**/*spec.{ts,js}"
+    ],
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },

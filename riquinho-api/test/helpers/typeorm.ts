@@ -1,6 +1,6 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppConfigModule } from '../app-config/app-config.module';
-import { AppConfigService } from '../app-config/app-config.service';
+import { AppConfigModule } from '../../src/app-config/app-config.module';
+import { AppConfigService } from '../../src/app-config/app-config.service';
 
 export const typeOrmModule = TypeOrmModule.forRootAsync({
   imports: [AppConfigModule],

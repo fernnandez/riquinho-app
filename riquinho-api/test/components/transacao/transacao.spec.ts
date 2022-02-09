@@ -1,7 +1,7 @@
-import { AppModule } from '../../../app.module';
 import { Test, TestingModule } from '@nestjs/testing';
-import { typeOrmModule } from '../../../data/typeorm';
-import { TransacaoService } from '../../../transacao/services/transacao.service';
+import { AppModule } from '../../../src/app.module';
+import { typeOrmModule } from '../../helpers/typeorm';
+import { TransacaoService } from '../../../src/transacao/services/transacao.service';
 
 describe('trasacao', () => {
   let module: TestingModule;
