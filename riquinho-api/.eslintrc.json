@@ -1,0 +1,45 @@
+{
+  "root": true,
+  "env": {
+    "es6": true,
+    "node": true,
+    "jest": true
+  },
+  "extends": ["airbnb-typescript/base", "prettier"],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+    "project": ["**/tsconfig.json"]
+  },
+  "plugins": ["@typescript-eslint", "prettier", "import"],
+  "rules": {
+    "prettier/prettier": "error",
+    "curly": "error",
+    "@typescript-eslint/indent": "off",
+    "import/prefer-default-export": "off",
+    "class-methods-use-this": "off",
+    "import/no-cycle": "off",
+    "no-restricted-syntax": "off",
+    "no-else-return": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "bundledDependencies": true,
+        "devDependencies": true,
+        "optionalDependencies": true,
+        "peerDependencies": true
+      }
+    ],
+    "no-return-await": "off",
+    "no-await-in-loop": "off",
+    "no-plusplus": "off",
+    "no-param-reassign": "off",
+    "@typescript-eslint/camelcase": "off"
+  }
+}

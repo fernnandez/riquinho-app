@@ -1,0 +1,11 @@
+entity: Transacao
+items:
+  transacao_1: 
+    id: 'b8ba79f9-13ca-49ab-85c4-40879c5f890c'
+    titulo: '1° quinzena do sálario'
+    descricao: NULL
+    data: '2022-02-09 00:00:00.0000'
+    tipo: 'RECEITA'
+    categoria: 'PAGAMENTO'
+    status: 'EFETIVADA'
+    valor: 1400

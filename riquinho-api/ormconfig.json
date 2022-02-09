@@ -1,7 +1,0 @@
-{
-  "migrations": ["./src/data/migrations/*.ts"],
-  "migrationsTableName": "database_migrations",
-  "cli": {
-    "migrationsDir": "./src/data/migrations"
-  }
-}

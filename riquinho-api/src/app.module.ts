@@ -22,7 +22,7 @@ import { AppService } from './app.service';
         cli: {
           migrationsDir: './data/migrations',
         },
-      }),
+      }), 
     }),
   ],
   controllers: [AppController],
