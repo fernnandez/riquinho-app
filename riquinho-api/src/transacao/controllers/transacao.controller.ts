@@ -7,11 +7,13 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { CreateUpdateTransacaoDto } from '../dtos/create-update-transacao.dto';
 import { Transacao } from '../entities/transacao.entity';
+import { TransacaoService } from '../services/transacao.service';
 
 @Controller('transacao')
 export class TransacaoController {
-  constructor(private transacaoService: transacaoService) {}
+  constructor(private transacaoService: TransacaoService) {}
 
   @Get()
   findAll(): Promise<Transacao[]> {
