@@ -28,5 +28,19 @@ describe('trasacao', () => {
 
     // Then
     expect(transacao).toBeDefined();
+    expect(transacao).toEqual(
+      expect.objectContaining({
+        id: 'b8ba79f9-13ca-49ab-85c4-40879c5f890c',
+        titulo: '1° quinzena do sálario',
+        descricao: null,
+        data: new Date('2022-02-09 00:00:00.0000'),
+        tipo: 'RECEITA',
+        categoria: 'PAGAMENTO',
+        status: 'EFETIVADA',
+        valor: '1400.00',
+      }),
+    );
   });
+
+  test('Deve retornar uma lista de Transações', async () => {});
 });

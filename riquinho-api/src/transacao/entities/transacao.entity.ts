@@ -46,7 +46,7 @@ export class Transacao {
   @Column({ type: 'enum', enum: Status })
   status: Status;
 
-  @Column({ type: 'timestamp' })
+  @Column()
   valor: number;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
