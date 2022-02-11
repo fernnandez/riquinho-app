@@ -1,4 +1,5 @@
 import styles from './styles.module.scss'
+import { Link } from 'react-router-dom'
 
 export function FormLogin() {
   return(
@@ -8,7 +9,7 @@ export function FormLogin() {
       <label htmlFor="senha">Senha</label>
       <input type="password" name="senha" id="senha" placeholder="**************"/>
       <button type="submit">Entrar</button>
-      <p>Ainda não tem uma conta? <a href="#">cadastre-se</a></p>
+      <p>Ainda não tem uma conta? <Link to="/cadastro">cadastre-se</Link></p>
     </form>
   )
 }
