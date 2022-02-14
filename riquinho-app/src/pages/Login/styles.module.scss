@@ -12,17 +12,24 @@ main {
   align-items: center;
   justify-content: center;
 
+  img {
+    height: 60%;
+    width: 60%;
+    min-height: 45rem;
+    min-width: 55rem;
+  }
+
   h2 {
     color: #fff;
-    font-size: 40px;
+    font-size: 4rem;
     font-weight: bold;
   }
 
   h1 {
     color: #fff;
-    font-size: 60px;
+    font-size: 6rem;
     font-weight: bold;
-    margin-bottom: 50px;
+    margin-bottom: 5rem;
   }
 }
 
@@ -35,7 +42,7 @@ main {
   align-items: center;
 
   img {
-    height: 80px;
-    width: 350px;
+    height: 8rem;
+    width: 35rem;
   }
 }
