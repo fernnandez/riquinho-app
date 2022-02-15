@@ -4,7 +4,10 @@
   min-width: 800px;
   height: 350px;
   padding: 30px;
-  text-align: center;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   .listRow {
     height: 7rem;
