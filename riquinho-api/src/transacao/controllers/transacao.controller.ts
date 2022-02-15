@@ -40,7 +40,7 @@ export class TransacaoController {
     return this.transacaoService.update(id, updateTransacaoDto);
   }
 
-  @Delete('id')
+  @Delete(':id')
   delete(@Param('id') id: string): Promise<void> {
     return this.transacaoService.delete(id);
   }
