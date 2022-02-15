@@ -2,7 +2,9 @@
   background: #f0f0f0;
   width: 50%;
   min-width: 800px;
+  height: 350px;
   padding: 30px;
+  text-align: center;
 
   .listRow {
     height: 7rem;
@@ -41,5 +43,10 @@
         }
       }
     }
+  }
+
+  .notFound{
+    height: 20rem;
+    width: 20rem;
   }
 }
