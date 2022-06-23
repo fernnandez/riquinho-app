@@ -65,7 +65,7 @@
       }
 
       .redButton {
-        @include button(#e46464, true);
+        @include button(#e46464, false);
       }
       .redButton.disable {
         @include button(#e46464, false);

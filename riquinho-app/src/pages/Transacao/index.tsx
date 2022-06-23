@@ -4,53 +4,29 @@ import { ListTransacoes } from '../../components/ListTransacoes';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../context/AuthContext';
+import { ModalCreateTransacao } from '../../components/ModalCreateTransacao';
 
 export function TransacaoPage() {
   const navigate = useNavigate();
   const { token } = useContext(AuthContext);
+
+  const [isOpenCreate, setIsOpenCreate] = useState(false);
+  const [isReceita, setIsReceita] = useState(true);
+
+  function handleCloseCreateModal() {
+    setIsOpenCreate(false);
+  }
+
+  function handleOpenCreateModal(boolean: boolean) {
+    setIsReceita(boolean);
+    setIsOpenCreate(true);
+  }
 
   useEffect(() => {
     if (!token) {
       navigate('/login');
     }
   }, []);
-
-  const [allFilter, setAllFilter] = useState(true);
-  const [receitaFilter, setResceitaFilter] = useState(false);
-  const [despesaFilter, setDespesaFilter] = useState(false);
-
-  function handleAll() {
-    setAllFalse();
-    setAllFilter(true);
-  }
-
-  function handleReceita() {
-    if (receitaFilter) {
-      setResceitaFilter(false);
-      setAllFilter(true);
-    } else {
-      setAllFalse();
-      setResceitaFilter(true);
-      setAllFilter(false);
-    }
-  }
-
-  function handleDespesa() {
-    if (despesaFilter) {
-      setDespesaFilter(false);
-      setAllFilter(true);
-    } else {
-      setAllFalse();
-      setDespesaFilter(true);
-      setAllFilter(false);
-    }
-  }
-
-  function setAllFalse() {
-    setAllFilter(false);
-    setDespesaFilter(false);
-    setResceitaFilter(false);
-  }
 
   return (
     <div className={styles.transacao}>
@@ -63,33 +39,30 @@ export function TransacaoPage() {
 
         <div className={styles.filterButtons}>
           <button
-            className={`${styles.blueButton} ${
-              !allFilter ? styles.disable : null
-            }`}
-            onClick={handleAll}
+            className={styles.greenButton}
+            onClick={() => {
+              handleOpenCreateModal(true);
+            }}
           >
-            Tudo
+            + Nova receita
           </button>
           <button
-            className={`${styles.greenButton} ${
-              !receitaFilter ? styles.disable : null
-            }`}
-            onClick={handleReceita}
+            className={styles.redButton}
+            onClick={() => {
+              handleOpenCreateModal(false);
+            }}
           >
-            Receitas
-          </button>
-          <button
-            className={`${styles.redButton} ${
-              !despesaFilter ? styles.disable : null
-            }`}
-            onClick={handleDespesa}
-          >
-            Despesas
+            + Nova despesa
           </button>
         </div>
 
         <ListTransacoes />
       </main>
+      <ModalCreateTransacao
+        open={isOpenCreate}
+        onClose={handleCloseCreateModal}
+        isReceita={isReceita}
+      />
     </div>
   );
 }
