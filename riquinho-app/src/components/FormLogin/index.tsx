@@ -29,7 +29,12 @@ export function FormLogin() {
         navigate('/');
       })
       .catch((error) => {
-        toast.error(error.response.data.message);
+        toast.error(
+          error.response
+            ? error.response.data.message
+            : 'Ops! alguma coisa deu errado'
+        );
+
         setEmail('');
         setSenha('');
       });
