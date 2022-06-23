@@ -5,9 +5,12 @@ import { LoginPage } from './pages/Login';
 import { TransacaoPage } from './pages/Transacao';
 import AuthProvider from './context/AuthProvider';
 
+import { Toaster } from 'react-hot-toast';
+
 function App() {
   return (
     <AuthProvider>
+      <Toaster toastOptions={{ duration: 3000 }} />
       <Routes>
         <Route path="/" element={<TransacaoPage />} />
         <Route path="/login" element={<LoginPage />} />

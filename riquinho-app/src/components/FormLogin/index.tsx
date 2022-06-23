@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FormEvent, useContext, useState } from 'react';
 import { api } from '../../services/api';
 import AuthContext from '../../context/AuthContext';
+import toast from 'react-hot-toast';
 
 export function FormLogin() {
   const navigate = useNavigate();
@@ -28,7 +29,9 @@ export function FormLogin() {
         navigate('/');
       })
       .catch((error) => {
-        console.log(error.message);
+        toast.error(error.response.data.message);
+        setEmail('');
+        setSenha('');
       });
   };
 

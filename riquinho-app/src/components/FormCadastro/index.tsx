@@ -2,6 +2,7 @@ import styles from './styles.module.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import { FormEvent, useState } from 'react';
 import { api } from '../../services/api';
+import toast from 'react-hot-toast';
 
 export function FormCadastro() {
   const navigate = useNavigate();
@@ -34,10 +35,14 @@ export function FormCadastro() {
         senha,
       })
       .then(() => {
+        toast.success('Cadastro realizado com sucesso');
         navigate('/login');
       })
       .catch((error: any) => {
-        console.log(error.response.data);
+        toast.error(error.response.data.message);
+        setEmail('');
+        setNome('');
+        setSenha('');
       });
   };
 
@@ -73,15 +78,7 @@ export function FormCadastro() {
           onChange={(e) => handleSenha(e)}
           value={senha}
         />
-        {/* <label htmlFor="senha">Confirmar Senha</label>
-        <input
-          type="password"
-          name="senha"
-          id="senha"
-          placeholder="**************"
-        /> */}
       </div>
-
       <div className={styles.submit}>
         <button type="submit">Cadastrar</button>
         <p>

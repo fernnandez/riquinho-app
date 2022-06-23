@@ -21,7 +21,7 @@ export class AppConfigService extends ConfigService {
 
   getCORSOrigin(): string[] {
     if (this.isDev()) {
-      return ['http://localhost:3000'];
+      return ['http://localhost:3001'];
     }
 
     if (this.isProduction()) {
