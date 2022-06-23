@@ -1,15 +1,26 @@
 import styles from './styles.module.scss';
 import { Header } from '../../components/Header';
 import { ListTransacoes } from '../../components/ListTransacoes';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import AuthContext from '../../context/AuthContext';
 
 export function TransacaoPage() {
+  const navigate = useNavigate();
+  const { token } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (!token) {
+      navigate('/login');
+    }
+  }, []);
+
   const [allFilter, setAllFilter] = useState(true);
   const [receitaFilter, setResceitaFilter] = useState(false);
   const [despesaFilter, setDespesaFilter] = useState(false);
 
   function handleAll() {
-    setAllFalse()
+    setAllFalse();
     setAllFilter(true);
   }
 
