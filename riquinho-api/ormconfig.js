@@ -10,6 +10,7 @@ const config = {
     migrationsDir: path.resolve(srcPath, 'data', 'migrations'),
   },
   database: process.env.POSTGRES_DB,
+  schema: process.env.POSTGRES_SCHEMA,
   host: process.env.POSTGRES_HOST,
   logging: process.env.POSTGRES_DEBUG === 'TRUE',
   migrationsTableName: 'database_migrations',
