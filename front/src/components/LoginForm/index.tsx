@@ -29,6 +29,10 @@ export function LoginForm() {
       email: '',
       senha: '',
     },
+    validate: (values) => ({
+      email: values.email === '' ? 'email é obrigatório' : null,
+      senha: values.senha === '' ? 'senha é obrigatória' : null,
+    }),
   });
 
   const handleSubmit = (data: { email: string; senha: string }) => {
@@ -38,7 +42,15 @@ export function LoginForm() {
         navigate('/');
       })
       .catch((error: any) => {
-        showNotification(notify({ type: TypeNotificationEnum.ERROR }));
+        showNotification(
+          notify({
+            type: TypeNotificationEnum.ERROR,
+            title:
+              error.response && error.response.data.status !== 500
+                ? error.response.data.message
+                : null,
+          })
+        );
       });
   };
 
@@ -50,6 +62,7 @@ export function LoginForm() {
         </Center>
 
         <TextInput
+          className={classes.textInput}
           label="Email"
           placeholder="hello@gmail.com"
           size="md"
@@ -57,6 +70,7 @@ export function LoginForm() {
         />
 
         <PasswordInput
+          className={classes.passwordInput}
           label="Senha"
           placeholder="sua senha"
           mt="md"

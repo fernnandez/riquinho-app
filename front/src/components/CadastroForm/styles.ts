@@ -26,4 +26,23 @@ export const useStyles = createStyles((theme) => ({
     marginLeft: 'auto',
     marginRight: 'auto',
   },
+
+  textInput: {
+    position: 'relative',
+    '& .mantine-TextInput-error': {
+      position: 'absolute',
+      height: '10px',
+      top: '4rem',
+      fontSize: '0.8rem',
+    },
+  },
+  passwordInput: {
+    position: 'relative',
+    '& .mantine-PasswordInput-error': {
+      position: 'absolute',
+      height: '10px',
+      top: '4rem',
+      fontSize: '0.8rem',
+    },
+  },
 }));

@@ -39,7 +39,15 @@ export function CadastroForm() {
         navigate('/login');
       })
       .catch((error: any) => {
-        showNotification(notify({ type: TypeNotificationEnum.ERROR }));
+        showNotification(
+          notify({
+            type: TypeNotificationEnum.ERROR,
+            title:
+              error.response && error.response.data.status !== 500
+                ? error.response.data.message
+                : null,
+          })
+        );
       });
   };
 
@@ -51,6 +59,7 @@ export function CadastroForm() {
         </Center>
 
         <TextInput
+          className={classes.textInput}
           label="Nome"
           placeholder="seu nome"
           size="md"
@@ -58,6 +67,7 @@ export function CadastroForm() {
         />
 
         <TextInput
+          className={classes.textInput}
           label="Email"
           placeholder="hello@gmail.com"
           size="md"
@@ -66,6 +76,7 @@ export function CadastroForm() {
         />
 
         <PasswordInput
+          className={classes.passwordInput}
           label="Senha"
           placeholder="sua senha"
           mt="md"
