@@ -10,6 +10,7 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai';
 import { useModalController } from '../../context/ModalContext/ModalContext';
+import { InfoCards } from '../InfoCards';
 import { CreateTransacaoModal } from './components/CreateTransacaoModal';
 import { EditTransacaoModal } from './components/EditTransacaoModal';
 import { TransacaoItem } from './components/TransacaoItem';
@@ -28,8 +29,15 @@ export function TransacaoList() {
 
   return (
     <Box>
-      <Group style={{ justifyContent: 'space-between', marginBottom: '2rem' }}>
-        <Title>Balanço financeiro</Title>
+      <InfoCards />
+      <Group
+        style={{
+          justifyContent: 'space-between',
+          marginBottom: '2rem',
+          marginTop: '2rem',
+        }}
+      >
+        <Title>Historico</Title>
         <Group>
           <Button
             color="blue"
