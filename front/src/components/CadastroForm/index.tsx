@@ -33,10 +33,10 @@ export function CadastroForm() {
     email: string;
     senha: string;
   }) => {
-    authCadastro({ nome: data.nome, email: data.email, password: data.senha })
+    authCadastro({ nome: data.nome, email: data.email, senha: data.senha })
       .then(() => {
         showNotification(notify({ type: TypeNotificationEnum.SUCCESS }));
-        navigate('/');
+        navigate('/login');
       })
       .catch((error: any) => {
         showNotification(notify({ type: TypeNotificationEnum.ERROR }));

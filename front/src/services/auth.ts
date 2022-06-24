@@ -1,5 +1,6 @@
 import api from './api';
 
+// no login é preciso ser password por conta do passportLocal
 interface authLoginType {
   email: string;
   password: string;
@@ -8,7 +9,7 @@ interface authLoginType {
 interface authCadastroType {
   nome: string;
   email: string;
-  password: string;
+  senha: string;
 }
 
 export const authLogin = async ({ email, password }: authLoginType) => {
@@ -18,7 +19,7 @@ export const authLogin = async ({ email, password }: authLoginType) => {
 export const authCadastro = async ({
   nome,
   email,
-  password,
+  senha,
 }: authCadastroType) => {
-  await api.post('user', { nome, email, password });
+  await api.post('user', { nome, email, senha });
 };

@@ -3,6 +3,7 @@ import { CadastroPage } from './pages/CadastroPage';
 import { LoginPage } from './pages/LoginPage';
 
 import { NotificationsProvider } from '@mantine/notifications';
+import { TransacaoPage } from './pages/TransacaoPage';
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
       <NotificationsProvider position="top-center">
         <BrowserRouter>
           <Routes>
+            <Route path="/" element={<TransacaoPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/cadastro" element={<CadastroPage />} />
           </Routes>
