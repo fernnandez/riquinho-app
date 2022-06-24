@@ -10,10 +10,10 @@ export function CadastroPage() {
       <CadastroForm />
       <Box className={classes.ilustration}>
         <Title order={2} style={{ cursor: 'default' }}>
-          Sua plataforma de
+          Gerenciar seu dinheiro
         </Title>
         <Title order={1} style={{ cursor: 'default' }} mb="xl">
-          Gestão financeira
+          É importante
         </Title>
         <Image src={cadastroIlustration} />
       </Box>

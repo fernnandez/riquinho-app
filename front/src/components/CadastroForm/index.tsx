@@ -26,6 +26,11 @@ export function CadastroForm() {
       email: '',
       senha: '',
     },
+    validate: (values) => ({
+      nome: values.nome === '' ? 'nome é obrigatório' : null,
+      email: values.email === '' ? 'email é obrigatório' : null,
+      senha: values.senha === '' ? 'senha é obrigatória' : null,
+    }),
   });
 
   const handleSubmit = (data: {
