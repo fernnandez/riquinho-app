@@ -10,24 +10,59 @@ import {
 } from '@mantine/core';
 import logo from '../../assets/logo.svg';
 import { useStyles } from './styles';
+import { Link, useNavigate } from 'react-router-dom';
+import { useForm } from '@mantine/form';
+import { authCadastro } from '../../services/auth';
+import { showNotification } from '@mantine/notifications';
+import { notify, TypeNotificationEnum } from '../../utils/notify';
 
 export function CadastroForm() {
   const { classes } = useStyles();
+  const navigate = useNavigate();
+
+  const form = useForm({
+    initialValues: {
+      nome: '',
+      email: '',
+      senha: '',
+    },
+  });
+
+  const handleSubmit = (data: {
+    nome: string;
+    email: string;
+    senha: string;
+  }) => {
+    authCadastro({ nome: data.nome, email: data.email, password: data.senha })
+      .then(() => {
+        showNotification(notify({ type: TypeNotificationEnum.SUCCESS }));
+        navigate('/');
+      })
+      .catch((error: any) => {
+        showNotification(notify({ type: TypeNotificationEnum.ERROR }));
+      });
+  };
 
   return (
     <Paper className={classes.form} radius={0} p={30}>
-      <form>
+      <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Center>
           <Image src={logo} width={200} height={50} mb="xl" />
         </Center>
 
-        <TextInput label="Nome" placeholder="seu nome" size="md" />
+        <TextInput
+          label="Nome"
+          placeholder="seu nome"
+          size="md"
+          {...form.getInputProps('nome')}
+        />
 
         <TextInput
           label="Email"
           placeholder="hello@gmail.com"
           size="md"
           mt="md"
+          {...form.getInputProps('email')}
         />
 
         <PasswordInput
@@ -35,19 +70,16 @@ export function CadastroForm() {
           placeholder="sua senha"
           mt="md"
           size="md"
+          {...form.getInputProps('senha')}
         />
 
-        <Button fullWidth mt="xl" size="md">
+        <Button fullWidth mt="xl" size="md" type="submit">
           Cadastrar
         </Button>
 
         <Text align="center" mt="md">
           Já tem uma conta?
-          <Anchor<'a'>
-            href="#"
-            weight={700}
-            onClick={(event) => event.preventDefault()}
-          >
+          <Anchor component={Link} to="/login" weight={700}>
             Entre
           </Anchor>
         </Text>
