@@ -5,7 +5,7 @@ export default function useStorage(key: any) {
   const [state, setState] = useState(() => storage.get(key));
 
   const set = useCallback(
-    (newValue) => {
+    (newValue: any) => {
       storage.set(key, newValue);
       setState(newValue);
     },

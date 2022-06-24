@@ -14,7 +14,7 @@ import { useForm } from '@mantine/form';
 import { Link, useNavigate } from 'react-router-dom';
 import { authLogin } from '../../services/auth';
 import { useContext } from 'react';
-import AuthContext from '../../context/AuthContext';
+import AuthContext from '../../context/AuthContext/AuthContext';
 import { showNotification } from '@mantine/notifications';
 import { notify, TypeNotificationEnum } from '../../utils/notify';
 

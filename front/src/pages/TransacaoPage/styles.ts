@@ -46,4 +46,27 @@ export const useStyles = createStyles((theme) => ({
         theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 3 : 7],
     },
   },
+
+  container: {
+    display: 'flex',
+    overflowY: 'auto',
+    minHeight: 'calc(100vh - 110px)',
+    width: '100%',
+    boxSizing: 'border-box',
+
+    '::-webkit-scrollbar': {
+      width: '6px',
+      backgroundColor: theme.colors.gray[0],
+    },
+
+    '::-webkit-scrollbar-thumb': {
+      background: '#555',
+      borderRadius: '10px',
+    },
+
+    '::-webkit-scrollbar-track': {
+      background: ' #C9C9C9',
+      borderRadius: '10px',
+    },
+  },
 }));

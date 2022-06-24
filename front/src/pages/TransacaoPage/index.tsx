@@ -12,7 +12,8 @@ import { HeroText } from './test';
 import { FiLogOut } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { useContext, useEffect } from 'react';
-import AuthContext from '../../context/AuthContext';
+import AuthContext from '../../context/AuthContext/AuthContext';
+import { TransacaoList } from '../../components/TransacaoList';
 
 export function TransacaoPage() {
   const { classes } = useStyles();
@@ -32,9 +33,8 @@ export function TransacaoPage() {
   }, []);
   return (
     <AppShell
-      padding="md"
       header={
-        <Header height={60} mb={120}>
+        <Header height={60}>
           <Container className={classes.header}>
             <Image src={logo} width={200} height={50} />
             <Group spacing={5} className={classes.links}>
@@ -58,7 +58,9 @@ export function TransacaoPage() {
         },
       })}
     >
-      <HeroText />
+      <section className={classes.container}>
+        <TransacaoList />
+      </section>
     </AppShell>
   );
 }

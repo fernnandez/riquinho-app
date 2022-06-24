@@ -1,4 +1,4 @@
-import useStorage from '../hooks/useStorage';
+import useStorage from '../../hooks/useStorage/useStorage';
 import AuthContext from './AuthContext';
 
 const AuthProvider = ({ children }: any) => {
