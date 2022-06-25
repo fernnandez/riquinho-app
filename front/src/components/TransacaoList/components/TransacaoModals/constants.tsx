@@ -6,6 +6,9 @@ import { TbNorthStar } from 'react-icons/tb';
 import { IoFastFoodSharp } from 'react-icons/io5';
 import { GiMoneyStack } from 'react-icons/gi';
 import { BiBuildingHouse } from 'react-icons/bi';
+import { BsStars } from 'react-icons/bs';
+
+import { ActionIcon } from '@mantine/core';
 
 export enum CategoriaEnum {
   ALIMENTACAO = 'ALIMENTACAO',
@@ -62,12 +65,14 @@ export function getStatus(value: string) {
     PENDENTE: StatusEnum.PENDENTE,
   }[value];
 }
+
 export function getTipo(value: string) {
   return {
     RECEITA: TipoTransacaoEnum.RECEITA,
     DESPESA: TipoTransacaoEnum.DESPESA,
   }[value];
 }
+
 export function getCategoria(value: string) {
   return {
     ALIMENTACAO: CategoriaEnum.ALIMENTACAO,
@@ -75,4 +80,29 @@ export function getCategoria(value: string) {
     PAGAMENTO: CategoriaEnum.ALIMENTACAO,
     OUTROS: CategoriaEnum.OUTROS,
   }[value];
+}
+
+export function getCategoriaIcon(categoria: string) {
+  return {
+    ALIMENTACAO: (
+      <ActionIcon color="red" size={60} radius="xl" variant="outline">
+        <IoFastFoodSharp size={45} />
+      </ActionIcon>
+    ),
+    MORADIA: (
+      <ActionIcon color="blue" size={60} radius="xl" variant="outline">
+        <BiBuildingHouse size={45} />
+      </ActionIcon>
+    ),
+    PAGAMENTO: (
+      <ActionIcon color="green" size={60} radius="xl" variant="outline">
+        <GiMoneyStack size={45} />
+      </ActionIcon>
+    ),
+    OUTROS: (
+      <ActionIcon color="gray" size={60} radius="xl" variant="outline">
+        <BsStars size={45} />
+      </ActionIcon>
+    ),
+  }[categoria];
 }

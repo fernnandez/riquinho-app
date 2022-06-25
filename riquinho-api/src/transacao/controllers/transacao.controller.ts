@@ -6,18 +6,22 @@ import {
   Param,
   Post,
   Put,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { CreateUpdateTransacaoDto } from '../dtos/create-update-transacao.dto';
 import { Transacao } from '../entities/transacao.entity';
 import { TransacaoService } from '../services/transacao.service';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('transacao')
 export class TransacaoController {
   constructor(private transacaoService: TransacaoService) {}
 
   @Get()
-  findAll(): Promise<Transacao[]> {
-    return this.transacaoService.findAll();
+  findAll(@Request() req): Promise<Transacao[]> {
+    return this.transacaoService.findAll(req.user);
   }
 
   @Get(':id')

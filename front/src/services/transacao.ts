@@ -15,6 +15,29 @@ interface TransacaoType {
   status: StatusEnum | undefined;
 }
 
-export const createTransacao = async (data: TransacaoType) => {
-  await api.post('/transacao', { ...data });
+interface TransacaoResponse {
+  titulo: string;
+  valor: number;
+  data: Date;
+  categoria: CategoriaEnum;
+  tipo: TipoTransacaoEnum;
+  descricao: string | null;
+  status: StatusEnum;
+}
+
+export const createTransacao = async (data: TransacaoType, token: string) => {
+  await api.post(
+    '/transacao',
+    { ...data },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+};
+
+export const findAllTransacao = async (token: string) => {
+  console.log(token);
+  return api.get<TransacaoResponse[]>('/transacao', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 };

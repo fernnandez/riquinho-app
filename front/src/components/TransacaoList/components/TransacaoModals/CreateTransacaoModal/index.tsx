@@ -13,21 +13,21 @@ import { DatePicker } from '@mantine/dates';
 
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
+import { useContext } from 'react';
 import { MdAttachMoney } from 'react-icons/md';
 import { TbCashBanknoteOff } from 'react-icons/tb';
+import AuthContext from '../../../../../context/AuthContext/AuthContext';
+import { queryClient } from '../../../../../services/queryClient';
 import { createTransacao } from '../../../../../services/transacao';
 
 import { SelectItemIcon } from '../../../../../utils/customSelect';
 import { notify, TypeNotificationEnum } from '../../../../../utils/notify';
 import {
-  CategoriaEnum,
   CategoriaSelectItems,
   getCategoria,
   getStatus,
   getTipo,
-  StatusEnum,
   TipoSelectItems,
-  TipoTransacaoEnum,
 } from '../constants';
 import { useStyles } from '../styles';
 interface CreateTransacaoModalProps {
@@ -40,6 +40,7 @@ export function CreateTransacaoModal({
   onClose,
 }: CreateTransacaoModalProps) {
   const { classes } = useStyles();
+  const { token } = useContext(AuthContext);
 
   const form = useForm({
     initialValues: {
@@ -60,14 +61,20 @@ export function CreateTransacaoModal({
   });
 
   const handleSubmit = (data: typeof form.values) => {
-    createTransacao({
-      ...data,
-      categoria: getCategoria(data.categoria),
-      status: getStatus(data.status),
-      tipo: getTipo(data.tipo),
-    })
+    createTransacao(
+      {
+        ...data,
+        categoria: getCategoria(data.categoria),
+        status: getStatus(data.status),
+        tipo: getTipo(data.tipo),
+      },
+      token.token
+    )
       .then(() => {
-        showNotification(notify({ type: TypeNotificationEnum.SUCCESS }));
+        queryClient.invalidateQueries('transacoes').then(() => {
+          showNotification(notify({ type: TypeNotificationEnum.SUCCESS }));
+          handleClose();
+        });
       })
       .catch((error: any) => {
         showNotification(

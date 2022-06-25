@@ -1,28 +1,37 @@
 import { ActionIcon, Avatar, Box, Grid, Paper, Text } from '@mantine/core';
 import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
+import { DateFormatter } from '../../../../utils/dateFormatter';
+import {
+  CategoriaEnum,
+  getCategoriaIcon,
+  StatusEnum,
+} from '../TransacaoModals/constants';
 import { useStyles } from './styles';
 
 interface TransacaoItemProps {
-  text: string;
+  data: {
+    titulo: string;
+    categoria: CategoriaEnum;
+    status: StatusEnum;
+    data: Date;
+    valor: number;
+    descricao: string | null;
+  };
   onOpenEdit: (id: string) => void;
 }
 
-export function TransacaoItem({ text, onOpenEdit }: TransacaoItemProps) {
+export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
   const { classes } = useStyles();
 
   return (
     <Paper shadow="md" p="1rem" style={{ minWidth: '100%' }}>
       <Grid grow className={classes.listItem} columns={32}>
-        <Grid.Col span={2}>
-          <Avatar size={60} radius={30} src={null}>
-            AF
-          </Avatar>
-        </Grid.Col>
+        <Grid.Col span={2}>{getCategoriaIcon(data.categoria)}</Grid.Col>
         <Grid.Col span={6}>
           <Box>
             <Text size="lg">Titulo</Text>
             <Text size="sm" color="dimmed">
-              {text}
+              {data.titulo}
             </Text>
           </Box>
         </Grid.Col>
@@ -31,7 +40,7 @@ export function TransacaoItem({ text, onOpenEdit }: TransacaoItemProps) {
             <Box>
               <Text size="lg">Valor</Text>
               <Text size="sm" color="dimmed">
-                R$ 950,00
+                R$ {data.valor}
               </Text>
             </Box>
           </Box>
@@ -41,7 +50,7 @@ export function TransacaoItem({ text, onOpenEdit }: TransacaoItemProps) {
             <Box>
               <Text size="lg">Data</Text>
               <Text size="sm" color="dimmed">
-                02/08/2022
+                {DateFormatter(data.data.toString())}
               </Text>
             </Box>
           </Box>

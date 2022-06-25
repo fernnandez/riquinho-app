@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { User } from '../../user/user.entity';
 import { CreateUpdateTransacaoDto } from '../dtos/create-update-transacao.dto';
 import { Transacao } from '../entities/transacao.entity';
 import { TransacaoRepository } from '../repositories/transacao.respository';
@@ -7,7 +8,8 @@ import { TransacaoRepository } from '../repositories/transacao.respository';
 export class TransacaoService {
   constructor(private transacaoRepository: TransacaoRepository) {}
 
-  findAll(): Promise<Transacao[]> {
+  findAll(user: User): Promise<Transacao[]> {
+    console.log(user);
     return this.transacaoRepository.find();
   }
 
