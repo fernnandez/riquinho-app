@@ -8,4 +8,3 @@ build/
 #envs
 .env
 .env.test
-.env.development
