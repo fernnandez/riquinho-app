@@ -9,14 +9,26 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { DatePicker, DatePickerBase } from '@mantine/dates';
+import { DatePicker } from '@mantine/dates';
 
 import { useForm } from '@mantine/form';
+import { showNotification } from '@mantine/notifications';
 import { MdAttachMoney } from 'react-icons/md';
 import { TbCashBanknoteOff } from 'react-icons/tb';
+import { createTransacao } from '../../../../../services/transacao';
 
 import { SelectItemIcon } from '../../../../../utils/customSelect';
-import { CategoriaSelectItems, TipoSelectItems } from '../constants';
+import { notify, TypeNotificationEnum } from '../../../../../utils/notify';
+import {
+  CategoriaEnum,
+  CategoriaSelectItems,
+  getCategoria,
+  getStatus,
+  getTipo,
+  StatusEnum,
+  TipoSelectItems,
+  TipoTransacaoEnum,
+} from '../constants';
 import { useStyles } from '../styles';
 interface CreateTransacaoModalProps {
   isOpen: boolean;
@@ -32,22 +44,42 @@ export function CreateTransacaoModal({
   const form = useForm({
     initialValues: {
       titulo: '',
-      valor: '',
+      valor: 0,
       data: new Date(),
       categoria: '',
       tipo: 'RECEITA',
       descricao: '',
+      status: 'EFETIVADA',
     },
     validate: (values) => ({
       titulo: values.titulo === '' ? 'titulo é obrigatório' : null,
-      valor: values.valor === '$ ' ? 'valor é obrigatório' : null,
+      valor: values.valor === 0 ? 'valor é obrigatório' : null,
       data: values.data === null ? 'data é obrigatório' : null,
-      tipo: values.tipo === '' ? 'tipo é obrigatório' : null,
+      tipo: values.tipo === null ? 'tipo é obrigatório' : null,
     }),
   });
 
   const handleSubmit = (data: typeof form.values) => {
-    console.log({ data });
+    createTransacao({
+      ...data,
+      categoria: getCategoria(data.categoria),
+      status: getStatus(data.status),
+      tipo: getTipo(data.tipo),
+    })
+      .then(() => {
+        showNotification(notify({ type: TypeNotificationEnum.SUCCESS }));
+      })
+      .catch((error: any) => {
+        showNotification(
+          notify({
+            type: TypeNotificationEnum.ERROR,
+            title:
+              error.response && error.response.data.status !== 500
+                ? error.response.data.message
+                : null,
+          })
+        );
+      });
   };
 
   const handleClose = () => {
@@ -85,7 +117,7 @@ export function CreateTransacaoModal({
           handleSubmit(values);
         })}
       >
-        <Grid gutter="xl" mt=".5rem">
+        <Grid grow gutter="xl" mt=".5rem">
           <Grid.Col span={6}>
             <TextInput
               label="Titulo"
@@ -137,12 +169,26 @@ export function CreateTransacaoModal({
               className={classes.datePicker}
               {...form.getInputProps('data')}
             />
+            <Select
+              className={classes.selectInput}
+              size="md"
+              mb="md"
+              label="Status"
+              placeholder="Status"
+              data={[
+                { label: 'Efetivada', value: 'EFETIVADA' },
+                { label: 'Pendente', value: 'PENDENTE' },
+              ]}
+              {...form.getInputProps('status')}
+            />
+          </Grid.Col>
+          <Grid.Col>
             <TextInput
               className={classes.textInput}
               label="Descrição"
               placeholder="Descrição"
               size="md"
-              mb="md"
+              mt={-30}
               {...form.getInputProps('descricao')}
             />
           </Grid.Col>
