@@ -11,8 +11,8 @@ import { useDisclosure } from '@mantine/hooks';
 import { AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai';
 import { useModalController } from '../../context/ModalContext/ModalContext';
 import { InfoCards } from '../InfoCards';
-import { CreateTransacaoModal } from './components/CreateTransacaoModal';
-import { EditTransacaoModal } from './components/EditTransacaoModal';
+import { CreateTransacaoModal } from './components/TransacaoModals/CreateTransacaoModal';
+import { EditTransacaoModal } from './components/TransacaoModals/EditTransacaoModal';
 import { TransacaoItem } from './components/TransacaoItem';
 
 export function TransacaoList() {
