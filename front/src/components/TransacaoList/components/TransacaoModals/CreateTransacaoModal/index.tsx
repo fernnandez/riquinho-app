@@ -9,7 +9,8 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { DatePicker } from '@mantine/dates';
+import { DatePicker, DatePickerBase } from '@mantine/dates';
+
 import { useForm } from '@mantine/form';
 import { MdAttachMoney } from 'react-icons/md';
 import { TbCashBanknoteOff } from 'react-icons/tb';
@@ -17,7 +18,6 @@ import { TbCashBanknoteOff } from 'react-icons/tb';
 import { SelectItemIcon } from '../../../../../utils/customSelect';
 import { CategoriaSelectItems, TipoSelectItems } from '../constants';
 import { useStyles } from '../styles';
-
 interface CreateTransacaoModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -47,7 +47,7 @@ export function CreateTransacaoModal({
   });
 
   const handleSubmit = (data: typeof form.values) => {
-    console.log(data);
+    console.log({ data });
   };
 
   const handleClose = () => {
@@ -96,17 +96,15 @@ export function CreateTransacaoModal({
               {...form.getInputProps('titulo')}
             />
             <NumberInput
+              icon={<MdAttachMoney size={18} />}
               className={classes.numberInput}
               size="md"
               label="Valor"
               mb="md"
               hideControls
-              parser={(value) => value?.replace(/\$\s?|(,*)/g, '')}
-              formatter={(value) =>
-                !Number.isNaN(parseFloat(value || ''))
-                  ? `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                  : '$'
-              }
+              min={0}
+              precision={2}
+              decimalSeparator=","
               {...form.getInputProps('valor')}
             />
             <Select
@@ -155,20 +153,12 @@ export function CreateTransacaoModal({
             color="red"
             size="md"
             variant="subtle"
-            radius={20}
             pl="xl"
             pr="xl"
           >
             Cancelar
           </Button>
-          <Button
-            type="submit"
-            color="blue"
-            size="md"
-            radius={20}
-            pl="xl"
-            pr="xl"
-          >
+          <Button type="submit" color="blue" size="md" pl="xl" pr="xl">
             Salvar
           </Button>
         </Box>

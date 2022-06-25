@@ -1,0 +1,16 @@
+version: '3.3'
+
+services:
+  db_riquinho:
+    image: postgres:11.4
+    hostname: riquinho
+    restart: always
+    ports:
+      - 5434:5432
+    env_file: .env.development
+    networks:
+      - development
+
+networks:
+  development:
+    driver: bridge
