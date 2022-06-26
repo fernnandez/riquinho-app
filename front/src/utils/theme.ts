@@ -12,6 +12,7 @@ export const mantineTheme: MantineThemeOverride = {
   },
   datesLocale: 'pt-br',
   dateFormat: 'DD/MM/YYYY',
+  loader: 'dots',
 };
 
 export const globalStyle = {};

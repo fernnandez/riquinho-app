@@ -33,7 +33,16 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
   const { classes } = useStyles();
 
   return (
-    <Paper shadow="md" p="1rem" style={{ minWidth: '100%' }}>
+    <Paper
+      shadow="md"
+      p="1rem"
+      style={{ minWidth: '100%' }}
+      sx={
+        data.status !== StatusEnum.EFETIVADA
+          ? { filter: 'brightness(90%)' }
+          : { filter: 'brightness(1)' }
+      }
+    >
       <Grid grow className={classes.listItem} columns={32}>
         <Grid.Col span={2}>
           {getCategoriaIcon(data.categoria, data.status)}

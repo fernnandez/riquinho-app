@@ -5,7 +5,12 @@ import { MdAttachMoney } from 'react-icons/md';
 import { TbCashBanknoteOff } from 'react-icons/tb';
 import { HiOutlineCash } from 'react-icons/hi';
 
-export function InfoCards() {
+interface InfoCardsProps {
+  isLoading: boolean;
+  values: { receitas: number; despesas: number } | null;
+}
+
+export function InfoCards({ isLoading, values }: InfoCardsProps) {
   return (
     <Box
       style={{
@@ -15,20 +20,23 @@ export function InfoCards() {
       }}
     >
       <Card
+        isLoading={isLoading}
         title="Receitas"
-        value="900"
+        value={values ? String(values.receitas) : null}
         icon={<MdAttachMoney size={25} color="green" />}
         color="green"
       />
       <Card
+        isLoading={isLoading}
         title="Balanço"
-        value="400"
+        value={values ? String(values.receitas - values.despesas) : null}
         icon={<HiOutlineCash size={25} color="blue" />}
         color="blue"
       />
       <Card
+        isLoading={isLoading}
         title="Despesas"
-        value="500"
+        value={values ? String(values.despesas) : null}
         icon={<TbCashBanknoteOff size={25} color="red" />}
         color="red"
       />

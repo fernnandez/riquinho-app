@@ -22,7 +22,7 @@ import { TransacaoItem } from './components/TransacaoItem';
 import { TipoTransacaoEnum } from './components/TransacaoModals/constants';
 import { CreateTransacaoModal } from './components/TransacaoModals/CreateTransacaoModal';
 import { EditTransacaoModal } from './components/TransacaoModals/EditTransacaoModal';
-import { getTransacaoByTipo } from './formatter';
+import { getTransacaoByTipo, getValues } from './formatter';
 
 export function TransacaoList() {
   const [openedCreate, handlersCreate] = useDisclosure(false);
@@ -55,7 +55,10 @@ export function TransacaoList() {
         minWidth: '100%',
       }}
     >
-      <InfoCards />
+      <InfoCards
+        isLoading={isLoading}
+        values={data && data.data.length > 0 ? getValues(data.data) : null}
+      />
       <Group
         style={{
           justifyContent: 'space-between',
@@ -123,7 +126,7 @@ export function TransacaoList() {
                   ))}
                 </Group>
               )}
-              {receitas && receitas.length === 0 && (
+              {!isLoading && !error && receitas && receitas.length === 0 && (
                 <Center>
                   <Alert
                     icon={<AiOutlinePlus size={20} />}
@@ -173,7 +176,7 @@ export function TransacaoList() {
                   ))}
                 </Group>
               )}
-              {despesas && despesas.length === 0 && (
+              {!isLoading && !error && despesas && despesas.length === 0 && (
                 <Center>
                   <Alert
                     icon={<AiOutlinePlus size={20} />}
