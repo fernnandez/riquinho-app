@@ -50,6 +50,12 @@ export const updateTransacao = async (
   );
 };
 
+export const deleteTransacao = async (idTransacao: string, token: string) => {
+  await api.delete(`/transacao/${idTransacao}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
+
 export const findAllTransacao = async (token: string) => {
   return api.get<TransacaoResponse[]>('/transacao', {
     headers: { Authorization: `Bearer ${token}` },

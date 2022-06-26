@@ -113,7 +113,6 @@ export function EditTransacaoModal({
     );
 
     if (trancasaoToEdit) {
-      console.log({ trancasaoToEdit });
       form.setValues({
         categoria: trancasaoToEdit.categoria,
         data: new Date(trancasaoToEdit.data),

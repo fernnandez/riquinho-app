@@ -1,14 +1,21 @@
 import {
   ActionIcon,
-  Avatar,
   Box,
   Grid,
+  Group,
   Paper,
   Text,
   Tooltip,
 } from '@mantine/core';
+import { useModals } from '@mantine/modals';
+import { showNotification } from '@mantine/notifications';
+import { useContext } from 'react';
 import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
+import AuthContext from '../../../../context/AuthContext/AuthContext';
+import { queryClient } from '../../../../services/queryClient';
+import { deleteTransacao } from '../../../../services/transacao';
 import { DateFormatter } from '../../../../utils/dateFormatter';
+import { notify, TypeNotificationEnum } from '../../../../utils/notify';
 import {
   CategoriaEnum,
   getCategoriaIcon,
@@ -31,6 +38,62 @@ interface TransacaoItemProps {
 
 export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
   const { classes } = useStyles();
+  const { token } = useContext(AuthContext);
+  const modals = useModals();
+
+  const handleDelete = () => {
+    deleteTransacao(data.id, token.token)
+      .then(() => {
+        queryClient.invalidateQueries('transacoes').then(() => {
+          showNotification(
+            notify({
+              type: TypeNotificationEnum.SUCCESS,
+              title: 'Removido com sucesso',
+            })
+          );
+        });
+      })
+      .catch((error: any) => {
+        showNotification(
+          notify({
+            type: TypeNotificationEnum.ERROR,
+            title:
+              error.response && error.response.data.status !== 500
+                ? error.response.data.message
+                : null,
+          })
+        );
+      });
+  };
+
+  const openConfirmDialog = () => {
+    return modals.openConfirmModal({
+      size: 'lg',
+      centered: true,
+      title: (
+        <Group>
+          <ActionIcon size="lg" color={'red'} radius="xl" variant="hover">
+            <AiFillDelete size={25} />
+          </ActionIcon>
+          <Text>Você está prestes a excluir uma transação</Text>
+        </Group>
+      ),
+      children: <Text size="sm">Tem certeza que deseja excluir ?</Text>,
+      labels: {
+        confirm: 'Excluir',
+        cancel: 'Cancelar',
+      },
+      confirmProps: {
+        color: 'red',
+        variant: 'light',
+      },
+      cancelProps: {
+        color: 'blue',
+        variant: 'light',
+      },
+      onConfirm: async () => handleDelete(),
+    });
+  };
 
   return (
     <Paper
@@ -87,7 +150,13 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
             >
               <AiFillEdit size={25} />
             </ActionIcon>
-            <ActionIcon size="lg" color={'red'} radius="xl" variant="hover">
+            <ActionIcon
+              size="lg"
+              color={'red'}
+              radius="xl"
+              variant="hover"
+              onClick={openConfirmDialog}
+            >
               <AiFillDelete size={25} />
             </ActionIcon>
           </Box>
