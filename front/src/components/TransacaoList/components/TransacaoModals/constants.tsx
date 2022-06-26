@@ -82,25 +82,49 @@ export function getCategoria(value: string) {
   }[value];
 }
 
-export function getCategoriaIcon(categoria: string) {
+export function getCategoriaIcon(categoria: string, isActive: StatusEnum) {
   return {
     ALIMENTACAO: (
-      <ActionIcon color="red" size={60} radius="xl" variant="outline">
+      <ActionIcon
+        color="red"
+        size={60}
+        radius="xl"
+        variant={isActive === StatusEnum.EFETIVADA ? 'outline' : 'default'}
+        style={{ cursor: 'default' }}
+      >
         <IoFastFoodSharp size={45} />
       </ActionIcon>
     ),
     MORADIA: (
-      <ActionIcon color="blue" size={60} radius="xl" variant="outline">
+      <ActionIcon
+        color="blue"
+        size={60}
+        radius="xl"
+        variant={isActive ? 'outline' : 'default'}
+        style={{ cursor: 'default' }}
+      >
         <BiBuildingHouse size={45} />
       </ActionIcon>
     ),
     PAGAMENTO: (
-      <ActionIcon color="green" size={60} radius="xl" variant="outline">
+      <ActionIcon
+        color="green"
+        size={60}
+        radius="xl"
+        variant={isActive ? 'outline' : 'default'}
+        style={{ cursor: 'default' }}
+      >
         <GiMoneyStack size={45} />
       </ActionIcon>
     ),
     OUTROS: (
-      <ActionIcon color="gray" size={60} radius="xl" variant="outline">
+      <ActionIcon
+        color="gray"
+        size={60}
+        radius="xl"
+        variant={isActive ? 'outline' : 'default'}
+        style={{ cursor: 'default' }}
+      >
         <BsStars size={45} />
       </ActionIcon>
     ),

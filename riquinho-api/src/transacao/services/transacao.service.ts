@@ -9,7 +9,6 @@ export class TransacaoService {
   constructor(private transacaoRepository: TransacaoRepository) {}
 
   findAll(user: User): Promise<Transacao[]> {
-    console.log(user);
     return this.transacaoRepository.find();
   }
 

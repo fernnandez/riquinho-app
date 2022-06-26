@@ -15,13 +15,14 @@ interface TransacaoType {
   status: StatusEnum | undefined;
 }
 
-interface TransacaoResponse {
+export interface TransacaoResponse {
+  id: string;
   titulo: string;
   valor: number;
   data: Date;
   categoria: CategoriaEnum;
   tipo: TipoTransacaoEnum;
-  descricao: string | null;
+  descricao: string;
   status: StatusEnum;
 }
 
@@ -35,8 +36,21 @@ export const createTransacao = async (data: TransacaoType, token: string) => {
   );
 };
 
+export const updateTransacao = async (
+  idTransacao: string,
+  data: TransacaoType,
+  token: string
+) => {
+  await api.put(
+    `/transacao/${idTransacao}`,
+    { ...data },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+};
+
 export const findAllTransacao = async (token: string) => {
-  console.log(token);
   return api.get<TransacaoResponse[]>('/transacao', {
     headers: { Authorization: `Bearer ${token}` },
   });

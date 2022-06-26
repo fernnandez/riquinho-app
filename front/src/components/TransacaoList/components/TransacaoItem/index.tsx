@@ -1,4 +1,12 @@
-import { ActionIcon, Avatar, Box, Grid, Paper, Text } from '@mantine/core';
+import {
+  ActionIcon,
+  Avatar,
+  Box,
+  Grid,
+  Paper,
+  Text,
+  Tooltip,
+} from '@mantine/core';
 import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
 import { DateFormatter } from '../../../../utils/dateFormatter';
 import {
@@ -10,6 +18,7 @@ import { useStyles } from './styles';
 
 interface TransacaoItemProps {
   data: {
+    id: string;
     titulo: string;
     categoria: CategoriaEnum;
     status: StatusEnum;
@@ -26,13 +35,17 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
   return (
     <Paper shadow="md" p="1rem" style={{ minWidth: '100%' }}>
       <Grid grow className={classes.listItem} columns={32}>
-        <Grid.Col span={2}>{getCategoriaIcon(data.categoria)}</Grid.Col>
+        <Grid.Col span={2}>
+          {getCategoriaIcon(data.categoria, data.status)}
+        </Grid.Col>
         <Grid.Col span={6}>
           <Box>
-            <Text size="lg">Titulo</Text>
-            <Text size="sm" color="dimmed">
-              {data.titulo}
-            </Text>
+            <Tooltip label={data.descricao}>
+              <Text size="lg">Titulo</Text>
+              <Text size="sm" color="dimmed">
+                {data.titulo}
+              </Text>
+            </Tooltip>
           </Box>
         </Grid.Col>
         <Grid.Col span={6}>
@@ -61,11 +74,11 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
               size="lg"
               color={'blue'}
               radius="xl"
-              onClick={() => onOpenEdit('abcdes')}
+              onClick={() => onOpenEdit(data.id)}
             >
               <AiFillEdit size={25} />
             </ActionIcon>
-            <ActionIcon size="lg" color={'red'} radius="xl">
+            <ActionIcon size="lg" color={'red'} radius="xl" variant="hover">
               <AiFillDelete size={25} />
             </ActionIcon>
           </Box>

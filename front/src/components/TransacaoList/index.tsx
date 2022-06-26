@@ -11,16 +11,18 @@ import {
   Title,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai';
 import { useQuery } from 'react-query';
 import AuthContext from '../../context/AuthContext/AuthContext';
 import { useModalController } from '../../context/ModalContext/ModalContext';
-import { findAllTransacao } from '../../services/transacao';
+import { findAllTransacao, TransacaoResponse } from '../../services/transacao';
 import { InfoCards } from '../InfoCards';
 import { TransacaoItem } from './components/TransacaoItem';
+import { TipoTransacaoEnum } from './components/TransacaoModals/constants';
 import { CreateTransacaoModal } from './components/TransacaoModals/CreateTransacaoModal';
 import { EditTransacaoModal } from './components/TransacaoModals/EditTransacaoModal';
+import { getTransacaoByTipo } from './formatter';
 
 export function TransacaoList() {
   const [openedCreate, handlersCreate] = useDisclosure(false);
@@ -32,10 +34,20 @@ export function TransacaoList() {
     return findAllTransacao(token.token);
   });
 
+  const [receitas, setReceitas] = useState<TransacaoResponse[]>([]);
+  const [despesas, setDespesas] = useState<TransacaoResponse[]>([]);
+
   const handleOpenEditModal = (id: string) => {
     onSetId(id);
     handlersEdit.open();
   };
+
+  useEffect(() => {
+    if (data && data.data.length > 0) {
+      setReceitas(getTransacaoByTipo(TipoTransacaoEnum.RECEITA, data.data));
+      setDespesas(getTransacaoByTipo(TipoTransacaoEnum.DESPESA, data.data));
+    }
+  }, [data]);
 
   return (
     <Box
@@ -77,7 +89,7 @@ export function TransacaoList() {
         }}
       >
         <Paper
-          style={{ backgroundColor: '#bfefbb', flex: 1 }}
+          style={{ backgroundColor: '#D1f7d6', flex: 1 }}
           shadow="md"
           p="1rem"
         >
@@ -100,17 +112,18 @@ export function TransacaoList() {
                 </Center>
               )}
 
-              {data && data.data.length > 0 && (
+              {receitas && receitas.length > 0 && (
                 <Group>
-                  {data.data.map((transacao) => (
+                  {receitas.map((transacao) => (
                     <TransacaoItem
+                      key={transacao.id}
                       data={transacao}
                       onOpenEdit={handleOpenEditModal}
                     />
                   ))}
                 </Group>
               )}
-              {data && data.data.length === 0 && (
+              {receitas && receitas.length === 0 && (
                 <Center>
                   <Alert
                     icon={<AiOutlinePlus size={20} />}
@@ -126,7 +139,7 @@ export function TransacaoList() {
         </Paper>
 
         <Paper
-          style={{ backgroundColor: '#ff9d95', flex: 1 }}
+          style={{ backgroundColor: '#Ffd3d3', flex: 1 }}
           shadow="md"
           p="1rem"
         >
@@ -149,18 +162,18 @@ export function TransacaoList() {
                 </Center>
               )}
 
-              {data && data.data.length > 0 && (
-                <Center>
-                  <Alert
-                    icon={<AiOutlinePlus size={20} />}
-                    title="Ops!"
-                    color="blue"
-                  >
-                    Temos dados
-                  </Alert>
-                </Center>
+              {despesas && despesas.length > 0 && (
+                <Group>
+                  {despesas.map((transacao) => (
+                    <TransacaoItem
+                      key={transacao.id}
+                      data={transacao}
+                      onOpenEdit={handleOpenEditModal}
+                    />
+                  ))}
+                </Group>
               )}
-              {data && data.data.length === 0 && (
+              {despesas && despesas.length === 0 && (
                 <Center>
                   <Alert
                     icon={<AiOutlinePlus size={20} />}
@@ -179,7 +192,13 @@ export function TransacaoList() {
         isOpen={openedCreate}
         onClose={handlersCreate.close}
       />
-      <EditTransacaoModal isOpen={openedEdit} onClose={handlersEdit.close} />
+      {data && data.data.length > 0 && (
+        <EditTransacaoModal
+          isOpen={openedEdit}
+          onClose={handlersEdit.close}
+          transacaoList={data.data}
+        />
+      )}
     </Box>
   );
 }
