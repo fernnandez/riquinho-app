@@ -45,7 +45,7 @@ export class TransacaoController {
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string): Promise<void> {
+  delete(@Param('id') id: string, @Request() req): Promise<void> {
     return this.transacaoService.delete(id);
   }
 }
