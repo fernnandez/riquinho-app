@@ -12,7 +12,6 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 
 - React
 - Typescript
-a mimir
 - NestJS
 - Typeorm
 - JWT
