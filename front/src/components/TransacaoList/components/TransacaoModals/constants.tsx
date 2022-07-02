@@ -1,6 +1,7 @@
 import { MdAttachMoney } from 'react-icons/md';
 import { TbCashBanknoteOff } from 'react-icons/tb';
 
+
 import { TbNorthStar } from 'react-icons/tb';
 
 import { IoFastFoodSharp } from 'react-icons/io5';
@@ -77,13 +78,15 @@ export function getCategoria(value: string) {
   return {
     ALIMENTACAO: CategoriaEnum.ALIMENTACAO,
     MORADIA: CategoriaEnum.MORADIA,
-    PAGAMENTO: CategoriaEnum.ALIMENTACAO,
+    PAGAMENTO: CategoriaEnum.PAGAMENTO,
     OUTROS: CategoriaEnum.OUTROS,
   }[value];
 }
 
 export function getCategoriaIcon(categoria: string, isActive: StatusEnum) {
+
   return {
+
     ALIMENTACAO: (
       <ActionIcon
         color="red"
@@ -129,4 +132,5 @@ export function getCategoriaIcon(categoria: string, isActive: StatusEnum) {
       </ActionIcon>
     ),
   }[categoria];
+  
 }
