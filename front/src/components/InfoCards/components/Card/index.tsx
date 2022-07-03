@@ -1,4 +1,4 @@
-import { Group, Paper, Skeleton, Text } from '@mantine/core';
+import { Divider, Group, Paper, Skeleton, Text, Space } from '@mantine/core';
 import { ReactNode } from 'react';
 import { useStyles } from './styles';
 
@@ -6,11 +6,12 @@ interface CardProps {
   color?: string;
   title: string;
   value: string | null;
+  valuePrevisto: string | null;
   icon: ReactNode;
   isLoading: boolean;
 }
 
-export function Card({ icon, title, value, color, isLoading }: CardProps) {
+export function Card({ icon, title, value, valuePrevisto, color, isLoading }: CardProps) {
   const { classes } = useStyles();
   return (
     <Paper
@@ -35,6 +36,10 @@ export function Card({ icon, title, value, color, isLoading }: CardProps) {
           </Group>
           <Text className={classes.value}>
             {value ? `R$ ${value}` : 'Não consta'}
+          </Text>
+          <Space h="sm" />
+          <Text >
+           Valor Previsto {valuePrevisto ? `R$ ${valuePrevisto}` : 'Não consta'}
           </Text>
         </>
       )}
