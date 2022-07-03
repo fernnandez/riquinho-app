@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, Repository } from 'typeorm';
 import { CreateUserDto } from './create-user.dto';
@@ -12,6 +16,14 @@ export class UserService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
+    const userFound = await this.userRepository.findOne({
+      where: { email: createUserDto.email },
+    });
+
+    if (userFound) {
+      throw new ConflictException('Esse email já está cadastrado');
+    }
+
     const user = this.userRepository.create(createUserDto);
     return this.userRepository.save(user);
   }
