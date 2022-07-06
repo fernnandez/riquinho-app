@@ -46,6 +46,9 @@ export function TransacaoList() {
     if (data && data.data.length > 0) {
       setReceitas(getTransacaoByTipo(TipoTransacaoEnum.RECEITA, data.data));
       setDespesas(getTransacaoByTipo(TipoTransacaoEnum.DESPESA, data.data));
+    } else {
+      setReceitas([]);
+      setDespesas([]);
     }
   }, [data]);
 
@@ -165,7 +168,7 @@ export function TransacaoList() {
                 </Center>
               )}
 
-              {despesas && despesas.length > 0 && (
+              {data && data.data.length > 0 && (
                 <Group>
                   {despesas.map((transacao) => (
                     <TransacaoItem
