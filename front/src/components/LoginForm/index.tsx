@@ -17,6 +17,7 @@ import { useContext } from 'react';
 import AuthContext from '../../context/AuthContext/AuthContext';
 import { showNotification } from '@mantine/notifications';
 import { notify, TypeNotificationEnum } from '../../utils/notify';
+import { queryClient } from '../../services/queryClient';
 
 export function LoginForm() {
   const { classes } = useStyles();
@@ -39,7 +40,9 @@ export function LoginForm() {
     authLogin({ email: data.email, password: data.senha })
       .then((result) => {
         setToken(result.data);
-        navigate('/');
+        queryClient.invalidateQueries('transacoes').then(() => {
+          navigate('/');
+        });
       })
       .catch((error: any) => {
         showNotification(

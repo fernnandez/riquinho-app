@@ -6,14 +6,13 @@ import {
   Header,
   Image,
 } from '@mantine/core';
-import { useStyles } from './styles';
-import logo from '../../assets/logo.svg';
-import { HeroText } from './test';
+import { useContext, useEffect } from 'react';
 import { FiLogOut } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import { useContext, useEffect } from 'react';
-import AuthContext from '../../context/AuthContext/AuthContext';
+import logo from '../../assets/logo.svg';
 import { TransacaoList } from '../../components/TransacaoList';
+import AuthContext from '../../context/AuthContext/AuthContext';
+import { useStyles } from './styles';
 
 export function TransacaoPage() {
   const { classes } = useStyles();

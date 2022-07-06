@@ -3,8 +3,8 @@ import { CadastroPage } from './pages/CadastroPage';
 import { LoginPage } from './pages/LoginPage';
 
 import { NotificationsProvider } from '@mantine/notifications';
-import { TransacaoPage } from './pages/TransacaoPage';
 import { ModalProvider } from './context/ModalContext/ModalContext';
+import { TransacaoPage } from './pages/TransacaoPage';
 
 function App() {
   return (
