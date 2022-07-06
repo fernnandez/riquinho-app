@@ -32,8 +32,9 @@ export class TransacaoController {
   @Post()
   create(
     @Body() createTransacaoDto: CreateUpdateTransacaoDto,
+    @Request() req,
   ): Promise<Transacao> {
-    return this.transacaoService.create(createTransacaoDto);
+    return this.transacaoService.create(createTransacaoDto, req.user);
   }
 
   @Put(':id')
@@ -45,7 +46,7 @@ export class TransacaoController {
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string, @Request() req): Promise<void> {
+  delete(@Param('id') id: string): Promise<void> {
     return this.transacaoService.delete(id);
   }
 }

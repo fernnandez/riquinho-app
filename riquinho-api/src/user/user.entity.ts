@@ -4,9 +4,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Transacao } from '../transacao/entities/transacao.entity';
 
 @Entity()
 export class User {
@@ -21,6 +23,9 @@ export class User {
 
   @Column()
   senha: string;
+
+  @OneToMany(() => Transacao, (transacao) => transacao.user)
+  transacoes: Transacao[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

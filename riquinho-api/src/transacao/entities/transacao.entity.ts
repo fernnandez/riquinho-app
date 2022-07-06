@@ -2,9 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { User } from '../../user/user.entity';
 
 export enum TipoTransacao {
   RECEITA = 'RECEITA',
@@ -48,6 +51,10 @@ export class Transacao {
 
   @Column()
   valor: number;
+
+  @ManyToOne(() => User, (user) => user.transacoes)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   createdAt: Date;
