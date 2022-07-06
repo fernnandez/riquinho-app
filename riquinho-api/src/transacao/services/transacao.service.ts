@@ -9,15 +9,18 @@ export class TransacaoService {
   constructor(private transacaoRepository: TransacaoRepository) {}
 
   findAll(user: User): Promise<Transacao[]> {
-    return this.transacaoRepository.find();
+    return this.transacaoRepository.find({ where: { user } });
   }
 
   findOne(id: string): Promise<Transacao> {
     return this.transacaoRepository.findOne(id);
   }
 
-  create(createTransacaoDto: CreateUpdateTransacaoDto): Promise<Transacao> {
-    return this.transacaoRepository.save(createTransacaoDto);
+  create(
+    createTransacaoDto: CreateUpdateTransacaoDto,
+    user: User,
+  ): Promise<Transacao> {
+    return this.transacaoRepository.save({ ...createTransacaoDto, user });
   }
 
   async update(

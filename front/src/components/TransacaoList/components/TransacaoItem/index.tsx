@@ -9,7 +9,7 @@ import {
 } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
 import AuthContext from '../../../../context/AuthContext/AuthContext';
 import { queryClient } from '../../../../services/queryClient';
