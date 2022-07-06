@@ -21,7 +21,7 @@ export function InfoCards({ isLoading, values }: InfoCardsProps) {
     >
       <Card
         isLoading={isLoading}
-        title="Receitas"
+        title="Recebido"
         value={values ? String(values.receitasEfetivadas) : null}
         valuePrevisto={values ? String(values.receitas) : null}
         icon={<MdAttachMoney size={25} color="green" />}
@@ -29,7 +29,7 @@ export function InfoCards({ isLoading, values }: InfoCardsProps) {
       />
       <Card
         isLoading={isLoading}
-        title="Balanço"
+        title="Saldo"
         value={values ? String(values.receitasEfetivadas - values.despesasEfetivadas) : null}
         valuePrevisto={values ? String(values.receitas -values.despesas) : null}
         icon={<HiOutlineCash size={25} color="blue" />}
@@ -37,7 +37,7 @@ export function InfoCards({ isLoading, values }: InfoCardsProps) {
       />
       <Card
         isLoading={isLoading}
-        title="Despesas"
+        title="Gasto"
         value={values ? String(values.despesasEfetivadas) : null}
         valuePrevisto={values ? String(values.despesas) : null}
         icon={<TbCashBanknoteOff size={25} color="red" />}
