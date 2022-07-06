@@ -23,6 +23,7 @@ import { TipoTransacaoEnum } from './components/TransacaoModals/constants';
 import { CreateTransacaoModal } from './components/TransacaoModals/CreateTransacaoModal';
 import { EditTransacaoModal } from './components/TransacaoModals/EditTransacaoModal';
 import { getTransacaoByTipo, getValues } from './formatter';
+import { DateRangePicker } from '@mantine/dates';
 
 export function TransacaoList() {
   const [openedCreate, handlersCreate] = useDisclosure(false);
@@ -41,7 +42,10 @@ export function TransacaoList() {
     onSetId(id);
     handlersEdit.open();
   };
-
+  const [value, setValue] = useState<[Date | null, Date | null]>([
+    new Date(2021, 11, 1),
+    new Date(2021, 11, 5),
+  ]);
   useEffect(() => {
     if (data && data.data.length > 0) {
       setReceitas(getTransacaoByTipo(TipoTransacaoEnum.RECEITA, data.data));
@@ -76,10 +80,7 @@ export function TransacaoList() {
           >
             Adicionar
           </Button>
-          <TextInput
-            icon={<AiOutlineSearch size={18} />}
-            placeholder="Pesquisar"
-          />
+        
         </Group>
       </Group>
       <Box
