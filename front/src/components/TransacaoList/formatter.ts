@@ -1,5 +1,8 @@
 import { TransacaoResponse } from '../../services/transacao';
-import { StatusEnum, TipoTransacaoEnum } from './components/TransacaoModals/constants';
+import {
+  StatusEnum,
+  TipoTransacaoEnum,
+} from './components/TransacaoModals/constants';
 
 export function getTransacaoByTipo(
   tipo: TipoTransacaoEnum,
@@ -11,19 +14,22 @@ export function getTransacaoByTipo(
 export function getValues(transacoes: TransacaoResponse[]) {
   let receitas = 0;
   let despesas = 0;
-  let receitasEfetivadas= 0;
-  let despesasEfetivadas= 0;
+  let receitasEfetivadas = 0;
+  let despesasEfetivadas = 0;
 
   transacoes.forEach((transacao) => {
     if (transacao.tipo === TipoTransacaoEnum.RECEITA) {
-      if(transacao.status === StatusEnum.EFETIVADA ){ receitasEfetivadas += Number(transacao.valor)}
+      if (transacao.status === StatusEnum.EFETIVADA) {
+        receitasEfetivadas += Number(transacao.valor);
+      }
       receitas += Number(transacao.valor);
     } else {
-    if(transacao.status === StatusEnum.EFETIVADA){despesasEfetivadas += Number(transacao.valor)}
+      if (transacao.status === StatusEnum.EFETIVADA) {
+        despesasEfetivadas += Number(transacao.valor);
+      }
       despesas += Number(transacao.valor);
     }
   });
-  console.log(despesas, despesasEfetivadas)
 
-  return { receitas, despesas, receitasEfetivadas,despesasEfetivadas };
+  return { receitas, despesas, receitasEfetivadas, despesasEfetivadas };
 }

@@ -12,7 +12,11 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useContext, useEffect, useState } from 'react';
-import { AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai';
+import {
+  AiOutlineInfoCircle,
+  AiOutlinePlus,
+  AiOutlineSearch,
+} from 'react-icons/ai';
 import { useQuery } from 'react-query';
 import AuthContext from '../../context/AuthContext/AuthContext';
 import { useModalController } from '../../context/ModalContext/ModalContext';
@@ -43,7 +47,7 @@ export function TransacaoList() {
   };
 
   useEffect(() => {
-    if (data && data.data.length > 0) {
+    if (data) {
       setReceitas(getTransacaoByTipo(TipoTransacaoEnum.RECEITA, data.data));
       setDespesas(getTransacaoByTipo(TipoTransacaoEnum.DESPESA, data.data));
     } else {
@@ -109,7 +113,7 @@ export function TransacaoList() {
               {!isLoading && error && (
                 <Center>
                   <Alert
-                    icon={<AiOutlinePlus size={20} />}
+                    icon={<AiOutlineInfoCircle size={20} />}
                     title="Ops!"
                     color="red"
                   >
@@ -132,7 +136,7 @@ export function TransacaoList() {
               {!isLoading && !error && receitas && receitas.length === 0 && (
                 <Center>
                   <Alert
-                    icon={<AiOutlinePlus size={20} />}
+                    icon={<AiOutlineInfoCircle size={20} />}
                     title="Ops!"
                     color="blue"
                   >

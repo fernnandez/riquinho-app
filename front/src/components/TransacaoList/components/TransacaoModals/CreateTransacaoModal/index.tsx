@@ -5,9 +5,10 @@ import {
   Grid,
   Modal,
   NumberInput,
+  SegmentedControl,
   Select,
   TextInput,
-  Title,
+  Title
 } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 
@@ -27,7 +28,7 @@ import {
   getCategoria,
   getStatus,
   getTipo,
-  TipoSelectItems,
+  TipoSelectItems
 } from '../constants';
 import { useStyles } from '../styles';
 interface CreateTransacaoModalProps {
@@ -54,6 +55,7 @@ export function CreateTransacaoModal({
     },
     validate: (values) => ({
       titulo: values.titulo === '' ? 'titulo é obrigatório' : null,
+      categoria: values.categoria === '' ? 'categoria é obrigatório' : null,
       valor: values.valor === 0 ? 'valor é obrigatório' : null,
       data: values.data === null ? 'data é obrigatório' : null,
       tipo: values.tipo === null ? 'tipo é obrigatório' : null,
@@ -107,14 +109,30 @@ export function CreateTransacaoModal({
             <ActionIcon color="green" variant="outline" size={40}>
               <MdAttachMoney size={40} />
             </ActionIcon>
-            <Title order={3}>Cadastro de receita</Title>
+            <Title order={3}>Cadastro de</Title>
+            <SegmentedControl
+              fullWidth
+              data={TipoSelectItems}
+              color={
+                form.getInputProps('tipo').value === 'RECEITA' ? 'green' : 'red'
+              }
+              {...form.getInputProps('tipo')}
+            />
           </Box>
         ) : (
           <Box className={classes.formHeader}>
             <ActionIcon color="red" variant="outline" size={40}>
               <TbCashBanknoteOff size={40} />
             </ActionIcon>
-            <Title order={3}>Cadastro de despesa</Title>
+            <Title order={3}>Cadastro de</Title>
+            <SegmentedControl
+              fullWidth
+              data={TipoSelectItems}
+              color={
+                form.getInputProps('tipo').value === 'RECEITA' ? 'green' : 'red'
+              }
+              {...form.getInputProps('tipo')}
+            />
           </Box>
         )
       }
@@ -146,15 +164,12 @@ export function CreateTransacaoModal({
               decimalSeparator=","
               {...form.getInputProps('valor')}
             />
-            <Select
-              className={classes.selectInput}
+            <TextInput
+              className={classes.textInput}
+              label="Descrição"
+              placeholder="Descrição"
               size="md"
-              mb="md"
-              label="Tipo"
-              placeholder="Tipo"
-              itemComponent={SelectItemIcon}
-              data={TipoSelectItems}
-              {...form.getInputProps('tipo')}
+              {...form.getInputProps('descricao')}
             />
           </Grid.Col>
           <Grid.Col span={6}>
@@ -187,16 +202,6 @@ export function CreateTransacaoModal({
                 { label: 'Pendente', value: 'PENDENTE' },
               ]}
               {...form.getInputProps('status')}
-            />
-          </Grid.Col>
-          <Grid.Col>
-            <TextInput
-              className={classes.textInput}
-              label="Descrição"
-              placeholder="Descrição"
-              size="md"
-              mt={-30}
-              {...form.getInputProps('descricao')}
             />
           </Grid.Col>
         </Grid>
