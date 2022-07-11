@@ -8,13 +8,13 @@ import {
   SegmentedControl,
   Select,
   TextInput,
-  Title
+  Title,
 } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { MdAttachMoney } from 'react-icons/md';
 import { TbCashBanknoteOff } from 'react-icons/tb';
 import AuthContext from '../../../../../context/AuthContext/AuthContext';
@@ -28,7 +28,7 @@ import {
   getCategoria,
   getStatus,
   getTipo,
-  TipoSelectItems
+  TipoSelectItems,
 } from '../constants';
 import { useStyles } from '../styles';
 interface CreateTransacaoModalProps {
@@ -41,12 +41,13 @@ export function CreateTransacaoModal({
   onClose,
 }: CreateTransacaoModalProps) {
   const { classes } = useStyles();
+  const [Loading, setloading] = useState(false);
   const { token } = useContext(AuthContext);
 
   const form = useForm({
     initialValues: {
       titulo: '',
-      valor: 0,
+      valor: '',
       data: new Date(),
       categoria: '',
       tipo: 'RECEITA',
@@ -56,16 +57,18 @@ export function CreateTransacaoModal({
     validate: (values) => ({
       titulo: values.titulo === '' ? 'titulo é obrigatório' : null,
       categoria: values.categoria === '' ? 'categoria é obrigatório' : null,
-      valor: values.valor === 0 ? 'valor é obrigatório' : null,
+      valor: values.valor === '' ? 'valor é obrigatório' : null,
       data: values.data === null ? 'data é obrigatório' : null,
       tipo: values.tipo === null ? 'tipo é obrigatório' : null,
     }),
   });
 
   const handleSubmit = (data: typeof form.values) => {
+    setloading(true);
     createTransacao(
       {
         ...data,
+        valor: Number(data.valor),
         categoria: getCategoria(data.categoria),
         status: getStatus(data.status),
         tipo: getTipo(data.tipo),
@@ -88,7 +91,8 @@ export function CreateTransacaoModal({
                 : null,
           })
         );
-      });
+      })
+      .finally(() => setloading(false));
   };
 
   const handleClose = () => {
@@ -216,7 +220,14 @@ export function CreateTransacaoModal({
           >
             Cancelar
           </Button>
-          <Button type="submit" color="blue" size="md" pl="xl" pr="xl">
+          <Button
+            type="submit"
+            color="blue"
+            size="md"
+            pl="xl"
+            pr="xl"
+            loading={Loading}
+          >
             Salvar
           </Button>
         </Box>

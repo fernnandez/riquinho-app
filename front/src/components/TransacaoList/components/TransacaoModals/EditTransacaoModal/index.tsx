@@ -13,7 +13,7 @@ import {
 import { DatePicker } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { MdAttachMoney } from 'react-icons/md';
 import { TbCashBanknoteOff } from 'react-icons/tb';
 import AuthContext from '../../../../../context/AuthContext/AuthContext';
@@ -46,6 +46,7 @@ export function EditTransacaoModal({
   transacaoList,
 }: EditTransacaoModalProps) {
   const { classes } = useStyles();
+  const [Loading, setloading ] = useState(false); 
   const { token } = useContext(AuthContext);
   const { id } = useModalController();
 
@@ -74,6 +75,7 @@ export function EditTransacaoModal({
   };
 
   const handleSubmit = (data: typeof form.values) => {
+    setloading(true);
     updateTransacao(
       id,
       {
@@ -105,7 +107,7 @@ export function EditTransacaoModal({
                 : null,
           })
         );
-      });
+      }).finally(() => setloading(false));
   };
 
   useEffect(() => {
@@ -246,7 +248,7 @@ export function EditTransacaoModal({
           >
             Cancelar
           </Button>
-          <Button type="submit" color="blue" size="md" pl="xl" pr="xl">
+          <Button type="submit" color="blue" size="md" pl="xl" pr="xl" loading={Loading}>
             Salvar
           </Button>
         </Box>

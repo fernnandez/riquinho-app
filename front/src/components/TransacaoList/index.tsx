@@ -33,6 +33,7 @@ import { TipoTransacaoEnum } from './components/TransacaoModals/constants';
 import { CreateTransacaoModal } from './components/TransacaoModals/CreateTransacaoModal';
 import { EditTransacaoModal } from './components/TransacaoModals/EditTransacaoModal';
 import { getTransacaoByTipo, getValues } from './formatter';
+import { DateRangePicker } from '@mantine/dates';
 
 export function TransacaoList() {
   const [openedCreate, handlersCreate] = useDisclosure(false);
@@ -53,7 +54,10 @@ export function TransacaoList() {
     onSetId(id);
     handlersEdit.open();
   };
-
+  const [value, setValue] = useState<[Date | null, Date | null]>([
+    new Date(2021, 11, 1),
+    new Date(2021, 11, 5),
+  ]);
   useEffect(() => {
     if (data) {
       setReceitas(
