@@ -11,13 +11,23 @@ import {
   Title,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { DateTime } from 'luxon';
 import { useContext, useEffect, useState } from 'react';
-import { AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai';
+import {
+  AiOutlineInfoCircle,
+  AiOutlinePlus,
+  AiOutlineSearch,
+} from 'react-icons/ai';
 import { useQuery } from 'react-query';
 import AuthContext from '../../context/AuthContext/AuthContext';
 import { useModalController } from '../../context/ModalContext/ModalContext';
+import {
+  MonthProvider,
+  useMonthController,
+} from '../../context/MonthContext/MonthContext';
 import { findAllTransacao, TransacaoResponse } from '../../services/transacao';
 import { InfoCards } from '../InfoCards';
+import { SeletorMes } from './components/SeletorMes';
 import { TransacaoItem } from './components/TransacaoItem';
 import { TipoTransacaoEnum } from './components/TransacaoModals/constants';
 import { CreateTransacaoModal } from './components/TransacaoModals/CreateTransacaoModal';
@@ -28,7 +38,9 @@ import { DateRangePicker } from '@mantine/dates';
 export function TransacaoList() {
   const [openedCreate, handlersCreate] = useDisclosure(false);
   const [openedEdit, handlersEdit] = useDisclosure(false);
+
   const { onSetId } = useModalController();
+  const { date } = useMonthController();
   const { token } = useContext(AuthContext);
 
   const { data, isLoading, error } = useQuery(['transacoes'], () => {
@@ -47,11 +59,18 @@ export function TransacaoList() {
     new Date(2021, 11, 5),
   ]);
   useEffect(() => {
-    if (data && data.data.length > 0) {
-      setReceitas(getTransacaoByTipo(TipoTransacaoEnum.RECEITA, data.data));
-      setDespesas(getTransacaoByTipo(TipoTransacaoEnum.DESPESA, data.data));
+    if (data) {
+      setReceitas(
+        getTransacaoByTipo(TipoTransacaoEnum.RECEITA, data.data, date)
+      );
+      setDespesas(
+        getTransacaoByTipo(TipoTransacaoEnum.DESPESA, data.data, date)
+      );
+    } else {
+      setReceitas([]);
+      setDespesas([]);
     }
-  }, [data]);
+  }, [data, date]);
 
   return (
     <Box
@@ -61,7 +80,9 @@ export function TransacaoList() {
     >
       <InfoCards
         isLoading={isLoading}
-        values={data && data.data.length > 0 ? getValues(data.data) : null}
+        values={
+          data && data.data.length > 0 ? getValues(data.data, date) : null
+        }
       />
       <Group
         style={{
@@ -70,18 +91,19 @@ export function TransacaoList() {
           marginTop: '2rem',
         }}
       >
-        <Title>Historico</Title>
-        <Group>
-          <Button
-            color="blue"
-            leftIcon={<AiOutlinePlus />}
-            size="sm"
-            onClick={() => handlersCreate.open()}
-          >
-            Adicionar
-          </Button>
-        
-        </Group>
+        <Button
+          color="blue"
+          leftIcon={<AiOutlinePlus />}
+          onClick={() => handlersCreate.open()}
+        >
+          Adicionar nova transação
+        </Button>
+        <SeletorMes />
+        <TextInput
+          icon={<AiOutlineSearch size={18} />}
+          placeholder="Pesquisar"
+          disabled
+        />
       </Group>
       <Box
         style={{
@@ -100,20 +122,34 @@ export function TransacaoList() {
           <ScrollArea style={{ height: 500 }}>
             <>
               {isLoading && (
-                <Center>
+                <Box
+                  style={{
+                    height: '500px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
                   <Loader />
-                </Center>
+                </Box>
               )}
               {!isLoading && error && (
-                <Center>
+                <Box
+                  style={{
+                    height: '500px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
                   <Alert
-                    icon={<AiOutlinePlus size={20} />}
+                    icon={<AiOutlineInfoCircle size={20} />}
                     title="Ops!"
                     color="red"
                   >
                     Aparentemente alguma coisa deu errado, tente novamente
                   </Alert>
-                </Center>
+                </Box>
               )}
 
               {receitas && receitas.length > 0 && (
@@ -128,15 +164,22 @@ export function TransacaoList() {
                 </Group>
               )}
               {!isLoading && !error && receitas && receitas.length === 0 && (
-                <Center>
+                <Box
+                  style={{
+                    height: '500px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
                   <Alert
-                    icon={<AiOutlinePlus size={20} />}
+                    icon={<AiOutlineInfoCircle size={20} />}
                     title="Ops!"
                     color="blue"
                   >
                     Nenhuma informação cadastradada
                   </Alert>
-                </Center>
+                </Box>
               )}
             </>
           </ScrollArea>
@@ -150,12 +193,26 @@ export function TransacaoList() {
           <ScrollArea style={{ height: 500 }}>
             <>
               {isLoading && (
-                <Center>
+                <Box
+                  style={{
+                    height: '500px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
                   <Loader />
-                </Center>
+                </Box>
               )}
               {!isLoading && error && (
-                <Center>
+                <Box
+                  style={{
+                    height: '500px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
                   <Alert
                     icon={<AiOutlinePlus size={20} />}
                     title="Ops!"
@@ -163,10 +220,10 @@ export function TransacaoList() {
                   >
                     Aparentemente alguma coisa deu errado, tente novamente
                   </Alert>
-                </Center>
+                </Box>
               )}
 
-              {despesas && despesas.length > 0 && (
+              {data && data.data.length > 0 && (
                 <Group>
                   {despesas.map((transacao) => (
                     <TransacaoItem
@@ -178,7 +235,14 @@ export function TransacaoList() {
                 </Group>
               )}
               {!isLoading && !error && despesas && despesas.length === 0 && (
-                <Center>
+                <Box
+                  style={{
+                    height: '500px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
                   <Alert
                     icon={<AiOutlinePlus size={20} />}
                     title="Ops!"
@@ -186,7 +250,7 @@ export function TransacaoList() {
                   >
                     Nenhuma informação cadastradada
                   </Alert>
-                </Center>
+                </Box>
               )}
             </>
           </ScrollArea>

@@ -1,13 +1,12 @@
 import { MdAttachMoney } from 'react-icons/md';
 import { TbCashBanknoteOff } from 'react-icons/tb';
 
-
 import { TbNorthStar } from 'react-icons/tb';
 
-import { IoFastFoodSharp } from 'react-icons/io5';
-import { GiMoneyStack } from 'react-icons/gi';
 import { BiBuildingHouse } from 'react-icons/bi';
 import { BsStars } from 'react-icons/bs';
+import { GiMoneyStack } from 'react-icons/gi';
+import { IoFastFoodSharp } from 'react-icons/io5';
 
 import { ActionIcon } from '@mantine/core';
 
@@ -84,9 +83,7 @@ export function getCategoria(value: string) {
 }
 
 export function getCategoriaIcon(categoria: string, isActive: StatusEnum) {
-
   return {
-
     ALIMENTACAO: (
       <ActionIcon
         color="red"
@@ -132,5 +129,4 @@ export function getCategoriaIcon(categoria: string, isActive: StatusEnum) {
       </ActionIcon>
     ),
   }[categoria];
-  
 }

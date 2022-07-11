@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo.svg';
 import { TransacaoList } from '../../components/TransacaoList';
 import AuthContext from '../../context/AuthContext/AuthContext';
+import { MonthProvider } from '../../context/MonthContext/MonthContext';
 import { useStyles } from './styles';
 
 export function TransacaoPage() {
@@ -57,9 +58,11 @@ export function TransacaoPage() {
         },
       })}
     >
-      <section className={classes.container}>
-        <TransacaoList />
-      </section>
+      <MonthProvider>
+        <section className={classes.container}>
+          <TransacaoList />
+        </section>
+      </MonthProvider>
     </AppShell>
   );
 }

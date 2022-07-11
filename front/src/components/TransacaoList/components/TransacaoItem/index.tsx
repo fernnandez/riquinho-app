@@ -1,16 +1,20 @@
 import {
   ActionIcon,
   Box,
+  Button,
   Grid,
   Group,
+  Menu,
   Paper,
   Text,
   Tooltip,
 } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
+import { TbDots } from 'react-icons/tb';
+
 import AuthContext from '../../../../context/AuthContext/AuthContext';
 import { queryClient } from '../../../../services/queryClient';
 import { deleteTransacao } from '../../../../services/transacao';
@@ -141,25 +145,31 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
           </Box>
         </Grid.Col>
         <Grid.Col span={2}>
-          <Box className={classes.actions}>
-            <ActionIcon
-              size="lg"
-              color={'blue'}
-              radius="xl"
+          <Menu
+            transition="pop"
+            withArrow
+            placement="end"
+            control={
+              <ActionIcon color="blue" variant="filled">
+                <TbDots />
+              </ActionIcon>
+            }
+          >
+            <Menu.Item
+              icon={<AiFillEdit size={25} />}
               onClick={() => onOpenEdit(data.id)}
+              color="blue"
             >
-              <AiFillEdit size={25} />
-            </ActionIcon>
-            <ActionIcon
-              size="lg"
-              color={'red'}
-              radius="xl"
-              variant="hover"
+              Editar
+            </Menu.Item>
+            <Menu.Item
+              icon={<AiFillDelete size={25} />}
               onClick={openConfirmDialog}
+              color="red"
             >
-              <AiFillDelete size={25} />
-            </ActionIcon>
-          </Box>
+              Excluir
+            </Menu.Item>
+          </Menu>
         </Grid.Col>
       </Grid>
     </Paper>

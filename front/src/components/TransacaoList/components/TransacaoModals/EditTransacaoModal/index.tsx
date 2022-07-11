@@ -5,6 +5,7 @@ import {
   Grid,
   Modal,
   NumberInput,
+  SegmentedControl,
   Select,
   TextInput,
   Title,
@@ -19,18 +20,17 @@ import AuthContext from '../../../../../context/AuthContext/AuthContext';
 import { useModalController } from '../../../../../context/ModalContext/ModalContext';
 import { queryClient } from '../../../../../services/queryClient';
 import {
-  createTransacao,
   TransacaoResponse,
   updateTransacao,
 } from '../../../../../services/transacao';
 import { SelectItemIcon } from '../../../../../utils/customSelect';
 import { notify, TypeNotificationEnum } from '../../../../../utils/notify';
 import {
-  TipoSelectItems,
   CategoriaSelectItems,
   getCategoria,
   getStatus,
   getTipo,
+  TipoSelectItems,
 } from '../constants';
 import { useStyles } from '../styles';
 
@@ -62,6 +62,7 @@ export function EditTransacaoModal({
     },
     validate: (values) => ({
       titulo: values.titulo === '' ? 'titulo é obrigatório' : null,
+      categoria: values.categoria === '' ? 'categoria é obrigatório' : null,
       valor: values.valor === 0 ? 'valor é obrigatório' : null,
       data: values.data === null ? 'data é obrigatório' : null,
       tipo: values.tipo === null ? 'tipo é obrigatório' : null,
@@ -140,14 +141,30 @@ export function EditTransacaoModal({
             <ActionIcon color="green" variant="outline" size={40}>
               <MdAttachMoney size={40} />
             </ActionIcon>
-            <Title order={3}>Edição de receita</Title>
+            <Title order={3}>Cadastro de</Title>
+            <SegmentedControl
+              fullWidth
+              data={TipoSelectItems}
+              color={
+                form.getInputProps('tipo').value === 'RECEITA' ? 'green' : 'red'
+              }
+              {...form.getInputProps('tipo')}
+            />
           </Box>
         ) : (
           <Box className={classes.formHeader}>
             <ActionIcon color="red" variant="outline" size={40}>
               <TbCashBanknoteOff size={40} />
             </ActionIcon>
-            <Title order={3}>Edição de despesa</Title>
+            <Title order={3}>Cadastro de</Title>
+            <SegmentedControl
+              fullWidth
+              data={TipoSelectItems}
+              color={
+                form.getInputProps('tipo').value === 'RECEITA' ? 'green' : 'red'
+              }
+              {...form.getInputProps('tipo')}
+            />
           </Box>
         )
       }
@@ -179,15 +196,12 @@ export function EditTransacaoModal({
               decimalSeparator=","
               {...form.getInputProps('valor')}
             />
-            <Select
-              className={classes.selectInput}
+            <TextInput
+              className={classes.textInput}
+              label="Descrição"
+              placeholder="Descrição"
               size="md"
-              mb="md"
-              label="Tipo"
-              placeholder="Tipo"
-              itemComponent={SelectItemIcon}
-              data={TipoSelectItems}
-              {...form.getInputProps('tipo')}
+              {...form.getInputProps('descricao')}
             />
           </Grid.Col>
           <Grid.Col span={6}>
@@ -220,16 +234,6 @@ export function EditTransacaoModal({
                 { label: 'Pendente', value: 'PENDENTE' },
               ]}
               {...form.getInputProps('status')}
-            />
-          </Grid.Col>
-          <Grid.Col>
-            <TextInput
-              className={classes.textInput}
-              label="Descrição"
-              placeholder="Descrição"
-              size="md"
-              mt={-30}
-              {...form.getInputProps('descricao')}
             />
           </Grid.Col>
         </Grid>

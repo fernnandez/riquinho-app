@@ -5,6 +5,7 @@ import {
   Grid,
   Modal,
   NumberInput,
+  SegmentedControl,
   Select,
   TextInput,
   Title,
@@ -40,7 +41,7 @@ export function CreateTransacaoModal({
   onClose,
 }: CreateTransacaoModalProps) {
   const { classes } = useStyles();
-  const [Loading, setloading ] = useState(false); 
+  const [Loading, setloading] = useState(false);
   const { token } = useContext(AuthContext);
 
   const form = useForm({
@@ -55,7 +56,8 @@ export function CreateTransacaoModal({
     },
     validate: (values) => ({
       titulo: values.titulo === '' ? 'titulo é obrigatório' : null,
-      valor: values.valor ==='' ? 'valor é obrigatório' : null,
+      categoria: values.categoria === '' ? 'categoria é obrigatório' : null,
+      valor: values.valor === '' ? 'valor é obrigatório' : null,
       data: values.data === null ? 'data é obrigatório' : null,
       tipo: values.tipo === null ? 'tipo é obrigatório' : null,
     }),
@@ -66,7 +68,7 @@ export function CreateTransacaoModal({
     createTransacao(
       {
         ...data,
-        valor:Number(data.valor),
+        valor: Number(data.valor),
         categoria: getCategoria(data.categoria),
         status: getStatus(data.status),
         tipo: getTipo(data.tipo),
@@ -89,7 +91,8 @@ export function CreateTransacaoModal({
                 : null,
           })
         );
-      }).finally(() => setloading(false));
+      })
+      .finally(() => setloading(false));
   };
 
   const handleClose = () => {
@@ -110,14 +113,30 @@ export function CreateTransacaoModal({
             <ActionIcon color="green" variant="outline" size={40}>
               <MdAttachMoney size={40} />
             </ActionIcon>
-            <Title order={3}>Cadastro de receita</Title>
+            <Title order={3}>Cadastro de</Title>
+            <SegmentedControl
+              fullWidth
+              data={TipoSelectItems}
+              color={
+                form.getInputProps('tipo').value === 'RECEITA' ? 'green' : 'red'
+              }
+              {...form.getInputProps('tipo')}
+            />
           </Box>
         ) : (
           <Box className={classes.formHeader}>
             <ActionIcon color="red" variant="outline" size={40}>
               <TbCashBanknoteOff size={40} />
             </ActionIcon>
-            <Title order={3}>Cadastro de despesa</Title>
+            <Title order={3}>Cadastro de</Title>
+            <SegmentedControl
+              fullWidth
+              data={TipoSelectItems}
+              color={
+                form.getInputProps('tipo').value === 'RECEITA' ? 'green' : 'red'
+              }
+              {...form.getInputProps('tipo')}
+            />
           </Box>
         )
       }
@@ -149,15 +168,12 @@ export function CreateTransacaoModal({
               decimalSeparator=","
               {...form.getInputProps('valor')}
             />
-            <Select
-              className={classes.selectInput}
+            <TextInput
+              className={classes.textInput}
+              label="Descrição"
+              placeholder="Descrição"
               size="md"
-              mb="md"
-              label="Tipo"
-              placeholder="Tipo"
-              itemComponent={SelectItemIcon}
-              data={TipoSelectItems}
-              {...form.getInputProps('tipo')}
+              {...form.getInputProps('descricao')}
             />
           </Grid.Col>
           <Grid.Col span={6}>
@@ -192,16 +208,6 @@ export function CreateTransacaoModal({
               {...form.getInputProps('status')}
             />
           </Grid.Col>
-          <Grid.Col>
-            <TextInput
-              className={classes.textInput}
-              label="Descrição"
-              placeholder="Descrição"
-              size="md"
-              mt={-30}
-              {...form.getInputProps('descricao')}
-            />
-          </Grid.Col>
         </Grid>
         <Box className={classes.formButtonsCreate}>
           <Button
@@ -214,7 +220,14 @@ export function CreateTransacaoModal({
           >
             Cancelar
           </Button>
-          <Button type="submit" color="blue" size="md" pl="xl" pr="xl" loading={Loading}>
+          <Button
+            type="submit"
+            color="blue"
+            size="md"
+            pl="xl"
+            pr="xl"
+            loading={Loading}
+          >
             Salvar
           </Button>
         </Box>
