@@ -150,7 +150,7 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
             withArrow
             placement="end"
             control={
-              <ActionIcon color="blue" variant="filled" radius="lg">
+              <ActionIcon color="blue" variant="filled">
                 <TbDots />
               </ActionIcon>
             }
