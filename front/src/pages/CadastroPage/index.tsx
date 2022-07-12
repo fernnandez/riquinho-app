@@ -1,6 +1,6 @@
 import { Box, Image, Title } from '@mantine/core';
 import { useStyles } from './styles';
-import cadastroIlustration from '../../assets/cadastro-ilustration.svg';
+import cadastroIlustration from '../../assets/mobileInterface.svg';
 import { CadastroForm } from '../../components/CadastroForm';
 
 export function CadastroPage() {
@@ -15,7 +15,7 @@ export function CadastroPage() {
         <Title order={1} style={{ cursor: 'default' }} mb="xl">
           É importante
         </Title>
-        <Image src={cadastroIlustration} />
+        <Image src={cadastroIlustration} width={400} />
       </Box>
     </div>
   );

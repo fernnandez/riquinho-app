@@ -11,7 +11,6 @@ import { mantineTheme } from './utils/theme';
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient} >
-      <ReactQueryDevtools initialIsOpen={false} />
       <MantineProvider
         theme={{ ...mantineTheme }}
         withNormalizeCSS

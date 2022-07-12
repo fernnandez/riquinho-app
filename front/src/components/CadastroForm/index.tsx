@@ -94,7 +94,7 @@ export function CadastroForm() {
         </Button>
 
         <Text align="center" mt="md">
-          Já tem uma conta?
+          Já tem uma conta?{' '}
           <Anchor component={Link} to="/login" weight={700}>
             Entre
           </Anchor>

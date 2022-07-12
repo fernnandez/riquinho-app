@@ -9,6 +9,7 @@ import {
   ScrollArea,
   TextInput,
   Title,
+  MultiSelect,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { DateTime } from 'luxon';
@@ -25,7 +26,7 @@ import {
   MonthProvider,
   useMonthController,
 } from '../../context/MonthContext/MonthContext';
-import { findAllTransacao, TransacaoResponse } from '../../services/transacao';
+import { findAllCategorias, findAllTransacao, TransacaoResponse } from '../../services/transacao';
 import { InfoCards } from '../InfoCards';
 import { SeletorMes } from './components/SeletorMes';
 import { TransacaoItem } from './components/TransacaoItem';
@@ -46,6 +47,9 @@ export function TransacaoList() {
   const { data, isLoading, error } = useQuery(['transacoes'], () => {
     return findAllTransacao(token.token);
   });
+  // const {data } = useQuery(['categoria'], () => {
+  //   return findAllCategorias(token.token);
+  // });
 
   const [receitas, setReceitas] = useState<TransacaoResponse[]>([]);
   const [despesas, setDespesas] = useState<TransacaoResponse[]>([]);
@@ -72,6 +76,7 @@ export function TransacaoList() {
     }
   }, [data, date]);
 
+  const [dados, setDados] = useState(['categorias']);
   return (
     <Box
       style={{
@@ -99,11 +104,21 @@ export function TransacaoList() {
           Adicionar nova transação
         </Button>
         <SeletorMes />
+
+        {/* <MultiSelect
+          data={data}
+          label="Selecione uma categoria"
+          placeholder="Pick all that you like"
+          defaultValue={['react', 'next']}
+          clearButtonLabel="Clear selection"
+          clearable
+        /> */}
         <TextInput
-          icon={<AiOutlineSearch size={18} />}
-          placeholder="Pesquisar"
-          disabled
-        />
+          icon={<AiOutlineSearch 
+          size={18} />}
+          placeholder="Pesquisar" 
+          disabled 
+          />
       </Group>
       <Box
         style={{
