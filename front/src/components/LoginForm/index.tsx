@@ -1,5 +1,3 @@
-import logo from '../../assets/logo.svg';
-import { useStyles } from './styles';
 import {
   Anchor,
   Button,
@@ -11,13 +9,15 @@ import {
   TextInput,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { Link, useNavigate } from 'react-router-dom';
-import { authLogin } from '../../services/auth';
-import { useContext } from 'react';
-import AuthContext from '../../context/AuthContext/AuthContext';
 import { showNotification } from '@mantine/notifications';
-import { notify, TypeNotificationEnum } from '../../utils/notify';
+import { useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import logo from '../../assets/logo.svg';
+import AuthContext from '../../context/AuthContext/AuthContext';
+import { authLogin } from '../../services/auth';
 import { queryClient } from '../../services/queryClient';
+import { notify, TypeNotificationEnum } from '../../utils/notify';
+import { useStyles } from './styles';
 
 export function LoginForm() {
   const { classes } = useStyles();
@@ -87,8 +87,8 @@ export function LoginForm() {
 
         <Text align="center" mt="md">
           Não tem uma conta?{' '}
-          <Anchor component={Link} to="/cadastro" weight={700} >
-          Cadastre-se
+          <Anchor component={Link} to="/cadastro" weight={700}>
+            Cadastre-se
           </Anchor>
         </Text>
       </form>

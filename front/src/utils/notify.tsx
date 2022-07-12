@@ -1,5 +1,5 @@
-import { BiErrorCircle } from 'react-icons/bi';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
+import { BiErrorCircle } from 'react-icons/bi';
 
 interface NotificationProps {
   type: TypeNotificationEnum;

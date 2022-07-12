@@ -8,13 +8,13 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
-import logo from '../../assets/logo.svg';
-import { useStyles } from './styles';
-import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from '@mantine/form';
-import { authCadastro } from '../../services/auth';
 import { showNotification } from '@mantine/notifications';
+import { Link, useNavigate } from 'react-router-dom';
+import logo from '../../assets/logo.svg';
+import { authCadastro } from '../../services/auth';
 import { notify, TypeNotificationEnum } from '../../utils/notify';
+import { useStyles } from './styles';
 
 export function CadastroForm() {
   const { classes } = useStyles();
