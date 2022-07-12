@@ -1,4 +1,4 @@
-import { Divider, Group, Paper, Skeleton, Text, Space } from '@mantine/core';
+import { Group, Paper, Skeleton, Space, Text } from '@mantine/core';
 import { ReactNode } from 'react';
 import { useStyles } from './styles';
 

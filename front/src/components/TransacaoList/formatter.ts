@@ -10,7 +10,6 @@ export function getTransacaoByTipo(
   transacoes: TransacaoResponse[],
   data: DateTime
 ) {
-  console.log(data);
   return transacoes.filter(
     (transacao) =>
       transacao.tipo === tipo &&

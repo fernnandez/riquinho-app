@@ -10,7 +10,11 @@ function App() {
   return (
     <div className="App">
       <ModalProvider>
-        <NotificationsProvider position="top-center" transitionDuration={1000} autoClose={4000}>
+        <NotificationsProvider
+          position="top-center"
+          transitionDuration={1000}
+          autoClose={4000}
+        >
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<TransacaoPage />} />

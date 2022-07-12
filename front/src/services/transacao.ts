@@ -61,7 +61,7 @@ export const findAllTransacao = async (token: string) => {
     headers: { Authorization: `Bearer ${token}` },
   });
 };
- export const findAllCategorias = async (token: string) => {
+export const findAllCategorias = async (token: string) => {
   return api.get<TransacaoResponse['categoria']>('/transacao', {
     headers: { Authorization: `Bearer ${token}` },
   });
