@@ -1,5 +1,5 @@
 import { Box, Image, Title } from '@mantine/core';
-import loginIlustration from '../../assets/login-ilustration.svg';
+import loginIlustration from '../../assets/calculator.svg';
 import { LoginForm } from '../../components/LoginForm';
 import { useStyles } from './styles';
 
@@ -15,7 +15,7 @@ export function LoginPage() {
         <Title order={1} style={{ cursor: 'default' }} mb="xl">
           Gestão financeira
         </Title>
-        <Image src={loginIlustration} />
+        <Image src={loginIlustration} width={400}/>
       </Box>
     </div>
   );

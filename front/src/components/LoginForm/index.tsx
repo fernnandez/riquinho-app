@@ -86,9 +86,9 @@ export function LoginForm() {
         </Button>
 
         <Text align="center" mt="md">
-          Não tem uma conta?
-          <Anchor component={Link} to="/cadastro" weight={700}>
-            Cadastre-se
+          Não tem uma conta?{' '}
+          <Anchor component={Link} to="/cadastro" weight={700} >
+          Cadastre-se
           </Anchor>
         </Text>
       </form>
