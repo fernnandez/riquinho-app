@@ -11,7 +11,12 @@ async function bootstrap() {
 
   app.enableCors({
     origin:
-      process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : '',
+      process.env.NODE_ENV === 'development'
+        ? 'http://localhost:3000'
+        : [
+            'https://riquinho.vercel.app',
+            'https://riquinho-rework.vercel.app/',
+          ],
   });
 
   await app.listen(process.env.PORT || 3002);
