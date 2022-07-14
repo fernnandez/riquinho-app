@@ -1,13 +1,18 @@
 import { Box } from '@mantine/core';
-import { Card } from './components/Card';
 import { MdAttachMoney } from 'react-icons/md';
+import { Card } from './components/Card';
 
-import { TbCashBanknoteOff } from 'react-icons/tb';
 import { HiOutlineCash } from 'react-icons/hi';
+import { TbCashBanknoteOff } from 'react-icons/tb';
 
 interface InfoCardsProps {
   isLoading: boolean;
-  values: { receitas: number; despesas: number; receitasEfetivadas: number; despesasEfetivadas: number } | null;
+  values: {
+    receitas: number;
+    despesas: number;
+    receitasEfetivadas: number;
+    despesasEfetivadas: number;
+  } | null;
 }
 
 export function InfoCards({ isLoading, values }: InfoCardsProps) {
@@ -30,8 +35,14 @@ export function InfoCards({ isLoading, values }: InfoCardsProps) {
       <Card
         isLoading={isLoading}
         title="Saldo"
-        value={values ? String(values.receitasEfetivadas - values.despesasEfetivadas) : null}
-        valuePrevisto={values ? String(values.receitas -values.despesas) : null}
+        value={
+          values
+            ? String(values.receitasEfetivadas - values.despesasEfetivadas)
+            : null
+        }
+        valuePrevisto={
+          values ? String(values.receitas - values.despesas) : null
+        }
         icon={<HiOutlineCash size={25} color="blue" />}
         color="blue"
       />
