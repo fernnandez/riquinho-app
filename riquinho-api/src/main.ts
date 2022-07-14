@@ -14,6 +14,6 @@ async function bootstrap() {
       process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : '',
   });
 
-  await app.listen(+process.env.API_PORT || 3002);
+  await app.listen(3002);
 }
 bootstrap();
