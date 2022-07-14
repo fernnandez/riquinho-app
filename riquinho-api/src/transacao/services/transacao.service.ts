@@ -1,19 +1,26 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { User } from '../../user/user.entity';
 import { CreateUpdateTransacaoDto } from '../dtos/create-update-transacao.dto';
 import { Transacao } from '../entities/transacao.entity';
-import { TransacaoRepository } from '../repositories/transacao.respository';
 
 @Injectable()
 export class TransacaoService {
-  constructor(private transacaoRepository: TransacaoRepository) {}
+  constructor(
+    @InjectRepository(Transacao)
+    private readonly transacaoRepository: Repository<Transacao>,
+  ) {}
 
   findAll(user: User): Promise<Transacao[]> {
-    return this.transacaoRepository.find({ where: { user } });
+    return this.transacaoRepository
+      .createQueryBuilder('transacao')
+      .where('transacao.user = :id', { id: user.id })
+      .getMany();
   }
 
   findOne(id: string): Promise<Transacao> {
-    return this.transacaoRepository.findOne(id);
+    return this.transacaoRepository.findOne({ where: { id } });
   }
 
   create(
