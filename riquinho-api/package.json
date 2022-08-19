@@ -19,6 +19,7 @@
     "schema:drop": "ts-node -r dotenv/config ./node_modules/typeorm/cli.js schema:drop",
     "migration:run": "ts-node -r dotenv/config ./node_modules/typeorm/cli.js migration:run",
     "migration:revert": "ts-node -r dotenv/config ./node_modules/typeorm/cli.js migration:revert",
+    "migration:create": "typeorm migration:create",
     "db:reload": "npm run schema:drop && npm run migration:run",
     "test:db:reload": "cross-env NODE_ENV=test npm run schema:drop && cross-env NODE_ENV=test npm run migration:run && cross-env NODE_ENV=test npm run test:fixtures",
     "test:fixtures": "cross-env NODE_ENV=test ts-node ./src/data/db.truncate.ts && fixtures -d ./test/helpers/fixtures --config ./ormconfig.js --require ts-node/register --debug",
@@ -46,9 +47,8 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.5.6",
-    "sqlite3": "^5.0.8",
-    "typeorm": "^0.3.7",
-    "typeorm-fixtures-cli": "^3.0.0"
+    "typeorm": "^0.2.45",
+    "typeorm-fixtures-cli": "^1.10.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
