@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Transacao } from '../transacao/entities/transacao.entity';
+import { Transacao } from '../../transacao/entities/transacao.entity';
 
 @Entity()
 export class User {
