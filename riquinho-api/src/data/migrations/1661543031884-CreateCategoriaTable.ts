@@ -1,20 +1,16 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableForeignKey,
+} from 'typeorm';
 
-enum TipoTransacao {
-  RECEITA = 'RECEITA',
-  DESPESA = 'DESPESA',
-}
+export class CreateCategoriaTable1661543031884 implements MigrationInterface {
+  private tableName = 'categoria';
 
-enum Status {
-  EFETIVADA = 'EFETIVADA',
-  PENDENTE = 'PENDENTE',
-}
-
-export class CreateTransacaoTable1644268019887 implements MigrationInterface {
-  private tableName = 'transacao';
+  private userFK = 'FK_CATEGORIA_ID_USER';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
     await queryRunner.createTable(
       new Table({
         name: this.tableName,
@@ -27,37 +23,28 @@ export class CreateTransacaoTable1644268019887 implements MigrationInterface {
             generationStrategy: 'uuid',
           },
           {
-            name: 'titulo',
+            name: 'nome',
             type: 'varchar',
           },
           {
-            name: 'descricao',
-            type: 'varchar',
-            isNullable: true,
-          },
-          {
-            name: 'data',
-            type: 'Date',
-          },
-          {
-            name: 'tipo',
-            type: 'enum',
-            enum: Object.values(TipoTransacao),
-          },
-          {
-            name: 'categoria',
+            name: 'icon',
             type: 'varchar',
           },
           {
-            name: 'status',
-            type: 'enum',
-            enum: Object.values(Status),
+            name: 'color',
+            type: 'varchar',
           },
           {
-            name: 'valor',
-            type: 'numeric',
-            scale: 2,
-            precision: 10,
+            name: 'is_for_receita',
+            type: 'boolean',
+          },
+          {
+            name: 'is_for_despesa',
+            type: 'boolean',
+          },
+          {
+            name: 'user_id',
+            type: 'uuid',
           },
           {
             name: 'created_at',
@@ -70,6 +57,17 @@ export class CreateTransacaoTable1644268019887 implements MigrationInterface {
             default: 'now()',
           },
         ],
+      }),
+    );
+
+    await queryRunner.createForeignKey(
+      this.tableName,
+      new TableForeignKey({
+        name: this.userFK,
+        columnNames: ['user_id'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'user',
+        onDelete: 'CASCADE',
       }),
     );
   }

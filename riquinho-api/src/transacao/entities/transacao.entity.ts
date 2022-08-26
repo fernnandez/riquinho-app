@@ -19,13 +19,6 @@ export enum Status {
   PENDENTE = 'PENDENTE',
 }
 
-export enum CategoriaTransacao {
-  ALIMENTACAO = 'ALIMENTACAO',
-  MORADIA = 'MORADIA',
-  PAGAMENTO = 'PAGAMENTO',
-  OUTROS = 'OUTROS',
-}
-
 @Entity('transacao')
 export class Transacao {
   @PrimaryGeneratedColumn('uuid')
@@ -43,8 +36,8 @@ export class Transacao {
   @Column({ type: 'enum', enum: TipoTransacao })
   tipo: TipoTransacao;
 
-  @Column({ type: 'enum', enum: CategoriaTransacao })
-  categoria: CategoriaTransacao;
+  @Column()
+  categoria: string;
 
   @Column({ type: 'enum', enum: Status })
   status: Status;

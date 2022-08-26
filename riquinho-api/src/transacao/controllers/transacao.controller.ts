@@ -49,4 +49,6 @@ export class TransacaoController {
   delete(@Param('id') id: string): Promise<void> {
     return this.transacaoService.delete(id);
   }
+
+  // TODO criar rota para trocar o status da transação
 }
