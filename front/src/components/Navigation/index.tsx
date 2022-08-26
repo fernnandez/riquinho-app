@@ -8,7 +8,7 @@ import {
 } from '@mantine/core';
 import { ReactNode, useContext } from 'react';
 import { FiLogOut, FiSettings } from 'react-icons/fi';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo.svg';
 import AuthContext from '../../context/AuthContext/AuthContext';
 import { useStyles } from './styles';
@@ -39,7 +39,9 @@ export function Navigation({ children }: NavigationProps) {
             <Group spacing={5} className={classes.links}>
               <Button
                 rightIcon={<FiSettings />}
-                variant="light"
+                variant={
+                  useLocation().pathname === '/custom' ? 'light' : 'outline'
+                }
                 onClick={() => {
                   navigate('/custom');
                 }}
@@ -48,7 +50,7 @@ export function Navigation({ children }: NavigationProps) {
               </Button>
               <Button
                 rightIcon={<FiLogOut />}
-                variant="light"
+                variant="outline"
                 onClick={handleLogout}
               >
                 Sair

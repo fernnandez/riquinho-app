@@ -18,14 +18,12 @@ function App() {
           autoClose={4000}
         >
           <BrowserRouter>
-            <Navigation>
-              <Routes>
-                <Route path="/" element={<TransacaoPage />} />
-                <Route path="/custom" element={<CustomPage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/cadastro" element={<CadastroPage />} />
-              </Routes>
-            </Navigation>
+            <Routes>
+              <Route path="/" element={<TransacaoPage />} />
+              <Route path="/custom" element={<CustomPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/cadastro" element={<CadastroPage />} />
+            </Routes>
           </BrowserRouter>
         </NotificationsProvider>
       </ModalProvider>
