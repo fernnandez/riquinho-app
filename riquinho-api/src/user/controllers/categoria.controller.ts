@@ -1,8 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Post,
+  Put,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -18,6 +21,19 @@ export class CategoriaController {
   @Post()
   async create(@Body() createCategoriaDto: CreateCategoriaDto, @Request() req) {
     return this.categoriaService.create(createCategoriaDto, req.user);
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateCategoriaDto: CreateCategoriaDto,
+  ) {
+    return this.categoriaService.update(id, updateCategoriaDto);
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: string) {
+    return this.categoriaService.delete(id);
   }
 
   @Get()

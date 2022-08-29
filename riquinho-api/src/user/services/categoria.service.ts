@@ -16,7 +16,16 @@ export class CategoriaService {
     return this.categoriaRepository.save({ ...createCategoriaDto, user });
   }
 
+  async update(id: string, updateCategoriaDto: CreateCategoriaDto) {
+    return this.categoriaRepository.update(id, updateCategoriaDto);
+  }
+
   async findAll(user: User) {
     return this.categoriaRepository.find({ where: { user } });
+  }
+
+  async delete(id: string) {
+    // TODO ajustar possiveis receitas que tenham essa categoria com outra categoria
+    return this.categoriaRepository.delete(id);
   }
 }
