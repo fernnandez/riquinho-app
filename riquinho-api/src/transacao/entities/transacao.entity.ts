@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Categoria } from '../../user/entities/categoria.entity';
 import { User } from '../../user/entities/user.entity';
 
 export enum TipoTransacao {
@@ -36,8 +37,9 @@ export class Transacao {
   @Column({ type: 'enum', enum: TipoTransacao })
   tipo: TipoTransacao;
 
-  @Column()
-  categoria: string;
+  @ManyToOne(() => Categoria, (categoria) => categoria.transacoes)
+  @JoinColumn({ name: 'categoria_id' })
+  categoria: Categoria;
 
   @Column({ type: 'enum', enum: Status })
   status: Status;

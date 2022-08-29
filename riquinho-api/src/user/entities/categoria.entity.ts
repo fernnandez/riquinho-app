@@ -4,9 +4,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Transacao } from '../../transacao/entities/transacao.entity';
 import { User } from './user.entity';
 
 @Entity()
@@ -32,6 +34,9 @@ export class Categoria {
   @ManyToOne(() => User, (user) => user.transacoes)
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  @OneToMany(() => Transacao, (transacao) => transacao.categoria)
+  transacoes: Transacao[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

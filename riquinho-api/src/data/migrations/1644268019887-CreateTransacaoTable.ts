@@ -45,10 +45,6 @@ export class CreateTransacaoTable1644268019887 implements MigrationInterface {
             enum: Object.values(TipoTransacao),
           },
           {
-            name: 'categoria',
-            type: 'varchar',
-          },
-          {
             name: 'status',
             type: 'enum',
             enum: Object.values(Status),

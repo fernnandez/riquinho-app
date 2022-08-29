@@ -7,12 +7,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, Repository } from 'typeorm';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { User } from '../entities/user.entity';
+import { CategoriaService } from './categoria.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly categoriaService: CategoriaService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -25,7 +27,11 @@ export class UserService {
     }
 
     const user = this.userRepository.create(createUserDto);
-    return this.userRepository.save(user);
+    const userCreated = await this.userRepository.save(user);
+
+    await this.categoriaService.createCategoriasDefault(userCreated);
+
+    return userCreated;
   }
 
   async findAll() {
