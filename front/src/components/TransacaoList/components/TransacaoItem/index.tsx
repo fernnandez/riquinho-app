@@ -15,22 +15,19 @@ import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
 import { TbDots } from 'react-icons/tb';
 
 import AuthContext from '../../../../context/AuthContext/AuthContext';
+import { CategoriaResponse } from '../../../../services/categoria';
 import { queryClient } from '../../../../services/queryClient';
 import { deleteTransacao } from '../../../../services/transacao';
 import { DateFormatter } from '../../../../utils/dateFormatter';
 import { notify, TypeNotificationEnum } from '../../../../utils/notify';
-import {
-  CategoriaEnum,
-  getCategoriaIcon,
-  StatusEnum,
-} from '../TransacaoModals/constants';
+import { getCategoriaIcon, StatusEnum } from '../TransacaoModals/constants';
 import { useStyles } from './styles';
 
 interface TransacaoItemProps {
   data: {
     id: string;
     titulo: string;
-    categoria: CategoriaEnum;
+    categoria: CategoriaResponse;
     status: StatusEnum;
     data: Date;
     valor: number;
@@ -111,7 +108,7 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
     >
       <Grid grow className={classes.listItem} columns={32}>
         <Grid.Col span={2}>
-          {getCategoriaIcon(data.categoria, data.status)}
+          {getCategoriaIcon(data.categoria, data.status, 60, 45)}
         </Grid.Col>
         <Grid.Col span={6}>
           <Box>

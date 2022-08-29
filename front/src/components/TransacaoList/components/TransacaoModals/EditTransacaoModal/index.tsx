@@ -27,7 +27,6 @@ import { SelectItemIcon } from '../../../../../utils/customSelect';
 import { notify, TypeNotificationEnum } from '../../../../../utils/notify';
 import {
   CategoriaSelectItems,
-  getCategoria,
   getStatus,
   getTipo,
   TipoSelectItems,
@@ -46,7 +45,7 @@ export function EditTransacaoModal({
   transacaoList,
 }: EditTransacaoModalProps) {
   const { classes } = useStyles();
-  const [Loading, setloading ] = useState(false); 
+  const [Loading, setloading] = useState(false);
   const { token } = useContext(AuthContext);
   const { id } = useModalController();
 
@@ -80,7 +79,6 @@ export function EditTransacaoModal({
       id,
       {
         ...data,
-        categoria: getCategoria(data.categoria),
         status: getStatus(data.status),
         tipo: getTipo(data.tipo),
       },
@@ -107,7 +105,8 @@ export function EditTransacaoModal({
                 : null,
           })
         );
-      }).finally(() => setloading(false));
+      })
+      .finally(() => setloading(false));
   };
 
   useEffect(() => {
@@ -117,7 +116,7 @@ export function EditTransacaoModal({
 
     if (trancasaoToEdit) {
       form.setValues({
-        categoria: trancasaoToEdit.categoria,
+        categoria: trancasaoToEdit.categoria.id,
         data: new Date(trancasaoToEdit.data),
         descricao: trancasaoToEdit.descricao,
         status: trancasaoToEdit.status,
@@ -248,7 +247,14 @@ export function EditTransacaoModal({
           >
             Cancelar
           </Button>
-          <Button type="submit" color="blue" size="md" pl="xl" pr="xl" loading={Loading}>
+          <Button
+            type="submit"
+            color="blue"
+            size="md"
+            pl="xl"
+            pr="xl"
+            loading={Loading}
+          >
             Salvar
           </Button>
         </Box>

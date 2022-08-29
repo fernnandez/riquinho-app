@@ -30,16 +30,12 @@ import { useModalController } from '../../context/ModalContext/ModalContext';
 import { deleteCategoria, findAllCategorias } from '../../services/categoria';
 import { queryClient } from '../../services/queryClient';
 import { notify, TypeNotificationEnum } from '../../utils/notify';
+import {
+  getCategoriaIcon,
+  StatusEnum,
+} from '../TransacaoList/components/TransacaoModals/constants';
 import { CreateCategoriaModal } from './components/CreateCategoriaModal';
 import { EditCategoriaModal } from './components/EditCategoriaModal';
-
-const elements = [
-  { tipo: 'RECEITA', symbol: <FiImage />, name: 'Carbon' },
-  { tipo: 'RECEITA', symbol: <FiImage />, name: 'Nitrogen' },
-  { tipo: 'RECEITA', symbol: <FiImage />, name: 'Yttrium' },
-  { tipo: 'DESPESA', symbol: <FiImage />, name: 'Barium' },
-  { tipo: 'DESPESA', symbol: <FiImage />, name: 'Cerium' },
-];
 
 export function CategoriaList() {
   const { data, isLoading, error } = useQuery(['categorias'], () => {
@@ -129,11 +125,7 @@ export function CategoriaList() {
           )}
         </Group>
       </td>
-      <td>
-        <ThemeIcon size={30} style={{ backgroundColor: element.color }}>
-          <BiCustomize size={25} />
-        </ThemeIcon>
-      </td>
+      <td>{getCategoriaIcon(element, StatusEnum.EFETIVADA, 35, 20)}</td>
       <td>
         <Group spacing="xs">
           <ActionIcon

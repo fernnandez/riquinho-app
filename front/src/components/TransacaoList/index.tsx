@@ -19,6 +19,7 @@ import { useQuery } from 'react-query';
 import AuthContext from '../../context/AuthContext/AuthContext';
 import { useModalController } from '../../context/ModalContext/ModalContext';
 import { useMonthController } from '../../context/MonthContext/MonthContext';
+import { findAllCategorias } from '../../services/categoria';
 import { findAllTransacao, TransacaoResponse } from '../../services/transacao';
 import { InfoCards } from '../InfoCards';
 import { SeletorMes } from './components/SeletorMes';
@@ -38,6 +39,10 @@ export function TransacaoList() {
 
   const { data, isLoading, error } = useQuery(['transacoes'], () => {
     return findAllTransacao(token.token);
+  });
+
+  const { data: dateCategorias } = useQuery(['categorias'], () => {
+    return findAllCategorias(token.token);
   });
 
   const [receitas, setReceitas] = useState<TransacaoResponse[]>([]);
@@ -246,10 +251,15 @@ export function TransacaoList() {
           </ScrollArea>
         </Paper>
       </Box>
-      <CreateTransacaoModal
-        isOpen={openedCreate}
-        onClose={handlersCreate.close}
-      />
+
+      {dateCategorias?.data && (
+        <CreateTransacaoModal
+          categorias={dateCategorias.data}
+          isOpen={openedCreate}
+          onClose={handlersCreate.close}
+        />
+      )}
+
       {data && data.data.length > 0 && (
         <EditTransacaoModal
           isOpen={openedEdit}
