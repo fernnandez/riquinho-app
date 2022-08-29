@@ -1,56 +1,30 @@
 import {
-  ActionIcon,
   Alert,
-  Badge,
   Box,
   Button,
   Center,
   Group,
-  ScrollArea,
-  Table,
   ThemeIcon,
   Title,
 } from '@mantine/core';
-import { AiFillDelete, AiFillEdit, AiOutlinePlus } from 'react-icons/ai';
-import { BiCategory, BiWallet } from 'react-icons/bi';
-import { FiAlertCircle, FiImage, FiUser } from 'react-icons/fi';
+import { useContext, useEffect } from 'react';
+import { BiWallet } from 'react-icons/bi';
+import { FiAlertCircle, FiUser } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
+import { CategoriaList } from '../../components/CategoriaList';
 import { Navigation } from '../../components/Navigation';
-
-const elements = [
-  { tipo: 'RECEITA', symbol: <FiImage />, name: 'Carbon' },
-  { tipo: 'RECEITA', symbol: <FiImage />, name: 'Nitrogen' },
-  { tipo: 'RECEITA', symbol: <FiImage />, name: 'Yttrium' },
-  { tipo: 'DESPESA', symbol: <FiImage />, name: 'Barium' },
-  { tipo: 'DESPESA', symbol: <FiImage />, name: 'Cerium' },
-  { tipo: 'DESPESA', symbol: <FiImage />, name: 'Cerium' },
-  { tipo: 'DESPESA', symbol: <FiImage />, name: 'Cerium' },
-  { tipo: 'DESPESA', symbol: <FiImage />, name: 'Cerium' },
-  { tipo: 'DESPESA', symbol: <FiImage />, name: 'Cerium' },
-  { tipo: 'DESPESA', symbol: <FiImage />, name: 'Cerium' },
-];
+import AuthContext from '../../context/AuthContext/AuthContext';
 
 export function CustomPage() {
-  const rows = elements.map((element) => (
-    <tr key={element.name}>
-      <td>{element.name}</td>
-      <td>
-        <Badge>{element.tipo}</Badge>
-      </td>
-      <td>
-        <ThemeIcon size={30}>{element.symbol}</ThemeIcon>
-      </td>
-      <td>
-        <Group spacing="xs">
-          <ActionIcon color="blue">
-            <AiFillEdit size={25} />
-          </ActionIcon>
-          <ActionIcon color="red">
-            <AiFillDelete size={25} />
-          </ActionIcon>
-        </Group>
-      </td>
-    </tr>
-  ));
+  const navigate = useNavigate();
+  const { token } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (!token) {
+      navigate('/login');
+    }
+  }, []);
+
   return (
     <Navigation>
       <Box style={{ width: '100%', padding: '2rem' }}>
@@ -76,32 +50,7 @@ export function CustomPage() {
           </Center>
         </Box>
 
-        <Box mb="xl">
-          <Center>
-            <Group align="center">
-              <Title order={2} align="center">
-                Categorias
-              </Title>
-              <ThemeIcon size={30}>
-                <BiCategory size={30} />
-              </ThemeIcon>
-            </Group>
-          </Center>
-          <Button leftIcon={<AiOutlinePlus />}>Adicionar Nova Categoria</Button>
-          <ScrollArea mt="xl" style={{ height: '300px' }}>
-            <Table>
-              <thead>
-                <tr>
-                  <th>Nome</th>
-                  <th>Tipo</th>
-                  <th>Icon</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody>{rows}</tbody>
-            </Table>
-          </ScrollArea>
-        </Box>
+        <CategoriaList />
 
         <Box>
           <Center>

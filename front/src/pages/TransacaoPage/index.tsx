@@ -14,6 +14,7 @@ export function TransacaoPage() {
       navigate('/login');
     }
   }, []);
+
   return (
     <Navigation>
       <MonthProvider>
