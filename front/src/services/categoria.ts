@@ -28,8 +28,29 @@ export const createCategoria = async (data: CategoriaType, token: string) => {
   );
 };
 
+export const updateCategoria = async (
+  idCategoria: string,
+  data: CategoriaType,
+  token: string
+) => {
+  console.log(token);
+  await api.put(
+    `/categoria/${idCategoria}`,
+    { ...data },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+};
+
 export const findAllCategorias = async (token: string) => {
   return api.get<CategoriaResponse[]>('/categoria', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
+
+export const deleteCategoria = async (idCategoria: string, token: string) => {
+  await api.delete(`/categoria/${idCategoria}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 };

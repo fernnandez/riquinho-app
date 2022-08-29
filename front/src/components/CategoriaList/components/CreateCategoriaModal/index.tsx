@@ -19,6 +19,7 @@ import { useContext, useState } from 'react';
 import { BiCategory, BiCustomize } from 'react-icons/bi';
 import AuthContext from '../../../../context/AuthContext/AuthContext';
 import { createCategoria } from '../../../../services/categoria';
+import { queryClient } from '../../../../services/queryClient';
 import { notify, TypeNotificationEnum } from '../../../../utils/notify';
 import { useStyles } from '../styles';
 
@@ -51,10 +52,10 @@ export function CreateCategoriaModal({
     } else {
       createCategoria(data, token.token)
         .then(() => {
-          // queryClient.invalidateQueries('transacoes').then(() => {
-          showNotification(notify({ type: TypeNotificationEnum.SUCCESS }));
-          handleClose();
-          // });
+          queryClient.invalidateQueries('categorias').then(() => {
+            showNotification(notify({ type: TypeNotificationEnum.SUCCESS }));
+            handleClose();
+          });
         })
         .catch((error: any) => {
           showNotification(
@@ -146,7 +147,10 @@ export function CreateCategoriaModal({
             <Box>
               <Tooltip label="não editavel">
                 <Text>Icone </Text>
-                <ThemeIcon mt="xs">
+                <ThemeIcon
+                  mt="xs"
+                  style={{ backgroundColor: form.getInputProps('color').value }}
+                >
                   <BiCustomize />
                 </ThemeIcon>
               </Tooltip>
