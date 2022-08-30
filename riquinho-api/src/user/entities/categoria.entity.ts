@@ -31,6 +31,9 @@ export class Categoria {
   @Column({ name: 'is_for_despesa' })
   isForDespesa: boolean;
 
+  @Column({ name: 'is_default' })
+  isDefault: boolean;
+
   @ManyToOne(() => User, (user) => user.transacoes)
   @JoinColumn({ name: 'user_id' })
   user: User;

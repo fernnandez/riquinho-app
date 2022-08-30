@@ -43,6 +43,11 @@ export class CreateCategoriaTable1661543031884 implements MigrationInterface {
             type: 'boolean',
           },
           {
+            name: 'is_default',
+            type: 'boolean',
+            default: false,
+          },
+          {
             name: 'user_id',
             type: 'uuid',
           },
