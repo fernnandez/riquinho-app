@@ -14,7 +14,7 @@ import { DatePicker } from '@mantine/dates';
 
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { MdAttachMoney } from 'react-icons/md';
 import { TbCashBanknoteOff } from 'react-icons/tb';
 import AuthContext from '../../../../../context/AuthContext/AuthContext';
@@ -101,6 +101,11 @@ export function CreateTransacaoModal({
     onClose();
   };
 
+  // Existem categorias difentes em cada tipo e isso garante que o form nao quebre
+  useEffect(() => {
+    form.setFieldValue('categoria', '');
+  }, [form.getInputProps('tipo').value]);
+
   return (
     <Modal
       centered
@@ -179,6 +184,7 @@ export function CreateTransacaoModal({
           </Grid.Col>
           <Grid.Col span={6}>
             <Select
+              searchable
               className={classes.selectInput}
               size="md"
               mb="md"

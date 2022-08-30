@@ -18,6 +18,7 @@ import { MdAttachMoney } from 'react-icons/md';
 import { TbCashBanknoteOff } from 'react-icons/tb';
 import AuthContext from '../../../../../context/AuthContext/AuthContext';
 import { useModalController } from '../../../../../context/ModalContext/ModalContext';
+import { CategoriaResponse } from '../../../../../services/categoria';
 import { queryClient } from '../../../../../services/queryClient';
 import {
   TransacaoResponse,
@@ -26,10 +27,10 @@ import {
 import { SelectItemIcon } from '../../../../../utils/customSelect';
 import { notify, TypeNotificationEnum } from '../../../../../utils/notify';
 import {
-  CategoriaSelectItems,
   getStatus,
   getTipo,
   TipoSelectItems,
+  getCategoriaSelectList,
 } from '../constants';
 import { useStyles } from '../styles';
 
@@ -37,12 +38,14 @@ interface EditTransacaoModalProps {
   isOpen: boolean;
   onClose: () => void;
   transacaoList: TransacaoResponse[];
+  categorias: CategoriaResponse[];
 }
 
 export function EditTransacaoModal({
   isOpen,
   onClose,
   transacaoList,
+  categorias,
 }: EditTransacaoModalProps) {
   const { classes } = useStyles();
   const [Loading, setloading] = useState(false);
@@ -127,6 +130,11 @@ export function EditTransacaoModal({
     }
   }, [isOpen]);
 
+  // Existem categorias difentes em cada tipo e isso garante que o form nao quebre
+  useEffect(() => {
+    form.setFieldValue('categoria', '');
+  }, [form.getInputProps('tipo').value]);
+
   return (
     <Modal
       centered
@@ -148,6 +156,7 @@ export function EditTransacaoModal({
                 form.getInputProps('tipo').value === 'RECEITA' ? 'green' : 'red'
               }
               {...form.getInputProps('tipo')}
+              onChange={() => form.setFieldValue('categoria', '')}
             />
           </Box>
         ) : (
@@ -205,13 +214,22 @@ export function EditTransacaoModal({
           </Grid.Col>
           <Grid.Col span={6}>
             <Select
+              searchable
               className={classes.selectInput}
               size="md"
               mb="md"
               label="Categoria"
               placeholder="Categoria"
               itemComponent={SelectItemIcon}
-              data={CategoriaSelectItems}
+              data={
+                form.getInputProps('tipo').value === 'RECEITA'
+                  ? getCategoriaSelectList(
+                      categorias.filter((el) => el.isForReceita)
+                    )
+                  : getCategoriaSelectList(
+                      categorias.filter((el) => el.isForDespesa)
+                    )
+              }
               {...form.getInputProps('categoria')}
             />
             <DatePicker

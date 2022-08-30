@@ -28,6 +28,8 @@ export function CustomPage() {
   return (
     <Navigation>
       <Box style={{ width: '100%', padding: '2rem' }}>
+        <CategoriaList />
+
         <Box mb="xl">
           <Center>
             <Group align="center">
@@ -49,8 +51,6 @@ export function CustomPage() {
             </Group>
           </Center>
         </Box>
-
-        <CategoriaList />
 
         <Box>
           <Center>

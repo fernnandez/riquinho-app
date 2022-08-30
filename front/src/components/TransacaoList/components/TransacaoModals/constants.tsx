@@ -1,16 +1,13 @@
 import { MdAttachMoney } from 'react-icons/md';
 import { TbCashBanknoteOff } from 'react-icons/tb';
 
-import { TbNorthStar } from 'react-icons/tb';
-
 import { BiBuildingHouse, BiCategory } from 'react-icons/bi';
 import { BsStars } from 'react-icons/bs';
 import { GiMoneyStack } from 'react-icons/gi';
 import { IoFastFoodSharp } from 'react-icons/io5';
 
-import { ActionIcon, ThemeIcon } from '@mantine/core';
+import { ThemeIcon } from '@mantine/core';
 import { CategoriaResponse } from '../../../../services/categoria';
-import { ReactNode } from 'react';
 
 export enum CategoriaEnum {
   ALIMENTACAO = 'ALIMENTACAO',
@@ -57,7 +54,7 @@ export function getCategoriaSelectList(categorias: CategoriaResponse[]) {
     return {
       value: categoria.id,
       label: categoria.nome,
-      icon: getCategoriaIconSelect(categoria.icon, categoria.color),
+      icon: getCategoriaIcon(categoria, StatusEnum.EFETIVADA, 35, 25),
     };
   });
 }
@@ -140,36 +137,4 @@ export function getCategoriaIcon(
       </ThemeIcon>
     ),
   }[categoria.icon];
-}
-
-export function getCategoriaIconSelect(value: string, color: string) {
-  return {
-    ALIMENTACAO: (
-      <ThemeIcon color={color} radius="xl" style={{ cursor: 'default' }}>
-        <IoFastFoodSharp />
-      </ThemeIcon>
-    ),
-    MORADIA: (
-      <ThemeIcon color={color} radius="xl" style={{ cursor: 'default' }}>
-        <BiBuildingHouse />
-      </ThemeIcon>
-    ),
-
-    PAGAMENTO: (
-      <ThemeIcon color={color} radius="xl" style={{ cursor: 'default' }}>
-        <GiMoneyStack />
-      </ThemeIcon>
-    ),
-    OUTROS: (
-      <ThemeIcon color={color} radius="xl" style={{ cursor: 'default' }}>
-        <BsStars />
-      </ThemeIcon>
-    ),
-
-    CUSTOM: (
-      <ThemeIcon color={color} radius="xl" style={{ cursor: 'default' }}>
-        <BiCategory />
-      </ThemeIcon>
-    ),
-  }[value];
 }

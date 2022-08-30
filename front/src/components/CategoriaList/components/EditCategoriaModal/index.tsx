@@ -21,14 +21,13 @@ import AuthContext from '../../../../context/AuthContext/AuthContext';
 import { useModalController } from '../../../../context/ModalContext/ModalContext';
 import {
   CategoriaResponse,
-  createCategoria,
   updateCategoria,
 } from '../../../../services/categoria';
 import { queryClient } from '../../../../services/queryClient';
 import { notify, TypeNotificationEnum } from '../../../../utils/notify';
 import { useStyles } from '../styles';
 
-interface CreateCategoriaModalProps {
+interface EditCategoriaModalProps {
   isOpen: boolean;
   onClose: () => void;
   categoriaList: CategoriaResponse[];
@@ -38,7 +37,7 @@ export function EditCategoriaModal({
   isOpen,
   onClose,
   categoriaList,
-}: CreateCategoriaModalProps) {
+}: EditCategoriaModalProps) {
   const { classes } = useStyles();
   const { token } = useContext(AuthContext);
   const [Loading, setloading] = useState(false);
@@ -122,7 +121,7 @@ export function EditCategoriaModal({
           <ActionIcon color="blue" variant="outline" size={40}>
             <BiCategory size={40} />
           </ActionIcon>
-          <Title order={3}>Cadastro de Categoria</Title>
+          <Title order={3}>Edição de Categoria</Title>
         </Box>
       }
     >

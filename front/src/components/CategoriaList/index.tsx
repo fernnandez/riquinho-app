@@ -125,7 +125,7 @@ export function CategoriaList() {
           )}
         </Group>
       </td>
-      <td>{getCategoriaIcon(element, StatusEnum.EFETIVADA, 35, 20)}</td>
+      <td>{getCategoriaIcon(element, StatusEnum.EFETIVADA, 35, 25)}</td>
       <td>
         <Group spacing="xs">
           <ActionIcon

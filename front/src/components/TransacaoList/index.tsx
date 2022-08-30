@@ -252,20 +252,23 @@ export function TransacaoList() {
         </Paper>
       </Box>
 
+      {/* Modals */}
       {dateCategorias?.data && (
-        <CreateTransacaoModal
-          categorias={dateCategorias.data}
-          isOpen={openedCreate}
-          onClose={handlersCreate.close}
-        />
-      )}
-
-      {data && data.data.length > 0 && (
-        <EditTransacaoModal
-          isOpen={openedEdit}
-          onClose={handlersEdit.close}
-          transacaoList={data.data}
-        />
+        <>
+          <CreateTransacaoModal
+            categorias={dateCategorias.data}
+            isOpen={openedCreate}
+            onClose={handlersCreate.close}
+          />
+          {data && data.data.length > 0 && (
+            <EditTransacaoModal
+              categorias={dateCategorias.data}
+              isOpen={openedEdit}
+              onClose={handlersEdit.close}
+              transacaoList={data.data}
+            />
+          )}
+        </>
       )}
     </Box>
   );
