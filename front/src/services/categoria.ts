@@ -15,6 +15,7 @@ export interface CategoriaResponse {
   color: string;
   isForReceita: boolean;
   isForDespesa: boolean;
+  isDefault: boolean;
 }
 
 export const createCategoria = async (data: CategoriaType, token: string) => {

@@ -129,6 +129,7 @@ export function CategoriaList() {
       <td>
         <Group spacing="xs">
           <ActionIcon
+            disabled={element.isDefault}
             color="blue"
             onClick={() => {
               handleOpenEditModal(element.id);
@@ -137,6 +138,7 @@ export function CategoriaList() {
             <AiFillEdit size={25} />
           </ActionIcon>
           <ActionIcon
+            disabled={element.isDefault}
             color="red"
             onClick={() => {
               openConfirmDialog(element.id);
