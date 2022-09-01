@@ -137,6 +137,7 @@ export function EditCategoriaModal({
               placeholder="Nome"
               size="md"
               mb="md"
+              maxLength={30}
               className={classes.textInput}
               {...form.getInputProps('nome')}
             />

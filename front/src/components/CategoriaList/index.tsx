@@ -152,17 +152,15 @@ export function CategoriaList() {
   ));
 
   return (
-    <Box mb="xl">
-      <Center>
-        <Group align="center">
-          <Title order={2} align="center">
-            Categorias
-          </Title>
-          <ThemeIcon size={30}>
-            <BiCategory size={30} />
-          </ThemeIcon>
-        </Group>
-      </Center>
+    <Box>
+      <Group align="center" mb="2rem">
+        <Title order={2} style={{ cursor: 'default' }}>
+          Categorias
+        </Title>
+        <ThemeIcon size={30}>
+          <BiCategory size={30} />
+        </ThemeIcon>
+      </Group>
       <Button
         leftIcon={<AiOutlinePlus />}
         onClick={() => {
@@ -171,13 +169,13 @@ export function CategoriaList() {
       >
         Adicionar Nova Categoria
       </Button>
-      <ScrollArea mt="xl" style={{ height: '300px' }}>
+      <ScrollArea mt="xl" style={{ height: '400px', backgroundColor: 'white' }}>
         {isLoading ? (
           <Center>
             <Loader />
           </Center>
         ) : (
-          <Table>
+          <Table verticalSpacing="xs" fontSize="md">
             <thead>
               <tr>
                 <th>Nome</th>

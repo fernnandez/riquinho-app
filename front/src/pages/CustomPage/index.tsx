@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Center,
+  Divider,
   Group,
   ThemeIcon,
   Title,
@@ -27,20 +28,20 @@ export function CustomPage() {
 
   return (
     <Navigation>
-      <Box style={{ width: '100%', padding: '2rem' }}>
+      <Box style={{ width: '100%', padding: '1rem' }}>
         <CategoriaList />
 
-        <Box mb="xl">
-          <Center>
-            <Group align="center">
-              <Title order={2} align="center">
-                Perfil
-              </Title>
-              <ThemeIcon size={30}>
-                <FiUser size={30} />
-              </ThemeIcon>
-            </Group>
-          </Center>
+        <Divider mt="2rem" size="md" color="blue" />
+
+        <Box mt="2rem">
+          <Group align="center">
+            <Title order={2} style={{ cursor: 'default' }}>
+              Perfil
+            </Title>
+            <ThemeIcon size={30}>
+              <FiUser size={30} />
+            </ThemeIcon>
+          </Group>
           <Center mt="xl">
             <Group>
               <Button>Ajustar Nome de Usuario</Button>
@@ -52,26 +53,27 @@ export function CustomPage() {
           </Center>
         </Box>
 
-        <Box>
-          <Center>
-            <Group align="center">
-              <Title order={2} align="center">
-                Contas | Carteiras
-              </Title>
-              <ThemeIcon size={30}>
-                <BiWallet size={30} />
-              </ThemeIcon>
-            </Group>
-          </Center>
+        <Divider mt="2rem" size="md" color="blue" />
 
-          <Center mt="xl">
+        <Box mt="2rem">
+          <Group align="center">
+            <Title order={2} style={{ cursor: 'default' }}>
+              Contas | Carteiras
+            </Title>
+            <ThemeIcon size={30}>
+              <BiWallet size={30} />
+            </ThemeIcon>
+          </Group>
+
+          <Center>
             <Alert
               icon={<FiAlertCircle size={16} />}
               title="Em breve!"
               variant="filled"
               style={{ width: '500px' }}
             >
-              Estamos trabalhando na funcionalidade de contas
+              Estamos trabalhando na funcionalidade de contas para melhorar sua
+              experiência na nossa aplicação
             </Alert>
           </Center>
         </Box>

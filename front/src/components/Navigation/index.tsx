@@ -7,6 +7,8 @@ import {
   Image,
 } from '@mantine/core';
 import { ReactNode, useContext } from 'react';
+import { AiFillWallet } from 'react-icons/ai';
+import { BiWallet } from 'react-icons/bi';
 import { FiLogOut, FiSettings } from 'react-icons/fi';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo.svg';
@@ -31,12 +33,21 @@ export function Navigation({ children }: NavigationProps) {
   return (
     <AppShell
       header={
-        <Header height={60}>
+        <Header height={80} p="1rem">
           <Container className={classes.header}>
             <Link to="/">
               <Image src={logo} width={200} height={50} />
             </Link>
             <Group spacing={5} className={classes.links}>
+              <Button
+                rightIcon={<BiWallet />}
+                variant={useLocation().pathname === '/' ? 'light' : 'outline'}
+                onClick={() => {
+                  navigate('/');
+                }}
+              >
+                Carteira
+              </Button>
               <Button
                 rightIcon={<FiSettings />}
                 variant={

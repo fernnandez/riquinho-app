@@ -22,6 +22,7 @@ export function InfoCards({ isLoading, values }: InfoCardsProps) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-evenly',
+        marginTop: '2rem',
       }}
     >
       <Card
