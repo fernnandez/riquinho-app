@@ -35,9 +35,19 @@ export function Navigation({ children }: NavigationProps) {
       header={
         <Header height={80} p="1rem">
           <Container className={classes.header}>
-            <Link to="/">
-              <Image src={logo} width={200} height={50} />
-            </Link>
+            <Image
+              src={logo}
+              width={200}
+              height={50}
+              sx={{
+                '&:hover': {
+                  cursor: 'pointer',
+                },
+              }}
+              onClick={() => {
+                navigate('/');
+              }}
+            />
             <Group spacing={5} className={classes.links}>
               <Button
                 rightIcon={<BiWallet />}

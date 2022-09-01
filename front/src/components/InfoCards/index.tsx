@@ -23,6 +23,7 @@ export function InfoCards({ isLoading, values }: InfoCardsProps) {
         alignItems: 'center',
         justifyContent: 'space-evenly',
         marginTop: '2rem',
+        gap: '5rem',
       }}
     >
       <Card
