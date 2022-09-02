@@ -156,7 +156,6 @@ export function EditTransacaoModal({
                 form.getInputProps('tipo').value === 'RECEITA' ? 'green' : 'red'
               }
               {...form.getInputProps('tipo')}
-              onChange={() => form.setFieldValue('categoria', '')}
             />
           </Box>
         ) : (

@@ -112,7 +112,7 @@ export function EditCategoriaModal({
   return (
     <Modal
       opened={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       size="lg"
       padding="lg"
       centered
@@ -184,7 +184,7 @@ export function EditCategoriaModal({
         </Grid>
         <Box className={classes.formButtonsCreate}>
           <Button
-            onClick={onClose}
+            onClick={handleClose}
             color="red"
             size="md"
             variant="subtle"
