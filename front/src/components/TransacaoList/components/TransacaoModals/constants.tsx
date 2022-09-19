@@ -1,14 +1,13 @@
 import { MdAttachMoney } from 'react-icons/md';
 import { TbCashBanknoteOff } from 'react-icons/tb';
 
-import { TbNorthStar } from 'react-icons/tb';
-
-import { BiBuildingHouse } from 'react-icons/bi';
+import { BiBuildingHouse, BiCategory } from 'react-icons/bi';
 import { BsStars } from 'react-icons/bs';
 import { GiMoneyStack } from 'react-icons/gi';
 import { IoFastFoodSharp } from 'react-icons/io5';
 
-import { ActionIcon } from '@mantine/core';
+import { ThemeIcon } from '@mantine/core';
+import { CategoriaResponse } from '../../../../services/categoria';
 
 export enum CategoriaEnum {
   ALIMENTACAO = 'ALIMENTACAO',
@@ -26,29 +25,6 @@ export enum StatusEnum {
   EFETIVADA = 'EFETIVADA',
   PENDENTE = 'PENDENTE',
 }
-
-export const CategoriaSelectItems = [
-  {
-    value: 'ALIMENTACAO',
-    label: 'Alimentação',
-    icon: <IoFastFoodSharp />,
-  },
-  {
-    value: 'PAGAMENTO',
-    label: 'Pagamentos',
-    icon: <GiMoneyStack />,
-  },
-  {
-    value: 'MORADIA',
-    label: 'Modaria',
-    icon: <BiBuildingHouse />,
-  },
-  {
-    value: 'OUTROS',
-    label: 'Outros',
-    icon: <TbNorthStar />,
-  },
-];
 
 export const TipoSelectItems = [
   { value: 'RECEITA', label: 'Receita', icon: <MdAttachMoney /> },
@@ -73,60 +49,92 @@ export function getTipo(value: string) {
   }[value];
 }
 
-export function getCategoria(value: string) {
-  return {
-    ALIMENTACAO: CategoriaEnum.ALIMENTACAO,
-    MORADIA: CategoriaEnum.MORADIA,
-    PAGAMENTO: CategoriaEnum.PAGAMENTO,
-    OUTROS: CategoriaEnum.OUTROS,
-  }[value];
+export function getCategoriaSelectList(categorias: CategoriaResponse[]) {
+  return categorias.map((categoria) => {
+    return {
+      value: categoria.id,
+      label: categoria.nome,
+      icon: getCategoriaIcon(categoria, StatusEnum.EFETIVADA, 35, 25),
+    };
+  });
 }
 
-export function getCategoriaIcon(categoria: string, isActive: StatusEnum) {
+export function getCategoriaIcon(
+  categoria: CategoriaResponse,
+  isActive: StatusEnum,
+  sizeBg: number,
+  sizeIcon: number
+) {
   return {
     ALIMENTACAO: (
-      <ActionIcon
-        color="red"
-        size={60}
+      <ThemeIcon
+        size={sizeBg}
         radius="xl"
-        variant={isActive === StatusEnum.EFETIVADA ? 'outline' : 'default'}
-        style={{ cursor: 'default' }}
+        variant={isActive === StatusEnum.EFETIVADA ? 'outline' : 'light'}
+        style={{
+          cursor: 'default',
+          backgroundColor: categoria.color,
+          border: 'none',
+        }}
       >
-        <IoFastFoodSharp size={45} />
-      </ActionIcon>
+        <IoFastFoodSharp size={sizeIcon} color="white" />
+      </ThemeIcon>
     ),
     MORADIA: (
-      <ActionIcon
-        color="blue"
-        size={60}
+      <ThemeIcon
+        size={sizeBg}
         radius="xl"
-        variant={isActive ? 'outline' : 'default'}
-        style={{ cursor: 'default' }}
+        variant={isActive ? 'outline' : 'filled'}
+        style={{
+          cursor: 'default',
+          backgroundColor: categoria.color,
+          border: 'none',
+        }}
       >
-        <BiBuildingHouse size={45} />
-      </ActionIcon>
+        <BiBuildingHouse size={sizeIcon} color="white" />
+      </ThemeIcon>
     ),
     PAGAMENTO: (
-      <ActionIcon
-        color="green"
-        size={60}
+      <ThemeIcon
+        size={sizeBg}
         radius="xl"
-        variant={isActive ? 'outline' : 'default'}
-        style={{ cursor: 'default' }}
+        variant={isActive ? 'outline' : 'filled'}
+        style={{
+          cursor: 'default',
+          backgroundColor: categoria.color,
+          border: 'none',
+        }}
       >
-        <GiMoneyStack size={45} />
-      </ActionIcon>
+        <GiMoneyStack size={sizeIcon} color="white" />
+      </ThemeIcon>
     ),
     OUTROS: (
-      <ActionIcon
-        color="gray"
-        size={60}
+      <ThemeIcon
+        size={sizeBg}
         radius="xl"
-        variant={isActive ? 'outline' : 'default'}
-        style={{ cursor: 'default' }}
+        variant={isActive ? 'outline' : 'filled'}
+        style={{
+          cursor: 'default',
+          backgroundColor: categoria.color,
+          border: 'none',
+        }}
       >
-        <BsStars size={45} />
-      </ActionIcon>
+        <BsStars size={sizeIcon} color="white" />
+      </ThemeIcon>
     ),
-  }[categoria];
+    CUSTOM: (
+      <ThemeIcon
+        size={sizeBg}
+        radius="xl"
+        variant={isActive ? 'outline' : 'filled'}
+        style={{
+          cursor: 'default',
+          backgroundColor: categoria.color,
+          border: 'none',
+        }}
+      >
+        <BiCategory size={sizeIcon} color="white" />
+      </ThemeIcon>
+    ),
+  }[categoria.icon];
 }

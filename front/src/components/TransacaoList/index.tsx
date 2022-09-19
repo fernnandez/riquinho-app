@@ -2,11 +2,15 @@ import {
   Alert,
   Box,
   Button,
+  Center,
+  Divider,
   Group,
   Loader,
   Paper,
   ScrollArea,
   TextInput,
+  ThemeIcon,
+  Title,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useContext, useEffect, useState } from 'react';
@@ -15,10 +19,13 @@ import {
   AiOutlinePlus,
   AiOutlineSearch,
 } from 'react-icons/ai';
+import { BsGraphUp } from 'react-icons/bs';
+import { GiMoneyStack } from 'react-icons/gi';
 import { useQuery } from 'react-query';
 import AuthContext from '../../context/AuthContext/AuthContext';
 import { useModalController } from '../../context/ModalContext/ModalContext';
 import { useMonthController } from '../../context/MonthContext/MonthContext';
+import { findAllCategorias } from '../../services/categoria';
 import { findAllTransacao, TransacaoResponse } from '../../services/transacao';
 import { InfoCards } from '../InfoCards';
 import { SeletorMes } from './components/SeletorMes';
@@ -38,6 +45,10 @@ export function TransacaoList() {
 
   const { data, isLoading, error } = useQuery(['transacoes'], () => {
     return findAllTransacao(token.token);
+  });
+
+  const { data: dateCategorias } = useQuery(['categorias'], () => {
+    return findAllCategorias(token.token);
   });
 
   const [receitas, setReceitas] = useState<TransacaoResponse[]>([]);
@@ -66,19 +77,13 @@ export function TransacaoList() {
     <Box
       style={{
         minWidth: '100%',
+        padding: '1rem',
       }}
     >
-      <InfoCards
-        isLoading={isLoading}
-        values={
-          data && data.data.length > 0 ? getValues(data.data, date) : null
-        }
-      />
       <Group
         style={{
           justifyContent: 'space-between',
           marginBottom: '2rem',
-          marginTop: '2rem',
         }}
       >
         <Button
@@ -95,12 +100,39 @@ export function TransacaoList() {
           disabled
         />
       </Group>
+
+      <Divider mt="2rem" size="md" color="blue" />
+
+      <Group align="center" mt="2rem">
+        <Title order={2} align="center">
+          Resumo
+        </Title>
+        <ThemeIcon size={30}>
+          <BsGraphUp size={30} />
+        </ThemeIcon>
+      </Group>
+      <InfoCards
+        isLoading={isLoading}
+        values={
+          data && data.data.length > 0 ? getValues(data.data, date) : null
+        }
+      />
+
+      <Group align="center" mt="2rem">
+        <Title order={2} align="center">
+          Transações
+        </Title>
+        <ThemeIcon size={30}>
+          <GiMoneyStack size={30} />
+        </ThemeIcon>
+      </Group>
       <Box
         style={{
           minWidth: '100%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          marginTop: '2rem',
           gap: '2rem',
         }}
       >
@@ -246,16 +278,24 @@ export function TransacaoList() {
           </ScrollArea>
         </Paper>
       </Box>
-      <CreateTransacaoModal
-        isOpen={openedCreate}
-        onClose={handlersCreate.close}
-      />
-      {data && data.data.length > 0 && (
-        <EditTransacaoModal
-          isOpen={openedEdit}
-          onClose={handlersEdit.close}
-          transacaoList={data.data}
-        />
+
+      {/* Modals */}
+      {dateCategorias?.data && (
+        <>
+          <CreateTransacaoModal
+            categorias={dateCategorias.data}
+            isOpen={openedCreate}
+            onClose={handlersCreate.close}
+          />
+          {data && data.data.length > 0 && (
+            <EditTransacaoModal
+              categorias={dateCategorias.data}
+              isOpen={openedEdit}
+              onClose={handlersEdit.close}
+              transacaoList={data.data}
+            />
+          )}
+        </>
       )}
     </Box>
   );

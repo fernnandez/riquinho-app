@@ -8,7 +8,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Transacao } from '../transacao/entities/transacao.entity';
+import { Transacao } from '../../transacao/entities/transacao.entity';
+import { Categoria } from './categoria.entity';
 
 @Entity()
 export class User {
@@ -26,6 +27,9 @@ export class User {
 
   @OneToMany(() => Transacao, (transacao) => transacao.user)
   transacoes: Transacao[];
+
+  @OneToMany(() => Categoria, (categoria) => categoria.user)
+  categorias: Categoria[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

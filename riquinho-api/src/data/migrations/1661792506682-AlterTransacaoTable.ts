@@ -5,20 +5,26 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export class AlterTransacaoTable1656933638145 implements MigrationInterface {
+export class AlterTransacaoTable1661792506682 implements MigrationInterface {
   private tableName = 'transacao';
 
   private userFK = 'FK_TRANSACAO_ID_USER';
 
+  private categoriaFK = 'FK_TRANSACAO_ID_CATEGORIA';
+
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.addColumn(
-      this.tableName,
+    await queryRunner.addColumns(this.tableName, [
       new TableColumn({
         name: 'user_id',
         type: 'uuid',
         isNullable: false,
       }),
-    );
+      new TableColumn({
+        name: 'categoria_id',
+        type: 'uuid',
+        isNullable: false,
+      }),
+    ]);
 
     await queryRunner.createForeignKey(
       this.tableName,
@@ -30,11 +36,26 @@ export class AlterTransacaoTable1656933638145 implements MigrationInterface {
         onDelete: 'CASCADE',
       }),
     );
+
+    await queryRunner.createForeignKey(
+      this.tableName,
+      new TableForeignKey({
+        name: this.categoriaFK,
+        columnNames: ['categoria_id'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'categoria',
+        onDelete: 'CASCADE',
+      }),
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropForeignKey(this.tableName, this.userFK);
 
+    await queryRunner.dropForeignKey(this.tableName, this.categoriaFK);
+
     await queryRunner.dropColumn(this.tableName, 'user_id');
+
+    await queryRunner.dropColumn(this.tableName, 'categoria_id');
   }
 }

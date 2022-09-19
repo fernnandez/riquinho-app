@@ -4,6 +4,7 @@ import { forwardRef, ReactNode } from 'react';
 interface ItemProps extends React.ComponentPropsWithoutRef<'div'> {
   icon: ReactNode;
   label: string;
+  id: string;
 }
 
 export const SelectItemIcon = forwardRef<HTMLDivElement, ItemProps>(
@@ -11,7 +12,6 @@ export const SelectItemIcon = forwardRef<HTMLDivElement, ItemProps>(
     <div ref={ref} {...others}>
       <Group noWrap>
         {icon}
-
         <Text size="sm">{label}</Text>
       </Group>
     </div>

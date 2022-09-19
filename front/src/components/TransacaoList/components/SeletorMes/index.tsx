@@ -1,4 +1,4 @@
-import { ActionIcon, Text } from '@mantine/core';
+import { ActionIcon, Text, Title } from '@mantine/core';
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
 import { useMonthController } from '../../../../context/MonthContext/MonthContext';
 
@@ -38,9 +38,12 @@ export function SeletorMes() {
       >
         <BsChevronLeft size={25} />
       </ActionIcon>
-      <Text size="xl" color="blue">
+      <Title
+        order={2}
+        sx={(theme) => ({ color: theme.colors.blue, cursor: 'default' })}
+      >
         {MonthName[date.month]} - {date.year}
-      </Text>
+      </Title>
       <ActionIcon
         onClick={handlePlusDate}
         size={35}

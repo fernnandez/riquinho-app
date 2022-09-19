@@ -29,6 +29,7 @@ export function Card({
         cursor: 'default',
         borderColor: color,
         minWidth: 250,
+        width: '100%',
         minHeight: 150,
       }}
     >

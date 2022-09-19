@@ -18,6 +18,7 @@ import { MdAttachMoney } from 'react-icons/md';
 import { TbCashBanknoteOff } from 'react-icons/tb';
 import AuthContext from '../../../../../context/AuthContext/AuthContext';
 import { useModalController } from '../../../../../context/ModalContext/ModalContext';
+import { CategoriaResponse } from '../../../../../services/categoria';
 import { queryClient } from '../../../../../services/queryClient';
 import {
   TransacaoResponse,
@@ -26,11 +27,10 @@ import {
 import { SelectItemIcon } from '../../../../../utils/customSelect';
 import { notify, TypeNotificationEnum } from '../../../../../utils/notify';
 import {
-  CategoriaSelectItems,
-  getCategoria,
   getStatus,
   getTipo,
   TipoSelectItems,
+  getCategoriaSelectList,
 } from '../constants';
 import { useStyles } from '../styles';
 
@@ -38,15 +38,17 @@ interface EditTransacaoModalProps {
   isOpen: boolean;
   onClose: () => void;
   transacaoList: TransacaoResponse[];
+  categorias: CategoriaResponse[];
 }
 
 export function EditTransacaoModal({
   isOpen,
   onClose,
   transacaoList,
+  categorias,
 }: EditTransacaoModalProps) {
   const { classes } = useStyles();
-  const [Loading, setloading ] = useState(false); 
+  const [Loading, setloading] = useState(false);
   const { token } = useContext(AuthContext);
   const { id } = useModalController();
 
@@ -80,7 +82,6 @@ export function EditTransacaoModal({
       id,
       {
         ...data,
-        categoria: getCategoria(data.categoria),
         status: getStatus(data.status),
         tipo: getTipo(data.tipo),
       },
@@ -107,7 +108,8 @@ export function EditTransacaoModal({
                 : null,
           })
         );
-      }).finally(() => setloading(false));
+      })
+      .finally(() => setloading(false));
   };
 
   useEffect(() => {
@@ -117,7 +119,7 @@ export function EditTransacaoModal({
 
     if (trancasaoToEdit) {
       form.setValues({
-        categoria: trancasaoToEdit.categoria,
+        categoria: trancasaoToEdit.categoria.id,
         data: new Date(trancasaoToEdit.data),
         descricao: trancasaoToEdit.descricao,
         status: trancasaoToEdit.status,
@@ -127,6 +129,11 @@ export function EditTransacaoModal({
       });
     }
   }, [isOpen]);
+
+  // Existem categorias difentes em cada tipo e isso garante que o form nao quebre
+  useEffect(() => {
+    form.setFieldValue('categoria', '');
+  }, [form.getInputProps('tipo').value]);
 
   return (
     <Modal
@@ -206,13 +213,22 @@ export function EditTransacaoModal({
           </Grid.Col>
           <Grid.Col span={6}>
             <Select
+              searchable
               className={classes.selectInput}
               size="md"
               mb="md"
               label="Categoria"
               placeholder="Categoria"
               itemComponent={SelectItemIcon}
-              data={CategoriaSelectItems}
+              data={
+                form.getInputProps('tipo').value === 'RECEITA'
+                  ? getCategoriaSelectList(
+                      categorias.filter((el) => el.isForReceita)
+                    )
+                  : getCategoriaSelectList(
+                      categorias.filter((el) => el.isForDespesa)
+                    )
+              }
               {...form.getInputProps('categoria')}
             />
             <DatePicker
@@ -248,7 +264,14 @@ export function EditTransacaoModal({
           >
             Cancelar
           </Button>
-          <Button type="submit" color="blue" size="md" pl="xl" pr="xl" loading={Loading}>
+          <Button
+            type="submit"
+            color="blue"
+            size="md"
+            pl="xl"
+            pr="xl"
+            loading={Loading}
+          >
             Salvar
           </Button>
         </Box>
