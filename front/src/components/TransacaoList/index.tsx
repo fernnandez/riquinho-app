@@ -19,6 +19,7 @@ import {
   AiOutlinePlus,
   AiOutlineSearch,
 } from 'react-icons/ai';
+import { BiChart } from 'react-icons/bi';
 import { BsGraphUp } from 'react-icons/bs';
 import { GiMoneyStack } from 'react-icons/gi';
 import { useQuery } from 'react-query';
@@ -33,6 +34,7 @@ import { TransacaoItem } from './components/TransacaoItem';
 import { TipoTransacaoEnum } from './components/TransacaoModals/constants';
 import { CreateTransacaoModal } from './components/TransacaoModals/CreateTransacaoModal';
 import { EditTransacaoModal } from './components/TransacaoModals/EditTransacaoModal';
+import CustomChart from './CustomChart';
 import { getTransacaoByTipo, getValues } from './formatter';
 
 export function TransacaoList() {
@@ -278,6 +280,25 @@ export function TransacaoList() {
           </ScrollArea>
         </Paper>
       </Box>
+
+      <Group align="center" mt="2rem">
+        <Title order={2} align="center">
+          Dashboards
+        </Title>
+        <ThemeIcon size={30}>
+          <BiChart size={30} />
+        </ThemeIcon>
+      </Group>
+
+      <Center>
+        <Title>Receitas</Title>
+        <CustomChart />
+      </Center>
+
+      <Center>
+        <CustomChart />
+        <Title>Despesas</Title>
+      </Center>
 
       {/* Modals */}
       {dateCategorias?.data && (
