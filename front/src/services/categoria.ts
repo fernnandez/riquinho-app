@@ -19,7 +19,6 @@ export interface CategoriaResponse {
 }
 
 export const createCategoria = async (data: CategoriaType, token: string) => {
-  console.log(token);
   await api.post(
     '/categoria',
     { ...data },
@@ -34,7 +33,6 @@ export const updateCategoria = async (
   data: CategoriaType,
   token: string
 ) => {
-  console.log(token);
   await api.put(
     `/categoria/${idCategoria}`,
     { ...data },

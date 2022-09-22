@@ -2,7 +2,7 @@ import {
   CategoriaEnum,
   StatusEnum,
   TipoTransacaoEnum,
-} from '../components/TransacaoList/components/TransacaoModals/constants';
+} from '../components/MainDashboard/components/TransacaoModals/constants';
 import api from './api';
 import { CategoriaResponse } from './categoria';
 
@@ -59,12 +59,6 @@ export const deleteTransacao = async (idTransacao: string, token: string) => {
 
 export const findAllTransacao = async (token: string) => {
   return api.get<TransacaoResponse[]>('/transacao', {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-};
-
-export const findAllCategorias = async (token: string) => {
-  return api.get<TransacaoResponse['categoria']>('/transacao', {
     headers: { Authorization: `Bearer ${token}` },
   });
 };

@@ -101,15 +101,15 @@ export default class CustomChart extends PureComponent {
 
   render() {
     return (
-      <PieChart width={700} height={700}>
+      <PieChart width={600} height={450}>
         <Pie
           activeIndex={this.state.activeIndex}
           activeShape={renderActiveShape}
           data={data}
           cx="50%"
           cy="50%"
-          innerRadius={150}
-          outerRadius={200}
+          innerRadius={100}
+          outerRadius={150}
           dataKey="value"
           onMouseEnter={this.onPieEnter}
         >
