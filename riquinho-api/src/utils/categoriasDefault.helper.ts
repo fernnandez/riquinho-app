@@ -16,7 +16,7 @@ export const categoriasDefault = [
   },
   {
     icon: 'MORADIA',
-    nome: 'Modaria',
+    nome: 'Moradia',
     isForReceita: true,
     isForDespesa: true,
     color: '#1C7ED6',

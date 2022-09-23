@@ -1,12 +1,7 @@
+import { Alert, Box } from '@mantine/core';
 import { PureComponent } from 'react';
+import { AiOutlineInfoCircle } from 'react-icons/ai';
 import { Cell, Pie, PieChart, Sector } from 'recharts';
-
-const data = [
-  { name: 'Alimentação', value: 1000, color: '#0088FE' },
-  { name: 'Pagamentos', value: 500, color: '#00C49F' },
-  { name: 'Tecnologia', value: 130, color: '#FFBB28' },
-  { name: 'Outros', value: 120, color: '#FF8042' },
-];
 
 const renderActiveShape = (props: any) => {
   const {
@@ -88,7 +83,11 @@ const renderActiveShape = (props: any) => {
   );
 };
 
-export default class CustomChart extends PureComponent {
+type CustomChartProps = {
+  data: { name: string; value: number; color: string }[];
+};
+
+export default class CustomChart extends PureComponent<CustomChartProps> {
   state = {
     activeIndex: 0,
   };
@@ -100,24 +99,48 @@ export default class CustomChart extends PureComponent {
   };
 
   render() {
-    return (
-      <PieChart width={600} height={450}>
-        <Pie
-          activeIndex={this.state.activeIndex}
-          activeShape={renderActiveShape}
-          data={data}
-          cx="50%"
-          cy="50%"
-          innerRadius={100}
-          outerRadius={150}
-          dataKey="value"
-          onMouseEnter={this.onPieEnter}
-        >
-          {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={entry.color} />
-          ))}
-        </Pie>
-      </PieChart>
-    );
+    {
+      if (this.props.data.length > 0) {
+        return (
+          <PieChart width={600} height={450}>
+            <Pie
+              activeIndex={this.state.activeIndex}
+              activeShape={renderActiveShape}
+              data={this.props.data}
+              cx="50%"
+              cy="50%"
+              innerRadius={100}
+              outerRadius={150}
+              dataKey="value"
+              onMouseEnter={this.onPieEnter}
+            >
+              {this.props.data.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
+            </Pie>
+          </PieChart>
+        );
+      } else {
+        return (
+          <Box
+            style={{
+              height: '450px',
+              width: '600px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Alert
+              icon={<AiOutlineInfoCircle size={20} />}
+              title="Ops!"
+              color="blue"
+            >
+              Sem dados no momento!!
+            </Alert>
+          </Box>
+        );
+      }
+    }
   }
 }

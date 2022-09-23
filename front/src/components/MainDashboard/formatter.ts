@@ -45,3 +45,66 @@ export function getValues(transacoes: TransacaoResponse[], data: DateTime) {
 
   return { receitas, despesas, receitasEfetivadas, despesasEfetivadas };
 }
+
+export function getValuesByCategory(
+  transacoes: TransacaoResponse[],
+  data: DateTime
+) {
+  const receitaCategoryValue = new Array<{
+    name: string;
+    value: number;
+    color: string;
+  }>();
+
+  const despesaCategoryValue = new Array<{
+    name: string;
+    value: number;
+    color: string;
+  }>();
+
+  const receitas = getTransacaoByTipo(
+    TipoTransacaoEnum.RECEITA,
+    transacoes,
+    data
+  );
+
+  const despesas = getTransacaoByTipo(
+    TipoTransacaoEnum.DESPESA,
+    transacoes,
+    data
+  );
+
+  receitas.forEach((transacao) => {
+    const categoriaFound = receitaCategoryValue.find(
+      (element) => element.name === transacao.categoria.nome
+    );
+
+    if (categoriaFound) {
+      categoriaFound.value += Number(transacao.valor);
+    } else {
+      receitaCategoryValue.push({
+        name: transacao.categoria.nome,
+        value: Number(transacao.valor),
+        color: transacao.categoria.color,
+      });
+    }
+  });
+
+  despesas.forEach((transacao) => {
+    const categoriaFound = despesaCategoryValue.find(
+      (element) => element.name === transacao.categoria.nome
+    );
+
+    if (categoriaFound) {
+      categoriaFound.value += Number(transacao.valor);
+    } else {
+      despesaCategoryValue.push({
+        name: transacao.categoria.nome,
+        value: Number(transacao.valor),
+        color: transacao.categoria.color,
+      });
+    }
+  });
+
+  return { receitaCategoryValue, despesaCategoryValue };
+}

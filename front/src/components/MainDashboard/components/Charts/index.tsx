@@ -1,13 +1,48 @@
 import { Box, Center, Group, Stack, Title } from '@mantine/core';
+import { useEffect, useState } from 'react';
 import { MdAttachMoney } from 'react-icons/md';
 import {
   TbArrowAutofitUp,
   TbArrowBarUp,
   TbCashBanknoteOff,
 } from 'react-icons/tb';
+import { useMonthController } from '../../../../context/MonthContext/MonthContext';
+import { TransacaoResponse } from '../../../../services/transacao';
+import { getValuesByCategory } from '../../formatter';
 import CustomChart from './CustomChart/CustomChart';
 
-export function Charts() {
+interface ChartsProps {
+  transacoes: TransacaoResponse[];
+}
+
+export function Charts({ transacoes }: ChartsProps) {
+  const { date } = useMonthController();
+
+  const [receitas, setReceitas] = useState<
+    {
+      name: string;
+      value: number;
+      color: string;
+    }[]
+  >([]);
+  const [despesas, setDespesas] = useState<
+    {
+      name: string;
+      value: number;
+      color: string;
+    }[]
+  >([]);
+
+  useEffect(() => {
+    if (transacoes.length > 0) {
+      const { despesaCategoryValue, receitaCategoryValue } =
+        getValuesByCategory(transacoes, date);
+
+      setReceitas(receitaCategoryValue);
+      setDespesas(despesaCategoryValue);
+    }
+  }, [transacoes, date]);
+
   return (
     <>
       <Group
@@ -15,7 +50,7 @@ export function Charts() {
         direction={'row'}
       >
         <Stack align={'center'}>
-          <CustomChart />
+          <CustomChart data={receitas} />
           <TbArrowBarUp size={25} color="green" />
           <Group direction="row">
             <Title
@@ -29,7 +64,7 @@ export function Charts() {
         </Stack>
 
         <Stack align={'center'}>
-          <CustomChart />
+          <CustomChart data={despesas} />
           <TbArrowBarUp size={25} color="red" />
           <Group direction="row">
             <Title

@@ -109,7 +109,7 @@ export function MainDashboard() {
           <BiChart size={30} />
         </ThemeIcon>
       </Group>
-      <Charts />
+      {data && data.data.length > 0 && <Charts transacoes={data?.data} />}
 
       {/* Modals */}
       {dateCategorias?.data && (
