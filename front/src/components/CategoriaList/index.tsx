@@ -33,7 +33,7 @@ import { notify, TypeNotificationEnum } from '../../utils/notify';
 import {
   getCategoriaIcon,
   StatusEnum,
-} from '../TransacaoList/components/TransacaoModals/constants';
+} from '../MainDashboard/components/TransacaoModals/constants';
 import { CreateCategoriaModal } from './components/CreateCategoriaModal';
 import { EditCategoriaModal } from './components/EditCategoriaModal';
 

@@ -14,13 +14,13 @@ import { useContext } from 'react';
 import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
 import { TbDots } from 'react-icons/tb';
 
-import AuthContext from '../../../../context/AuthContext/AuthContext';
-import { CategoriaResponse } from '../../../../services/categoria';
-import { queryClient } from '../../../../services/queryClient';
-import { deleteTransacao } from '../../../../services/transacao';
-import { DateFormatter } from '../../../../utils/dateFormatter';
-import { notify, TypeNotificationEnum } from '../../../../utils/notify';
-import { getCategoriaIcon, StatusEnum } from '../TransacaoModals/constants';
+import AuthContext from '../../../../../context/AuthContext/AuthContext';
+import { CategoriaResponse } from '../../../../../services/categoria';
+import { queryClient } from '../../../../../services/queryClient';
+import { deleteTransacao } from '../../../../../services/transacao';
+import { DateFormatter } from '../../../../../utils/dateFormatter';
+import { notify, TypeNotificationEnum } from '../../../../../utils/notify';
+import { getCategoriaIcon, StatusEnum } from '../../TransacaoModals/constants';
 import { useStyles } from './styles';
 
 interface TransacaoItemProps {
