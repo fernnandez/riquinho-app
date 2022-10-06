@@ -56,6 +56,40 @@ export class TransacaoService {
     });
   }
 
+  async updateStatus(
+    id: string,
+    updateTransacaoDto: Transacao,
+  ): Promise<void> {
+    
+    let statusTransacao;//status atual da transação
+
+    /**Verificação e atribuição do novo status */
+    if (updateTransacaoDto.status == 'EFETIVADA') {
+      statusTransacao = 'PENDENTE';
+    } else if (updateTransacaoDto.status == 'PENDENTE') {
+      statusTransacao = 'EFETIVADA';
+    } else {
+
+      let messageErroUpdatestatus = {
+        message: "status não definido"
+      }
+
+      console.log(messageErroUpdatestatus);
+    }
+
+    updateTransacaoDto.status = statusTransacao;//modifico o campo para a atualização de acordo com as condições
+    
+    await this.transacaoRepository.update(id, updateTransacaoDto);
+  }
+
+/*   async updateStatus(
+    id: string,
+    updateTransacaoDto: CreateUpdateTransacaoDto,
+  ): Promise<void> {
+    
+    await this.transacaoRepository.update(id, updateTransacaoDto);
+  } */
+
   async delete(id: string): Promise<void> {
     await this.transacaoRepository.delete(id);
   }
