@@ -7,7 +7,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from '../../user/user.entity';
+import { Categoria } from '../../user/entities/categoria.entity';
+import { User } from '../../user/entities/user.entity';
 
 export enum TipoTransacao {
   RECEITA = 'RECEITA',
@@ -17,13 +18,6 @@ export enum TipoTransacao {
 export enum Status {
   EFETIVADA = 'EFETIVADA',
   PENDENTE = 'PENDENTE',
-}
-
-export enum CategoriaTransacao {
-  ALIMENTACAO = 'ALIMENTACAO',
-  MORADIA = 'MORADIA',
-  PAGAMENTO = 'PAGAMENTO',
-  OUTROS = 'OUTROS',
 }
 
 @Entity('transacao')
@@ -43,8 +37,9 @@ export class Transacao {
   @Column({ type: 'enum', enum: TipoTransacao })
   tipo: TipoTransacao;
 
-  @Column({ type: 'enum', enum: CategoriaTransacao })
-  categoria: CategoriaTransacao;
+  @ManyToOne(() => Categoria, (categoria) => categoria.transacoes)
+  @JoinColumn({ name: 'categoria_id' })
+  categoria: Categoria;
 
   @Column({ type: 'enum', enum: Status })
   status: Status;

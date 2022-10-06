@@ -3,8 +3,10 @@ import { CadastroPage } from './pages/CadastroPage';
 import { LoginPage } from './pages/LoginPage';
 
 import { NotificationsProvider } from '@mantine/notifications';
+import { Navigation } from './components/Navigation';
 import { ModalProvider } from './context/ModalContext/ModalContext';
-import { TransacaoPage } from './pages/TransacaoPage';
+import { Home } from './pages/Home';
+import { CustomPage } from './pages/CustomPage';
 
 function App() {
   return (
@@ -17,7 +19,8 @@ function App() {
         >
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<TransacaoPage />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/custom" element={<CustomPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/cadastro" element={<CadastroPage />} />
             </Routes>

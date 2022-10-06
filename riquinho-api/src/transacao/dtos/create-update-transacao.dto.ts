@@ -5,11 +5,7 @@ import {
   IsNumber,
   IsString,
 } from 'class-validator';
-import {
-  CategoriaTransacao,
-  Status,
-  TipoTransacao,
-} from '../entities/transacao.entity';
+import { Status, TipoTransacao } from '../entities/transacao.entity';
 
 export class CreateUpdateTransacaoDto {
   @IsNotEmpty()
@@ -29,8 +25,7 @@ export class CreateUpdateTransacaoDto {
   tipo: TipoTransacao;
 
   @IsNotEmpty()
-  @IsEnum(CategoriaTransacao)
-  categoria: CategoriaTransacao;
+  categoria: string;
 
   @IsNotEmpty()
   @IsEnum(Status)

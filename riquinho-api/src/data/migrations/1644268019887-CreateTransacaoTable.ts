@@ -10,13 +10,6 @@ enum Status {
   PENDENTE = 'PENDENTE',
 }
 
-enum Categoria {
-  ALIMENTACAO = 'ALIMENTACAO',
-  MORADIA = 'MORADIA',
-  PAGAMENTO = 'PAGAMENTO',
-  OUTROS = 'OUTROS',
-}
-
 export class CreateTransacaoTable1644268019887 implements MigrationInterface {
   private tableName = 'transacao';
 
@@ -50,11 +43,6 @@ export class CreateTransacaoTable1644268019887 implements MigrationInterface {
             name: 'tipo',
             type: 'enum',
             enum: Object.values(TipoTransacao),
-          },
-          {
-            name: 'categoria',
-            type: 'enum',
-            enum: Object.values(Categoria),
           },
           {
             name: 'status',

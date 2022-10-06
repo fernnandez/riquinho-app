@@ -5,6 +5,7 @@ export const useStyles = createStyles((theme) => ({
     minHeight: '100vh',
     background: 'blue',
     display: 'flex',
+    width: '100%',
   },
 
   ilustration: {
