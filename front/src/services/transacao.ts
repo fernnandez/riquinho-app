@@ -62,3 +62,9 @@ export const findAllTransacao = async (token: string) => {
     headers: { Authorization: `Bearer ${token}` },
   });
 };
+
+export const updateStatus = async (idTransacao: string, token: string) => {
+  return api.get(`/transacao/change-status/${idTransacao}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};

@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { CategoriaService } from '../../user/services/categoria.service';
 import { CreateUpdateTransacaoDto } from '../dtos/create-update-transacao.dto';
-import { Transacao } from '../entities/transacao.entity';
+import { Status, Transacao } from '../entities/transacao.entity';
 
 @Injectable()
 export class TransacaoService {
@@ -56,39 +56,16 @@ export class TransacaoService {
     });
   }
 
-  async updateStatus(
-    id: string,
-    updateTransacaoDto: Transacao,
-  ): Promise<void> {
-    
-    let statusTransacao;//status atual da transação
-
+  async updateStatus(id: string, updateTransacaoDto: Transacao): Promise<void> {
     /**Verificação e atribuição do novo status */
-    if (updateTransacaoDto.status == 'EFETIVADA') {
-      statusTransacao = 'PENDENTE';
-    } else if (updateTransacaoDto.status == 'PENDENTE') {
-      statusTransacao = 'EFETIVADA';
+    if (updateTransacaoDto.status == Status.EFETIVADA) {
+      updateTransacaoDto.status = Status.PENDENTE;
     } else {
-
-      let messageErroUpdatestatus = {
-        message: "status não definido"
-      }
-
-      console.log(messageErroUpdatestatus);
+      updateTransacaoDto.status = Status.EFETIVADA;
     }
 
-    updateTransacaoDto.status = statusTransacao;//modifico o campo para a atualização de acordo com as condições
-    
     await this.transacaoRepository.update(id, updateTransacaoDto);
   }
-
-/*   async updateStatus(
-    id: string,
-    updateTransacaoDto: CreateUpdateTransacaoDto,
-  ): Promise<void> {
-    
-    await this.transacaoRepository.update(id, updateTransacaoDto);
-  } */
 
   async delete(id: string): Promise<void> {
     await this.transacaoRepository.delete(id);
