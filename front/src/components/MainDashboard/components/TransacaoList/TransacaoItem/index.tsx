@@ -10,24 +10,24 @@ import {
   Tooltip,
   Switch,
   Checkbox,
-} from "@mantine/core";
-import { useModals } from "@mantine/modals";
-import { showNotification } from "@mantine/notifications";
-import { BaseSyntheticEvent, useContext, useState } from "react";
-import { AiFillDelete, AiFillEdit } from "react-icons/ai";
-import { TbDots } from "react-icons/tb";
+} from '@mantine/core';
+import { useModals } from '@mantine/modals';
+import { showNotification } from '@mantine/notifications';
+import { BaseSyntheticEvent, useContext, useState } from 'react';
+import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
+import { TbCheck, TbDots } from 'react-icons/tb';
 
-import AuthContext from "../../../../../context/AuthContext/AuthContext";
-import { CategoriaResponse } from "../../../../../services/categoria";
-import { queryClient } from "../../../../../services/queryClient";
+import AuthContext from '../../../../../context/AuthContext/AuthContext';
+import { CategoriaResponse } from '../../../../../services/categoria';
+import { queryClient } from '../../../../../services/queryClient';
 import {
   deleteTransacao,
   updateStatus,
-} from "../../../../../services/transacao";
-import { DateFormatter } from "../../../../../utils/dateFormatter";
-import { notify, TypeNotificationEnum } from "../../../../../utils/notify";
-import { getCategoriaIcon, StatusEnum } from "../../TransacaoModals/constants";
-import { useStyles } from "./styles";
+} from '../../../../../services/transacao';
+import { DateFormatter } from '../../../../../utils/dateFormatter';
+import { notify, TypeNotificationEnum } from '../../../../../utils/notify';
+import { getCategoriaIcon, StatusEnum } from '../../TransacaoModals/constants';
+import { useStyles } from './styles';
 
 interface TransacaoItemProps {
   data: {
@@ -51,11 +51,11 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
   const handleDelete = () => {
     deleteTransacao(data.id, token.token)
       .then(() => {
-        queryClient.invalidateQueries("transacoes").then(() => {
+        queryClient.invalidateQueries('transacoes').then(() => {
           showNotification(
             notify({
               type: TypeNotificationEnum.SUCCESS,
-              title: "Removido com sucesso",
+              title: 'Removido com sucesso',
             })
           );
         });
@@ -76,11 +76,11 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
     setLoading(true);
     updateStatus(data.id, token.token)
       .then(() => {
-        queryClient.invalidateQueries("transacoes").then(() => {
+        queryClient.invalidateQueries('transacoes').then(() => {
           showNotification(
             notify({
               type: TypeNotificationEnum.SUCCESS,
-              title: "Atualizado com sucesso.",
+              title: 'Atualizado com sucesso.',
             })
           );
         });
@@ -95,18 +95,19 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
                 : null,
           })
         );
-      }).finally(()=>{
-        setLoading(false);
       })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const openConfirmDialog = () => {
     return modals.openConfirmModal({
-      size: "lg",
+      size: 'lg',
       centered: true,
       title: (
         <Group>
-          <ActionIcon size="lg" color={"red"} radius="xl" variant="hover">
+          <ActionIcon size="lg" color={'red'} radius="xl" variant="hover">
             <AiFillDelete size={25} />
           </ActionIcon>
           <Text>Você está prestes a excluir uma transação</Text>
@@ -114,16 +115,16 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
       ),
       children: <Text size="sm">Tem certeza que deseja excluir ?</Text>,
       labels: {
-        confirm: "Excluir",
-        cancel: "Cancelar",
+        confirm: 'Excluir',
+        cancel: 'Cancelar',
       },
       confirmProps: {
-        color: "red",
-        variant: "light",
+        color: 'red',
+        variant: 'light',
       },
       cancelProps: {
-        color: "blue",
-        variant: "light",
+        color: 'blue',
+        variant: 'light',
       },
       onConfirm: async () => handleDelete(),
     });
@@ -133,18 +134,18 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
     <Paper
       shadow="md"
       p="1rem"
-      style={{ minWidth: "100%" }}
+      style={{ minWidth: '100%' }}
       sx={
         data.status !== StatusEnum.EFETIVADA
-          ? { filter: "brightness(90%)" }
-          : { filter: "brightness(1)" }
+          ? { filter: 'brightness(90%)' }
+          : { filter: 'brightness(1)' }
       }
     >
       <Grid className={classes.displayFlex}>
         <Grid.Col span={2}>
           {getCategoriaIcon(data.categoria, data.status, 60, 45)}
         </Grid.Col>
-        <Box style={{ display: "flex", flexDirection: "column" }}>
+        <Box style={{ display: 'flex', flexDirection: 'column' }}>
           <Grid grow className={classes.listItem} columns={32}>
             <Grid.Col span={2}>
               {/* seguir um valor de span unitario */}
@@ -162,9 +163,9 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
                 <Box>
                   <Text size="sm">Valor</Text>
                   <Text size="lg" color="dimmed">
-                    {Number(data.valor).toLocaleString("pt-br", {
-                      style: "currency",
-                      currency: "BRL",
+                    {Number(data.valor).toLocaleString('pt-br', {
+                      style: 'currency',
+                      currency: 'BRL',
                     })}
                     {/* ajustar os valores monetários da aplicação */}
                   </Text>
@@ -183,44 +184,49 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
             </Grid.Col>
 
             <Grid.Col span={2}>
-              <Menu
-                transition="pop"
-                withArrow
-                placement="end"
-                control={
-                  <ActionIcon color="blue" variant="filled">
-                    <TbDots />
-                  </ActionIcon>
-                }
-              >
-                <Menu.Item
-                  icon={<AiFillEdit size={25} />}
-                  onClick={() => onOpenEdit(data.id)}
-                  color="blue"
+              <Tooltip label="trocar status">
+                <ActionIcon
+                  color={data.status === StatusEnum.EFETIVADA ? 'green' : 'red'}
+                  variant="filled"
+                  size="md"
+                  onClick={handleStatus}
+                  disabled={isLoading}
                 >
-                  Editar
-                </Menu.Item>
-                <Menu.Item
-                  icon={<AiFillDelete size={25} />}
-                  onClick={openConfirmDialog}
-                  color="red"
+                  <TbCheck />
+                </ActionIcon>
+              </Tooltip>
+              {/* lowcase do status */}
+            </Grid.Col>
+            <Grid.Col span={2}>
+              <Tooltip label="ações">
+                <Menu
+                  transition="pop"
+                  withArrow
+                  placement="end"
+                  control={
+                    <ActionIcon color="blue" variant="filled" size="md">
+                      <TbDots />
+                    </ActionIcon>
+                  }
                 >
-                  Excluir
-                </Menu.Item>
-              </Menu>
+                  <Menu.Item
+                    icon={<AiFillEdit size={25} />}
+                    onClick={() => onOpenEdit(data.id)}
+                    color="blue"
+                  >
+                    Editar
+                  </Menu.Item>
+                  <Menu.Item
+                    icon={<AiFillDelete size={25} />}
+                    onClick={openConfirmDialog}
+                    color="red"
+                  >
+                    Excluir
+                  </Menu.Item>
+                </Menu>
+              </Tooltip>
             </Grid.Col>
           </Grid>
-          <Box style={{ marginLeft: 0, display: "flex" }}>
-            <Text style={{ marginRight: 14 }} transform={"lowercase"}>
-              {data.status}
-            </Text>
-            <Checkbox
-              checked={data.status === StatusEnum.EFETIVADA ? true : false}
-              onChange={handleStatus}
-              disabled={isLoading}
-            />
-            {/* lowcase do status */}
-          </Box>
         </Box>
       </Grid>
     </Paper>

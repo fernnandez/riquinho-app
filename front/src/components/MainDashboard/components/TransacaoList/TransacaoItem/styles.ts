@@ -5,7 +5,7 @@ export const useStyles = createStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    gap:'1rem'
+    gap: '1rem',
   },
   actions: {
     display: 'flex',
@@ -22,6 +22,6 @@ export const useStyles = createStyles((theme) => ({
   },
   displayFlex: {
     display: 'flex',
-    
+    alignItems: 'center',
   },
 }));
