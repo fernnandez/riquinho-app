@@ -4,13 +4,16 @@ import {
   Grid,
   Group,
   Menu,
+  MenuItem,
   Paper,
   Text,
   Tooltip,
+  Switch,
+  Checkbox,
 } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
-import { useContext } from 'react';
+import { BaseSyntheticEvent, useContext,useState } from 'react';
 import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
 import { TbDots } from 'react-icons/tb';
 
@@ -22,6 +25,7 @@ import { DateFormatter } from '../../../../../utils/dateFormatter';
 import { notify, TypeNotificationEnum } from '../../../../../utils/notify';
 import { getCategoriaIcon, StatusEnum } from '../../TransacaoModals/constants';
 import { useStyles } from './styles';
+
 
 interface TransacaoItemProps {
   data: {
@@ -39,6 +43,8 @@ interface TransacaoItemProps {
 export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
   const { classes } = useStyles();
   const { token } = useContext(AuthContext);
+  const [isLoading, setLoading] = useState(false);
+  const [status, setstatus] = useState("EFETIVADA");
   const modals = useModals();
 
   const handleDelete = () => {
@@ -65,6 +71,14 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
         );
       });
   };
+  const handleStatus = (e: BaseSyntheticEvent) => {
+    if(e.target.checked === true){
+      setstatus("EFETIVADA")
+    }
+    if(e.target.checked === false){
+      setstatus("PENDENTE")
+    }
+  }
 
   const openConfirmDialog = () => {
     return modals.openConfirmModal({
@@ -101,7 +115,7 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
       p="1rem"
       style={{ minWidth: '100%' }}
       sx={
-        data.status !== StatusEnum.EFETIVADA
+        data.status !== status
           ? { filter: 'brightness(90%)' }
           : { filter: 'brightness(1)' }
       }
@@ -165,6 +179,12 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
             >
               Excluir
             </Menu.Item>
+            <MenuItem
+            >
+           <Checkbox label="status da transacao" checked={data.status === status ? true : false} 
+           onChange={handleStatus} disabled={status === "EFETIVADO" ? true : false} /> 
+
+            </MenuItem>
           </Menu>
         </Grid.Col>
       </Grid>
