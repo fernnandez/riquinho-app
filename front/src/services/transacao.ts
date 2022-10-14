@@ -62,3 +62,13 @@ export const findAllTransacao = async (token: string) => {
     headers: { Authorization: `Bearer ${token}` },
   });
 };
+
+export const updateStatus = async (idTransacao: string, token: string) =>{
+  console.log(token);
+  return api.patch(
+    `/transacao/${idTransacao}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  )
+}

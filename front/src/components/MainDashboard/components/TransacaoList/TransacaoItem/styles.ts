@@ -1,4 +1,4 @@
-import { createStyles } from '@mantine/core';
+import { Checkbox, createStyles } from '@mantine/core';
 
 export const useStyles = createStyles((theme) => ({
   listItem: {
@@ -18,6 +18,10 @@ export const useStyles = createStyles((theme) => ({
     marginLeft: '.5rem',
     display: 'flex',
     alignItems: 'center',
-    gap: '2rem',
+    gap: '0rem',
+  },
+  displayFlex: {
+    display: 'flex',
+    
   },
 }));

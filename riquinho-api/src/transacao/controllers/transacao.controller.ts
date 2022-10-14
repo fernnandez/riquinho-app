@@ -55,13 +55,11 @@ export class TransacaoController {
   }
 
   @Patch(':id')
-  @HttpCode(204)
-  async updateStatus(@Param('id') id: string): Promise<void> {
-     const responseById = await this.transacaoService.findOne(id);
+  // @HttpCode(204)
+  async updateStatus(@Param('id') id: string, @Request() req): Promise<void> {
+    console.log(req.user);
+    const responseById = await this.transacaoService.findOne(id);
 
-    return this.transacaoService.updateStatus(id,responseById);
+    return this.transacaoService.updateStatus(id, responseById);
   }
-
 }
-
-
