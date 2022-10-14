@@ -5,15 +5,11 @@ import {
   Get,
   Param,
   Post,
-  Patch,
   Put,
   Request,
   UseGuards,
-  HttpCode,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { request } from 'http';
-import { patch } from 'superagent';
 import { CreateUpdateTransacaoDto } from '../dtos/create-update-transacao.dto';
 import { Transacao } from '../entities/transacao.entity';
 import { TransacaoService } from '../services/transacao.service';
@@ -54,10 +50,8 @@ export class TransacaoController {
     return this.transacaoService.delete(id);
   }
 
-  @Patch(':id')
-  // @HttpCode(204)
-  async updateStatus(@Param('id') id: string, @Request() req): Promise<void> {
-    console.log(req.user);
+  @Get('/change-status/:id')
+  async updateStatus(@Param('id') id: string): Promise<void> {
     const responseById = await this.transacaoService.findOne(id);
 
     return this.transacaoService.updateStatus(id, responseById);
