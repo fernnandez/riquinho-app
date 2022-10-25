@@ -5,6 +5,7 @@ export const categoriasDefault = [
     nome: 'Alimentação',
     isForReceita: true,
     isForDespesa: true,
+    isDefault: true,
     color: '#E03131',
   },
   {
@@ -12,6 +13,7 @@ export const categoriasDefault = [
     nome: 'Pagamentos',
     isForReceita: true,
     isForDespesa: true,
+    isDefault: true,
     color: '#37B24D',
   },
   {
@@ -19,6 +21,7 @@ export const categoriasDefault = [
     nome: 'Moradia',
     isForReceita: true,
     isForDespesa: true,
+    isDefault: true,
     color: '#1C7ED6',
   },
   {
@@ -26,6 +29,7 @@ export const categoriasDefault = [
     nome: 'Outros',
     isForReceita: true,
     isForDespesa: true,
+    isDefault: true,
     color: '#495057',
   },
 ];
