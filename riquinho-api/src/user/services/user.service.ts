@@ -1,11 +1,14 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { compare } from 'bcrypt';
 import { FindOneOptions, Repository } from 'typeorm';
 import { CreateUserDto } from '../dtos/create-user.dto';
+import { UpdateNameUserDto } from '../dtos/update-name-user.dto';
 import { User } from '../entities/user.entity';
 import { CategoriaService } from './categoria.service';
 
@@ -32,6 +35,20 @@ export class UserService {
     await this.categoriaService.createCategoriasDefault(userCreated);
 
     return userCreated;
+  }
+
+  async updateName(updateNameUserDto: UpdateNameUserDto, id: string) {
+    const userToEdit = await this.findOneOrFail({ where: { id } });
+
+    if (!(await compare(updateNameUserDto.senha, userToEdit.senha))) {
+      throw new BadRequestException(
+        'Forneca a senha correta para atualizar as informações',
+      );
+    }
+
+    userToEdit.nome = updateNameUserDto.nome;
+
+    return this.userRepository.save(userToEdit);
   }
 
   async findAll() {
