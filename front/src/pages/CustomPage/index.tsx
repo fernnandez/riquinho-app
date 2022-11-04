@@ -8,17 +8,26 @@ import {
   ThemeIcon,
   Title,
 } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { useContext, useEffect } from 'react';
 import { BiWallet } from 'react-icons/bi';
 import { FiAlertCircle, FiUser } from 'react-icons/fi';
+import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { CategoriaList } from '../../components/CategoriaList';
 import { Navigation } from '../../components/Navigation';
+import { UpdateNomeModal } from '../../components/UpdateNomeForm/UpdateNomeForm';
 import AuthContext from '../../context/AuthContext/AuthContext';
+import { findOneUser } from '../../services/user';
 
 export function CustomPage() {
   const navigate = useNavigate();
   const { token } = useContext(AuthContext);
+  const [openedUpdateName, handlersUpdateName] = useDisclosure(false);
+
+  const { data, isLoading, error } = useQuery(['user'], () => {
+    return findOneUser(token.token);
+  });
 
   useEffect(() => {
     if (!token) {
@@ -44,7 +53,9 @@ export function CustomPage() {
           </Group>
           <Center mt="xl">
             <Group>
-              <Button>Ajustar Nome de Usuario</Button>
+              <Button onClick={() => handlersUpdateName.open()}>
+                Ajustar Nome de Usuario
+              </Button>
               <Button variant="light">Redefinir Senha</Button>
               <Button color="red" variant="light">
                 Excluir Conta
@@ -78,6 +89,14 @@ export function CustomPage() {
           </Center>
         </Box>
       </Box>
+      {data && (
+        <UpdateNomeModal
+          isOpen={openedUpdateName}
+          onClose={() => handlersUpdateName.close()}
+          nome={data.data.nome}
+          id={data.data.id}
+        />
+      )}
     </Navigation>
   );
 }

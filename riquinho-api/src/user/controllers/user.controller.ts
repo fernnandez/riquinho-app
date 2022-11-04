@@ -8,10 +8,13 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Put,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateUserDto } from '../dtos/create-user.dto';
+import { UpdateNameUserDto } from '../dtos/update-name-user.dto';
 import { User } from '../entities/user.entity';
 import { UserService } from '../services/user.service';
 
@@ -30,9 +33,10 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @Get(':id')
+  @Get('find')
   @UseGuards(AuthGuard('jwt'))
-  async show(@Param('id', new ParseUUIDPipe()) id: string): Promise<User> {
+  async show(@Request() req) {
+    const id = req.user.id;
     return this.userService.findOneOrFail({ where: { id } });
   }
 
@@ -41,5 +45,13 @@ export class UserController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async destroy(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
     return this.userService.delete(id);
+  }
+
+  @Put(':id')
+  async updateName(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() updateNameUserDto: UpdateNameUserDto,
+  ) {
+    return this.userService.updateName(updateNameUserDto, id);
   }
 }
