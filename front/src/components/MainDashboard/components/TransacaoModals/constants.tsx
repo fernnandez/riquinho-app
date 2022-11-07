@@ -8,6 +8,7 @@ import { IoFastFoodSharp } from 'react-icons/io5';
 
 import { ThemeIcon } from '@mantine/core';
 import { CategoriaResponse } from '../../../../services/categoria';
+import { ReactNode } from 'react';
 
 export enum CategoriaEnum {
   ALIMENTACAO = 'ALIMENTACAO',
@@ -59,82 +60,63 @@ export function getCategoriaSelectList(categorias: CategoriaResponse[]) {
   });
 }
 
+export function getDataCategoriaIcon() {}
+
 export function getCategoriaIcon(
   categoria: CategoriaResponse,
   isActive: StatusEnum,
   sizeBg: number,
   sizeIcon: number
-) {
-  return {
-    ALIMENTACAO: (
-      <ThemeIcon
-        size={sizeBg}
-        radius="xl"
-        variant={isActive === StatusEnum.EFETIVADA ? 'outline' : 'light'}
-        style={{
-          cursor: 'default',
-          backgroundColor: categoria.color,
-          border: 'none',
-        }}
-      >
-        <IoFastFoodSharp size={sizeIcon} color="white" />
-      </ThemeIcon>
-    ),
-    MORADIA: (
-      <ThemeIcon
-        size={sizeBg}
-        radius="xl"
-        variant={isActive ? 'outline' : 'filled'}
-        style={{
-          cursor: 'default',
-          backgroundColor: categoria.color,
-          border: 'none',
-        }}
-      >
-        <BiBuildingHouse size={sizeIcon} color="white" />
-      </ThemeIcon>
-    ),
-    PAGAMENTO: (
-      <ThemeIcon
-        size={sizeBg}
-        radius="xl"
-        variant={isActive ? 'outline' : 'filled'}
-        style={{
-          cursor: 'default',
-          backgroundColor: categoria.color,
-          border: 'none',
-        }}
-      >
-        <GiMoneyStack size={sizeIcon} color="white" />
-      </ThemeIcon>
-    ),
-    OUTROS: (
-      <ThemeIcon
-        size={sizeBg}
-        radius="xl"
-        variant={isActive ? 'outline' : 'filled'}
-        style={{
-          cursor: 'default',
-          backgroundColor: categoria.color,
-          border: 'none',
-        }}
-      >
-        <BsStars size={sizeIcon} color="white" />
-      </ThemeIcon>
-    ),
-    CUSTOM: (
-      <ThemeIcon
-        size={sizeBg}
-        radius="xl"
-        variant={isActive ? 'outline' : 'filled'}
-        style={{
-          cursor: 'default',
-          backgroundColor: categoria.color,
-          border: 'none',
-        }}
-      >
-        <BiCategory size={sizeIcon} color="white" />
-      </ThemeIcon>
-    ),
-  }[categoria.icon];
+): ReactNode {
+  return (
+    <ThemeIcon
+      size={sizeBg}
+      radius="xl"
+      variant={isActive ? 'outline' : 'filled'}
+      style={{
+        cursor: 'default',
+        backgroundColor: categoria.color,
+        border: 'none',
+      }}
+    >
+      {getSimpleIcon(categoria.icon, 'white', sizeIcon)}
+    </ThemeIcon>
+  );
 }
+
+export function getSimpleIcon(
+  icon: string,
+  color: string,
+  sizeIcon = 45
+): ReactNode {
+  return {
+    ALIMENTACAO: <IoFastFoodSharp size={sizeIcon} color={color} />,
+    MORADIA: <BiBuildingHouse size={sizeIcon} color={color} />,
+    PAGAMENTO: <GiMoneyStack size={sizeIcon} color={color} />,
+    OUTROS: <BsStars size={sizeIcon} color={color} />,
+    CUSTOM: <BiCategory size={sizeIcon} color={color} />,
+  }[icon];
+}
+
+export const iconList = [
+  {
+    value: 'ALIMENTACAO',
+    label: 'Comida',
+    icon: getSimpleIcon('ALIMENTACAO', 'black'),
+  },
+  {
+    value: 'MORADIA',
+    label: 'Casa',
+    icon: getSimpleIcon('MORADIA', 'black'),
+  },
+  {
+    value: 'PAGAMENTO',
+    label: 'Dinheiro',
+    icon: getSimpleIcon('PAGAMENTO', 'black'),
+  },
+  {
+    value: 'OUTROS',
+    label: 'Outros',
+    icon: getSimpleIcon('OUTROS', 'black'),
+  },
+];
