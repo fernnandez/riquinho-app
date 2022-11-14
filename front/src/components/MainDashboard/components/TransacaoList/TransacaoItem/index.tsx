@@ -51,6 +51,12 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
   const [isLoading, setLoading] = useState(false);
   const modals = useModals();
 
+  const invalidate = async () => {
+    await queryClient.invalidateQueries('receitas');
+    await queryClient.invalidateQueries('despesas');
+    await queryClient.invalidateQueries('resumo');
+  };
+
   const handleDelete = () => {
     deleteTransacao(data.id, token.token)
       .then(() => {
@@ -77,9 +83,9 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
   };
   const handleStatus = () => {
     setLoading(true);
-    updateStatus(data.id, token.token)
+    updateStatus(data.parcela.id, token.token)
       .then(() => {
-        queryClient.invalidateQueries('transacoes').then(() => {
+        invalidate().then(() => {
           showNotification(
             notify({
               type: TypeNotificationEnum.SUCCESS,
@@ -189,7 +195,11 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
             <Grid.Col span={2}>
               <Tooltip label="trocar status">
                 <ActionIcon
-                  color={data.parcela.status === StatusEnum.EFETIVADA ? 'green' : 'red'}
+                  color={
+                    data.parcela.status === StatusEnum.EFETIVADA
+                      ? 'green'
+                      : 'red'
+                  }
                   variant="filled"
                   size="md"
                   onClick={handleStatus}

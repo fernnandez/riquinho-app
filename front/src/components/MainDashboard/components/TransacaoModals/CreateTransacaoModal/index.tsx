@@ -55,7 +55,7 @@ export function CreateTransacaoModal({
       categoria: '',
       tipo: 'RECEITA',
       descricao: '',
-      status: true,
+      status: false,
       parcelado: false,
       parcelas: 1,
     },
@@ -205,22 +205,6 @@ export function CreateTransacaoModal({
               disabled={!form.getInputProps('parcelado').value}
               {...form.getInputProps('parcelas')}
             />
-            <NumberInput
-              icon={<MdAttachMoney size={18} />}
-              className={classes.numberInput}
-              size="md"
-              label="Valor Parcela"
-              mb="md"
-              mt="md"
-              hideControls
-              min={0}
-              precision={2}
-              disabled={true}
-              value={
-                form.getInputProps('valor').value /
-                form.getInputProps('parcelas').value
-              }
-            />
           </Grid.Col>
           <Grid.Col span={6}>
             <Select
@@ -251,19 +235,27 @@ export function CreateTransacaoModal({
               {...form.getInputProps('data')}
             />
             <Switch
-              className={classes.selectInput}
-              size="md"
-              mt="4rem"
-              label="Efetivada"
-              checked={form.getInputProps('status').value}
-              {...form.getInputProps('status')}
-            />
-            <Switch
               className={classes.textInput}
               label="Parcelado"
               size="md"
               mt="4rem"
               {...form.getInputProps('parcelado')}
+            />
+            <NumberInput
+              icon={<MdAttachMoney size={18} />}
+              className={classes.numberInput}
+              size="md"
+              label="Valor Parcela"
+              mb="md"
+              mt="2rem"
+              hideControls
+              min={0}
+              precision={2}
+              disabled={true}
+              value={
+                form.getInputProps('valor').value /
+                form.getInputProps('parcelas').value
+              }
             />
           </Grid.Col>
         </Grid>
