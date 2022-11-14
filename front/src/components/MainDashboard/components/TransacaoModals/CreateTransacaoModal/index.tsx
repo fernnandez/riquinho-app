@@ -7,6 +7,7 @@ import {
   NumberInput,
   SegmentedControl,
   Select,
+  Switch,
   TextInput,
   Title,
 } from '@mantine/core';
@@ -54,7 +55,9 @@ export function CreateTransacaoModal({
       categoria: '',
       tipo: 'RECEITA',
       descricao: '',
-      status: 'EFETIVADA',
+      status: true,
+      parcelado: false,
+      parcelas: 1,
     },
     validate: (values) => ({
       titulo: values.titulo === '' ? 'titulo é obrigatório' : null,
@@ -65,20 +68,29 @@ export function CreateTransacaoModal({
     }),
   });
 
-  const handleSubmit = (data: typeof form.values) => {
+  const invalidate = async () => {
+    await queryClient.invalidateQueries('receitas');
+    await queryClient.invalidateQueries('despesas');
+    await queryClient.invalidateQueries('resumo');
+  };
+
+  const handleSubmit = async (data: typeof form.values) => {
     setloading(true);
     createTransacao(
       {
-        ...data,
-        parcelas: 2,
+        categoria: data.categoria,
+        data: data.data,
+        descricao: data.descricao,
+        titulo: data.titulo,
+        parcelas: data.parcelas,
         valor: Number(data.valor),
-        status: getStatus(data.status),
+        status: getStatus(data.status === true ? 'EFETIVADA' : 'PENDENTE'),
         tipo: getTipo(data.tipo),
       },
       token.token
     )
       .then(() => {
-        queryClient.invalidateQueries('transacoes').then(() => {
+        invalidate().then(() => {
           showNotification(notify({ type: TypeNotificationEnum.SUCCESS }));
           handleClose();
         });
@@ -182,6 +194,19 @@ export function CreateTransacaoModal({
               size="md"
               {...form.getInputProps('descricao')}
             />
+            <NumberInput
+              icon={<MdAttachMoney size={18} />}
+              className={classes.numberInput}
+              size="md"
+              label="Parcelas"
+              mb="md"
+              mt="md"
+              hideControls
+              min={0}
+              precision={0}
+              disabled={!form.getInputProps('parcelado').value}
+              {...form.getInputProps('parcelas')}
+            />
           </Grid.Col>
           <Grid.Col span={6}>
             <Select
@@ -211,17 +236,20 @@ export function CreateTransacaoModal({
               className={classes.datePicker}
               {...form.getInputProps('data')}
             />
-            <Select
+            <Switch
               className={classes.selectInput}
               size="md"
-              mb="md"
-              label="Status"
-              placeholder="Status"
-              data={[
-                { label: 'Efetivada', value: 'EFETIVADA' },
-                { label: 'Pendente', value: 'PENDENTE' },
-              ]}
+              mt="4rem"
+              label="Efetivada"
+              checked={form.getInputProps('status').value}
               {...form.getInputProps('status')}
+            />
+            <Switch
+              className={classes.textInput}
+              label="Parcelado"
+              size="md"
+              mt="4rem"
+              {...form.getInputProps('parcelado')}
             />
           </Grid.Col>
         </Grid>
