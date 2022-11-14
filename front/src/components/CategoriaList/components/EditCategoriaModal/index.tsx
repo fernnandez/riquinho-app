@@ -7,6 +7,7 @@ import {
   Grid,
   Group,
   Modal,
+  Select,
   Text,
   TextInput,
   ThemeIcon,
@@ -24,7 +25,12 @@ import {
   updateCategoria,
 } from '../../../../services/categoria';
 import { queryClient } from '../../../../services/queryClient';
+import { SelectItemIcon } from '../../../../utils/customSelect';
 import { notify, TypeNotificationEnum } from '../../../../utils/notify';
+import {
+  getSimpleIcon,
+  iconList,
+} from '../../../MainDashboard/components/TransacaoModals/constants';
 import { useStyles } from '../styles';
 
 interface EditCategoriaModalProps {
@@ -169,17 +175,40 @@ export function EditCategoriaModal({
               mb="md"
               {...form.getInputProps('color')}
             />
-            <Box>
-              <Tooltip label="não editavel">
-                <Text>Icone </Text>
-                <ThemeIcon
-                  mt="xs"
-                  style={{ backgroundColor: form.getInputProps('color').value }}
-                >
-                  <BiCustomize />
-                </ThemeIcon>
-              </Tooltip>
-            </Box>
+            {form.getInputProps('icon').value ? (
+              <Box>
+                <Text>Icone</Text>
+                <Tooltip label="clique para mudar o icone">
+                  <ThemeIcon
+                    onClick={() => {
+                      form.setFieldValue('icon', '');
+                    }}
+                    mt="xs"
+                    radius={'md'}
+                    size={35}
+                    style={{
+                      backgroundColor: form.getInputProps('color').value,
+                    }}
+                  >
+                    {getSimpleIcon(
+                      form.getInputProps('icon').value,
+                      'white',
+                      25
+                    )}
+                  </ThemeIcon>
+                </Tooltip>
+              </Box>
+            ) : (
+              <Select
+                searchable
+                placeholder="Icone"
+                label="icone"
+                size="md"
+                data={iconList}
+                itemComponent={SelectItemIcon}
+                {...form.getInputProps('icon')}
+              />
+            )}
           </Grid.Col>
         </Grid>
         <Box className={classes.formButtonsCreate}>
