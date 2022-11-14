@@ -36,6 +36,15 @@ export class ParcelaService {
       parcelas.push(parcela);
     }
 
-    await this.parcelaRepository.save(parcelas);
+    return this.parcelaRepository.save(parcelas);
+  }
+
+  async removeParcelas(idTransacao: string) {
+    await this.parcelaRepository
+      .createQueryBuilder('parcela')
+      .delete()
+      .from(Parcela)
+      .where('transacao_id = :id', { id: idTransacao })
+      .execute();
   }
 }

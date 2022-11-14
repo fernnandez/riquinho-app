@@ -32,6 +32,12 @@ export class TransacaoService {
     const DateTimeToCompare = DateTime.fromJSDate(new Date(date));
 
     transacoes.forEach((transacao) => {
+      let valorTotal = 0;
+
+      transacao.parcelas.forEach((el) => {
+        valorTotal += Number(el.valor);
+      });
+
       transacao.parcelas.forEach((parcela) => {
         const DateTimeParcela = DateTime.fromJSDate(new Date(parcela.data));
         if (
@@ -41,6 +47,7 @@ export class TransacaoService {
           transacoesDoMes.push({
             ...transacao,
             parcelas: transacao.parcelas.length,
+            valorTotal,
             parcela: { ...parcela },
           });
         }
@@ -61,8 +68,6 @@ export class TransacaoService {
     const categoria = await this.categoriaService.findOne(
       createTransacaoDto.categoria,
     );
-
-    console.log(createTransacaoDto);
 
     const transacao = await this.transacaoRepository.save({
       ...createTransacaoDto,
@@ -90,11 +95,25 @@ export class TransacaoService {
       updateTransacaoDto.categoria,
     );
 
-    console.log(categoria);
-    // await this.transacaoRepository.update(id, {
-    //   ...updateTransacaoDto,
-    //   categoria,
-    // });
+    const transacao = await this.findOne(id);
+
+    await this.parcelaService.removeParcelas(id);
+
+    console.log(updateTransacaoDto);
+
+    const parcelas = await this.parcelaService.createParcelas(
+      updateTransacaoDto.valor,
+      updateTransacaoDto.parcelas,
+      updateTransacaoDto.data,
+      transacao,
+    );
+
+    await this.transacaoRepository.save({
+      ...updateTransacaoDto,
+      id,
+      categoria,
+      parcelas,
+    });
   }
 
   async updateStatus(id: string, updateTransacaoDto: Transacao): Promise<void> {
@@ -133,18 +152,18 @@ export class TransacaoService {
     if (dataReceitas.length) {
       dataReceitas.forEach((transacao) => {
         if (transacao.parcelas.status === Status.EFETIVADA) {
-          receitasEfetivadas += Number(transacao.parcelas.valor);
+          receitasEfetivadas += Number(transacao.parcela.valor);
         }
-        receitas += Number(transacao.parcelas.valor);
+        receitas += Number(transacao.parcela.valor);
       });
     }
 
     if (dataReceitas.length) {
       dataDespesas.forEach((transacao) => {
         if (transacao.parcelas.status === Status.EFETIVADA) {
-          despesasEfetivadas += Number(transacao.parcelas.valor);
+          despesasEfetivadas += Number(transacao.parcela.valor);
         }
-        despesas += Number(transacao.parcelas.valor);
+        despesas += Number(transacao.parcela.valor);
       });
     }
 
