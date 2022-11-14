@@ -35,6 +35,7 @@ interface TransacaoItemProps {
     titulo: string;
     categoria: CategoriaResponse;
     descricao: string | null;
+    parcelado: boolean;
     parcela: {
       id: string;
       status: StatusEnum;
@@ -140,108 +141,83 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
   };
 
   return (
-    <Paper
-      shadow="md"
-      p="1rem"
-      style={{ minWidth: '100%' }}
-      sx={
-        data.parcela.status !== StatusEnum.EFETIVADA
-          ? { filter: 'brightness(90%)' }
-          : { filter: 'brightness(1)' }
-      }
-    >
-      <Grid className={classes.displayFlex}>
-        <Grid.Col span={2}>
-          {getCategoriaIcon(data.categoria, data.parcela.status, 60, 45)}
-        </Grid.Col>
-        <Box style={{ display: 'flex', flexDirection: 'column' }}>
-          <Grid grow className={classes.listItem} columns={32}>
-            <Grid.Col span={2}>
-              {/* seguir um valor de span unitario */}
-              <Box>
-                <Tooltip label={data.descricao}>
-                  <Text size="sm">Titulo</Text>
-                  <Text size="lg" color="dimmed">
-                    {data.titulo}
-                  </Text>
-                </Tooltip>
-              </Box>
-            </Grid.Col>
-            <Grid.Col span={6}>
-              <Box className={classes.information}>
-                <Box>
-                  <Text size="sm">Valor</Text>
-                  <Text size="lg" color="dimmed">
-                    {Number(data.parcela.valor).toLocaleString('pt-br', {
-                      style: 'currency',
-                      currency: 'BRL',
-                    })}
-                    {/* ajustar os valores monetários da aplicação */}
-                  </Text>
-                </Box>
-              </Box>
-            </Grid.Col>
-            <Grid.Col span={6}>
-              <Box className={classes.information}>
-                <Box>
-                  <Text size="sm">Data</Text>
-                  <Text size="lg" color="dimmed">
-                    {DateFormatter(data.parcela.data.toString())}
-                  </Text>
-                </Box>
-              </Box>
-            </Grid.Col>
+    <tr key={data.parcela.id}>
+      <td>{getCategoriaIcon(data.categoria, data.parcela.status, 40, 25)}</td>
+      <td>
+        <Tooltip label={data.descricao}>
+          <Text size="sm" color="dimmed">
+            {data.titulo}
+          </Text>
+        </Tooltip>
+      </td>
+      <td>
+        <Text size="sm" color="dimmed">
+          {Number(data.parcela.valor).toLocaleString('pt-br', {
+            style: 'currency',
+            currency: 'BRL',
+          })}
+          {/* ajustar os valores monetários da aplicação */}
+        </Text>
+      </td>
 
-            <Grid.Col span={2}>
-              <Tooltip label="trocar status">
-                <ActionIcon
-                  color={
-                    data.parcela.status === StatusEnum.EFETIVADA
-                      ? 'green'
-                      : 'red'
-                  }
-                  variant="filled"
-                  size="md"
-                  onClick={handleStatus}
-                  disabled={isLoading}
-                >
-                  <TbCheck />
-                </ActionIcon>
-              </Tooltip>
-              {/* lowcase do status */}
-            </Grid.Col>
-            <Grid.Col span={2}>
-              <Tooltip label="ações">
-                <Menu
-                  transition="pop"
-                  withArrow
-                  placement="end"
-                  control={
-                    <ActionIcon color="blue" variant="filled" size="md">
-                      <TbDots />
-                    </ActionIcon>
-                  }
-                >
-                  <Menu.Item
-                    icon={<AiFillEdit size={25} />}
-                    onClick={() => onOpenEdit(data.id)}
-                    color="blue"
-                  >
-                    Editar
-                  </Menu.Item>
-                  <Menu.Item
-                    icon={<AiFillDelete size={25} />}
-                    onClick={openConfirmDialog}
-                    color="red"
-                  >
-                    Excluir
-                  </Menu.Item>
-                </Menu>
-              </Tooltip>
-            </Grid.Col>
-          </Grid>
+      <td>
+        <Box className={classes.information}>
+          <Text size="sm" color="dimmed">
+            {DateFormatter(data.parcela.data.toString())}
+          </Text>
         </Box>
-      </Grid>
-    </Paper>
+      </td>
+      <td>
+        <Box className={classes.information}>
+          <Text size="sm" color="dimmed">
+            {data.parcelado ? 'Sim' : 'Não'}
+          </Text>
+        </Box>
+      </td>
+      <td>
+        <Tooltip label="trocar status">
+          <ActionIcon
+            mr={'sm'}
+            color={
+              data.parcela.status === StatusEnum.EFETIVADA ? 'green' : 'red'
+            }
+            variant="filled"
+            size="md"
+            onClick={handleStatus}
+            disabled={isLoading}
+          >
+            <TbCheck />
+          </ActionIcon>
+        </Tooltip>
+
+        <Tooltip label="ações">
+          <Menu
+            transition="pop"
+            withArrow
+            placement="end"
+            control={
+              <ActionIcon color="blue" variant="filled" size="md">
+                <TbDots />
+              </ActionIcon>
+            }
+          >
+            <Menu.Item
+              icon={<AiFillEdit size={25} />}
+              onClick={() => onOpenEdit(data.id)}
+              color="blue"
+            >
+              Editar
+            </Menu.Item>
+            <Menu.Item
+              icon={<AiFillDelete size={25} />}
+              onClick={openConfirmDialog}
+              color="red"
+            >
+              Excluir
+            </Menu.Item>
+          </Menu>
+        </Tooltip>
+      </td>
+    </tr>
   );
 }

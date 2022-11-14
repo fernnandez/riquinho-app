@@ -1,4 +1,13 @@
-import { Alert, Box, Group, Loader, Paper, ScrollArea } from '@mantine/core';
+import {
+  Alert,
+  Box,
+  Group,
+  Loader,
+  Paper,
+  ScrollArea,
+  Table,
+  Text,
+} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useContext } from 'react';
 import { AiOutlineInfoCircle, AiOutlinePlus } from 'react-icons/ai';
@@ -102,15 +111,37 @@ export function TransacaoList({ categorias }: TransacaoListCustomProps) {
             )}
 
             {receitas && receitas.data.length > 0 && (
-              <Group>
-                {receitas.data.map((transacao) => (
-                  <TransacaoItem
-                    key={transacao.id}
-                    data={transacao}
-                    onOpenEdit={handleOpenEditModal}
-                  />
-                ))}
-              </Group>
+              <Table verticalSpacing="xs" fontSize="md">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>
+                      <Text size="sm">nome</Text>
+                    </th>
+                    <th>
+                      <Text size="sm">valor</Text>
+                    </th>
+                    <th>
+                      <Text size="sm">data</Text>
+                    </th>
+                    <th>
+                      <Text size="sm">parcelado</Text>
+                    </th>
+                    <th>
+                      <Text size="sm">ações</Text>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {receitas.data.map((transacao) => (
+                    <TransacaoItem
+                      key={transacao.id}
+                      data={transacao}
+                      onOpenEdit={handleOpenEditModal}
+                    />
+                  ))}
+                </tbody>
+              </Table>
             )}
             {!isLoadingReceita &&
               !errorReceita &&
@@ -176,15 +207,37 @@ export function TransacaoList({ categorias }: TransacaoListCustomProps) {
             )}
 
             {despesas && despesas.data.length > 0 && (
-              <Group>
-                {despesas.data.map((transacao) => (
-                  <TransacaoItem
-                    key={transacao.id}
-                    data={transacao}
-                    onOpenEdit={handleOpenEditModal}
-                  />
-                ))}
-              </Group>
+              <Table verticalSpacing="xs" fontSize="md">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>
+                      <Text size="sm">nome</Text>
+                    </th>
+                    <th>
+                      <Text size="sm">valor</Text>
+                    </th>
+                    <th>
+                      <Text size="sm">data</Text>
+                    </th>
+                    <th>
+                      <Text size="sm">parcelado</Text>
+                    </th>
+                    <th>
+                      <Text size="sm">ações</Text>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {despesas.data.map((transacao) => (
+                    <TransacaoItem
+                      key={transacao.id}
+                      data={transacao}
+                      onOpenEdit={handleOpenEditModal}
+                    />
+                  ))}
+                </tbody>
+              </Table>
             )}
             {!isLoadingDespesa &&
               !errorDespesa &&
