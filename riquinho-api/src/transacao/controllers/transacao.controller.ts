@@ -6,12 +6,13 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateUpdateTransacaoDto } from '../dtos/create-update-transacao.dto';
-import { Transacao } from '../entities/transacao.entity';
+import { TipoTransacao, Transacao } from '../entities/transacao.entity';
 import { TransacaoService } from '../services/transacao.service';
 
 @UseGuards(AuthGuard('jwt'))
@@ -20,8 +21,17 @@ export class TransacaoController {
   constructor(private transacaoService: TransacaoService) {}
 
   @Get()
-  findAll(@Request() req): Promise<Transacao[]> {
-    return this.transacaoService.findAll(req.user);
+  findAll(
+    @Request() req,
+    @Query('tipo') tipo: TipoTransacao,
+    @Query('data') data: Date,
+  ): Promise<Transacao[]> {
+    return this.transacaoService.findAllByTipo(req.user, tipo, data);
+  }
+
+  @Get('resumo')
+  findResumo(@Request() req, @Query('data') data: Date) {
+    return this.transacaoService.findResumo(req.user, data);
   }
 
   @Get(':id')

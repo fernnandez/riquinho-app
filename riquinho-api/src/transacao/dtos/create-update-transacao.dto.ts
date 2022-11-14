@@ -3,6 +3,7 @@ import {
   IsEnum,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
 } from 'class-validator';
 import { Status, TipoTransacao } from '../entities/transacao.entity';
@@ -12,7 +13,7 @@ export class CreateUpdateTransacaoDto {
   @IsString()
   titulo: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   descricao: string;
 
@@ -34,4 +35,8 @@ export class CreateUpdateTransacaoDto {
   @IsNotEmpty()
   @IsNumber()
   valor: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  parcelas: number;
 }

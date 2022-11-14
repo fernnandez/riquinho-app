@@ -5,11 +5,6 @@ enum TipoTransacao {
   DESPESA = 'DESPESA',
 }
 
-enum Status {
-  EFETIVADA = 'EFETIVADA',
-  PENDENTE = 'PENDENTE',
-}
-
 export class CreateTransacaoTable1644268019887 implements MigrationInterface {
   private tableName = 'transacao';
 
@@ -35,26 +30,26 @@ export class CreateTransacaoTable1644268019887 implements MigrationInterface {
             type: 'varchar',
             isNullable: true,
           },
-          {
-            name: 'data',
-            type: 'Date',
-          },
+          // {
+          //   name: 'data',
+          //   type: 'Date',
+          // },
           {
             name: 'tipo',
             type: 'enum',
             enum: Object.values(TipoTransacao),
           },
-          {
-            name: 'status',
-            type: 'enum',
-            enum: Object.values(Status),
-          },
-          {
-            name: 'valor',
-            type: 'numeric',
-            scale: 2,
-            precision: 10,
-          },
+          // {
+          //   name: 'status',
+          //   type: 'enum',
+          //   enum: Object.values(Status),
+          // },
+          // {
+          //   name: 'valor',
+          //   type: 'numeric',
+          //   scale: 2,
+          //   precision: 10,
+          // },
           {
             name: 'created_at',
             type: 'Date',
