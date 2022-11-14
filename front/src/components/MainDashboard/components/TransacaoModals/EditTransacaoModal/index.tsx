@@ -24,6 +24,7 @@ import { useModalController } from '../../../../../context/ModalContext/ModalCon
 import { CategoriaResponse } from '../../../../../services/categoria';
 import { queryClient } from '../../../../../services/queryClient';
 import {
+  TransacaoOneParcela,
   TransacaoResponse,
   updateTransacao,
 } from '../../../../../services/transacao';
@@ -40,7 +41,7 @@ import { useStyles } from '../styles';
 interface EditTransacaoModalProps {
   isOpen: boolean;
   onClose: () => void;
-  transacaoList: TransacaoResponse[];
+  transacaoList: TransacaoOneParcela[];
   categorias: CategoriaResponse[];
 }
 
@@ -81,12 +82,6 @@ export function EditTransacaoModal({
     onClose();
   };
 
-  const invalidate = async () => {
-    await queryClient.invalidateQueries('receitas');
-    await queryClient.invalidateQueries('despesas');
-    await queryClient.invalidateQueries('resumo');
-  };
-
   const handleSubmit = (data: typeof form.values) => {
     setloading(true);
     updateTransacao(
@@ -101,7 +96,7 @@ export function EditTransacaoModal({
       token.token
     )
       .then(() => {
-        invalidate().then(() => {
+        queryClient.invalidateQueries('transacoes').then(() => {
           showNotification(notify({ type: TypeNotificationEnum.SUCCESS }));
           handleClose();
         });

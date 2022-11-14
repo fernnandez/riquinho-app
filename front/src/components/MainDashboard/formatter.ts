@@ -1,21 +1,43 @@
 import { DateTime } from 'luxon';
-import { TransacaoResponse } from '../../services/transacao';
+import {
+  TransacaoOneParcela,
+  TransacaoResponse,
+} from '../../services/transacao';
 import {
   StatusEnum,
   TipoTransacaoEnum,
 } from './components/TransacaoModals/constants';
 
-export function getTransacaoByTipo(
-  tipo: TipoTransacaoEnum,
+export function getTransacaoDate(
   transacoes: TransacaoResponse[],
   data: DateTime
 ) {
-  return transacoes.filter(
-    (transacao) =>
-      transacao.tipo === tipo &&
-      DateTime.fromISO(transacao.data.toString()).month === data.month &&
-      DateTime.fromISO(transacao.data.toString()).year === data.year
-  );
+  const transacoesDoMes = new Array<TransacaoOneParcela>();
+
+  transacoes.forEach((transacao) => {
+    let valorTotal = 0;
+
+    transacao.parcelas.forEach((el) => {
+      valorTotal += Number(el.valor);
+    });
+
+    transacao.parcelas.forEach((parcela) => {
+      const DateTimeParcela = DateTime.fromJSDate(new Date(parcela.data));
+      if (
+        DateTimeParcela.month === data.month &&
+        DateTimeParcela.year === data.year
+      ) {
+        transacoesDoMes.push({
+          ...transacao,
+          parcelas: transacao.parcelas.length,
+          valorTotal,
+          parcela,
+        });
+      }
+    });
+  });
+
+  return transacoesDoMes;
 }
 
 export function getValues(transacoes: TransacaoResponse[], data: DateTime) {
@@ -24,22 +46,19 @@ export function getValues(transacoes: TransacaoResponse[], data: DateTime) {
   let receitasEfetivadas = 0;
   let despesasEfetivadas = 0;
 
-  transacoes.forEach((transacao) => {
-    if (
-      DateTime.fromISO(transacao.data.toString()).month === data.month &&
-      DateTime.fromISO(transacao.data.toString()).year === data.year
-    ) {
-      if (transacao.tipo === TipoTransacaoEnum.RECEITA) {
-        if (transacao.status === StatusEnum.EFETIVADA) {
-          receitasEfetivadas += Number(transacao.valor);
-        }
-        receitas += Number(transacao.valor);
-      } else {
-        if (transacao.status === StatusEnum.EFETIVADA) {
-          despesasEfetivadas += Number(transacao.valor);
-        }
-        despesas += Number(transacao.valor);
+  const transacoesAjustadas = getTransacaoDate(transacoes, data);
+
+  transacoesAjustadas.forEach((transacao) => {
+    if (transacao.tipo === TipoTransacaoEnum.RECEITA) {
+      if (transacao.parcela.status === StatusEnum.EFETIVADA) {
+        receitasEfetivadas += Number(transacao.parcela.valor);
       }
+      receitas += Number(transacao.parcela.valor);
+    } else {
+      if (transacao.parcela.status === StatusEnum.EFETIVADA) {
+        despesasEfetivadas += Number(transacao.parcela.valor);
+      }
+      despesas += Number(transacao.parcela.valor);
     }
   });
 
@@ -47,7 +66,8 @@ export function getValues(transacoes: TransacaoResponse[], data: DateTime) {
 }
 
 export function getValuesByCategory(
-  transacoes: TransacaoResponse[],
+  receitas: TransacaoResponse[],
+  despesas: TransacaoResponse[],
   data: DateTime
 ) {
   const receitaCategoryValue = new Array<{
@@ -62,45 +82,36 @@ export function getValuesByCategory(
     color: string;
   }>();
 
-  const receitas = getTransacaoByTipo(
-    TipoTransacaoEnum.RECEITA,
-    transacoes,
-    data
-  );
+  const receitasAjustadas = getTransacaoDate(receitas, data);
+  const despesasAjustadas = getTransacaoDate(despesas, data);
 
-  const despesas = getTransacaoByTipo(
-    TipoTransacaoEnum.DESPESA,
-    transacoes,
-    data
-  );
-
-  receitas.forEach((transacao) => {
+  receitasAjustadas.forEach((transacao) => {
     const categoriaFound = receitaCategoryValue.find(
       (element) => element.name === transacao.categoria.nome
     );
 
     if (categoriaFound) {
-      categoriaFound.value += Number(transacao.valor);
+      categoriaFound.value += Number(transacao.parcela.valor);
     } else {
       receitaCategoryValue.push({
         name: transacao.categoria.nome,
-        value: Number(transacao.valor),
+        value: Number(transacao.parcela.valor),
         color: transacao.categoria.color,
       });
     }
   });
 
-  despesas.forEach((transacao) => {
+  despesasAjustadas.forEach((transacao) => {
     const categoriaFound = despesaCategoryValue.find(
       (element) => element.name === transacao.categoria.nome
     );
 
     if (categoriaFound) {
-      categoriaFound.value += Number(transacao.valor);
+      categoriaFound.value += Number(transacao.parcela.valor);
     } else {
       despesaCategoryValue.push({
         name: transacao.categoria.nome,
-        value: Number(transacao.valor),
+        value: Number(transacao.parcela.valor),
         color: transacao.categoria.color,
       });
     }

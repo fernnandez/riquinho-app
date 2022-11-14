@@ -6,7 +6,6 @@ import {
   Param,
   Post,
   Put,
-  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -21,17 +20,29 @@ export class TransacaoController {
   constructor(private transacaoService: TransacaoService) {}
 
   @Get()
-  findAll(
+  async findAll(
     @Request() req,
-    @Query('tipo') tipo: TipoTransacao,
-    @Query('data') data: Date,
-  ): Promise<Transacao[]> {
-    return this.transacaoService.findAllByTipo(req.user, tipo, data);
+  ): Promise<{ receitas: Transacao[]; despesas: Transacao[] }> {
+    const receitas = await this.transacaoService.findAllByTipo(
+      req.user,
+      TipoTransacao.RECEITA,
+    );
+    const despesas = await this.transacaoService.findAllByTipo(
+      req.user,
+      TipoTransacao.DESPESA,
+    );
+
+    return { receitas, despesas };
   }
 
   @Get('resumo')
-  findResumo(@Request() req, @Query('data') data: Date) {
-    return this.transacaoService.findResumo(req.user, data);
+  findResumo(@Request() req) {
+    return this.transacaoService.findResumo(req.user);
+  }
+
+  @Get('resumo/categoria')
+  findResumoCategoria(@Request() req) {
+    return this.transacaoService.findResumoCategoria(req.user);
   }
 
   @Get(':id')

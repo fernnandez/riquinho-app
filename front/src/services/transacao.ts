@@ -25,8 +25,25 @@ export interface TransacaoResponse {
   tipo: TipoTransacaoEnum;
   descricao: string;
   parcelado: boolean;
-  parcelas: number;
   valorTotal: number;
+  parcelas: {
+    descricao: string;
+    id: string;
+    status: StatusEnum;
+    data: Date;
+    valor: number;
+  }[];
+}
+
+export interface TransacaoOneParcela {
+  id: string;
+  titulo: string;
+  categoria: CategoriaResponse;
+  tipo: TipoTransacaoEnum;
+  descricao: string;
+  parcelado: boolean;
+  valorTotal: number;
+  parcelas: number;
   parcela: {
     descricao: string;
     id: string;
@@ -66,13 +83,11 @@ export const deleteTransacao = async (idTransacao: string, token: string) => {
   });
 };
 
-export const findAllTransacao = async (
-  token: string,
-  tipo: TipoTransacaoEnum,
-  data: Date
-) => {
-  return api.get<TransacaoResponse[]>('/transacao', {
-    params: { tipo: tipo, data: data },
+export const findAllTransacao = async (token: string) => {
+  return api.get<{
+    receitas: TransacaoResponse[];
+    despesas: TransacaoResponse[];
+  }>('/transacao', {
     headers: { Authorization: `Bearer ${token}` },
   });
 };
@@ -84,6 +99,24 @@ export const findResumo = async (token: string, data: Date) => {
     despesas: number;
     despesasEfetivadas: number;
   }>('/transacao/resumo', {
+    params: { data: data },
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
+
+export const findResumoCategoria = async (token: string, data: Date) => {
+  return api.get<{
+    despesaCategoryValue: {
+      name: string;
+      value: number;
+      color: string;
+    }[];
+    receitaCategoryValue: {
+      name: string;
+      value: number;
+      color: string;
+    }[];
+  }>('/transacao/resumo/categoria', {
     params: { data: data },
     headers: { Authorization: `Bearer ${token}` },
   });

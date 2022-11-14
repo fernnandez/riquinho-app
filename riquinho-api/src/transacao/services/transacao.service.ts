@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DateTime } from 'luxon';
 import { Repository } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { CategoriaService } from '../../user/services/categoria.service';
@@ -18,7 +17,7 @@ export class TransacaoService {
     private readonly parcelaService: ParcelaService,
   ) {}
 
-  async findAllByTipo(user: User, tipo: TipoTransacao, date: Date) {
+  async findAllByTipo(user: User, tipo: TipoTransacao) {
     const transacoes = await this.transacaoRepository
       .createQueryBuilder('transacao')
       .where('transacao.user = :id', { id: user.id })
@@ -29,8 +28,6 @@ export class TransacaoService {
 
     const transacoesDoMes = [];
 
-    const DateTimeToCompare = DateTime.fromJSDate(new Date(date));
-
     transacoes.forEach((transacao) => {
       let valorTotal = 0;
 
@@ -38,19 +35,9 @@ export class TransacaoService {
         valorTotal += Number(el.valor);
       });
 
-      transacao.parcelas.forEach((parcela) => {
-        const DateTimeParcela = DateTime.fromJSDate(new Date(parcela.data));
-        if (
-          DateTimeParcela.month === DateTimeToCompare.month &&
-          DateTimeParcela.year === DateTimeToCompare.year
-        ) {
-          transacoesDoMes.push({
-            ...transacao,
-            parcelas: transacao.parcelas.length,
-            valorTotal,
-            parcela: { ...parcela },
-          });
-        }
+      transacoesDoMes.push({
+        ...transacao,
+        valorTotal,
       });
     });
 
@@ -122,23 +109,15 @@ export class TransacaoService {
     await this.transacaoRepository.delete(id);
   }
 
-  async findResumo(user: User, date: Date) {
+  async findResumo(user: User) {
     let receitas = 0;
     let despesas = 0;
     let receitasEfetivadas = 0;
     let despesasEfetivadas = 0;
 
-    const dataReceitas = await this.findAllByTipo(
-      user,
-      TipoTransacao.RECEITA,
-      date,
-    );
+    const dataReceitas = await this.findAllByTipo(user, TipoTransacao.RECEITA);
 
-    const dataDespesas = await this.findAllByTipo(
-      user,
-      TipoTransacao.DESPESA,
-      date,
-    );
+    const dataDespesas = await this.findAllByTipo(user, TipoTransacao.DESPESA);
 
     if (dataReceitas.length) {
       dataReceitas.forEach((transacao) => {
@@ -159,5 +138,56 @@ export class TransacaoService {
     }
 
     return { receitas, receitasEfetivadas, despesas, despesasEfetivadas };
+  }
+
+  async findResumoCategoria(user: User) {
+    const receitas = await this.findAllByTipo(user, TipoTransacao.RECEITA);
+
+    const despesas = await this.findAllByTipo(user, TipoTransacao.DESPESA);
+
+    const receitaCategoryValue = new Array<{
+      name: string;
+      value: number;
+      color: string;
+    }>();
+
+    const despesaCategoryValue = new Array<{
+      name: string;
+      value: number;
+      color: string;
+    }>();
+
+    receitas.forEach((transacao) => {
+      const categoriaFound = receitaCategoryValue.find(
+        (element) => element.name === transacao.categoria.nome,
+      );
+
+      if (categoriaFound) {
+        categoriaFound.value += Number(transacao.parcela.valor);
+      } else {
+        receitaCategoryValue.push({
+          name: transacao.categoria.nome,
+          value: Number(transacao.parcela.valor),
+          color: transacao.categoria.color,
+        });
+      }
+    });
+
+    despesas.forEach((transacao) => {
+      const categoriaFound = despesaCategoryValue.find(
+        (element) => element.name === transacao.categoria.nome,
+      );
+
+      if (categoriaFound) {
+        categoriaFound.value += Number(transacao.parcela.valor);
+      } else {
+        despesaCategoryValue.push({
+          name: transacao.categoria.nome,
+          value: Number(transacao.parcela.valor),
+          color: transacao.categoria.color,
+        });
+      }
+    });
+    return { receitaCategoryValue, despesaCategoryValue };
   }
 }

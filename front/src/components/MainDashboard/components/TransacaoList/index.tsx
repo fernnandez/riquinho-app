@@ -1,60 +1,47 @@
-import {
-  Alert,
-  Box,
-  Group,
-  Loader,
-  Paper,
-  ScrollArea,
-  Table,
-  Text,
-} from '@mantine/core';
+import { Box } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { useContext } from 'react';
-import { AiOutlineInfoCircle, AiOutlinePlus } from 'react-icons/ai';
-import { useQuery } from 'react-query';
+import { useContext, useEffect, useState } from 'react';
 import AuthContext from '../../../../context/AuthContext/AuthContext';
 import { useModalController } from '../../../../context/ModalContext/ModalContext';
 import { useMonthController } from '../../../../context/MonthContext/MonthContext';
 import { CategoriaResponse } from '../../../../services/categoria';
-import { findAllTransacao } from '../../../../services/transacao';
+import {
+  TransacaoOneParcela,
+  TransacaoResponse,
+} from '../../../../services/transacao';
+import { getTransacaoDate } from '../../formatter';
 import { TipoTransacaoEnum } from '../TransacaoModals/constants';
 import { EditTransacaoModal } from '../TransacaoModals/EditTransacaoModal';
-import { TransacaoItem } from './TransacaoItem';
+import { TransacaoTable } from './TransacaoTable';
 
 interface TransacaoListCustomProps {
+  transacoes:
+    | { receitas: TransacaoResponse[]; despesas: TransacaoResponse[] }
+    | undefined;
   categorias: CategoriaResponse[] | undefined;
 }
 
-export function TransacaoList({ categorias }: TransacaoListCustomProps) {
+export function TransacaoList({
+  categorias,
+  transacoes,
+}: TransacaoListCustomProps) {
   const [openedEdit, handlersEdit] = useDisclosure(false);
-  const { token } = useContext(AuthContext);
 
   const { onSetId } = useModalController();
   const { date } = useMonthController();
 
-  const {
-    data: receitas,
-    isLoading: isLoadingReceita,
-    error: errorReceita,
-  } = useQuery(['receitas'], () => {
-    return findAllTransacao(
-      token.token,
-      TipoTransacaoEnum.RECEITA,
-      date.toJSDate()
-    );
-  });
+  const [receitas, setReceitas] = useState<TransacaoOneParcela[]>([]);
+  const [despesas, setDespesas] = useState<TransacaoOneParcela[]>([]);
 
-  const {
-    data: despesas,
-    isLoading: isLoadingDespesa,
-    error: errorDespesa,
-  } = useQuery(['despesas'], () => {
-    return findAllTransacao(
-      token.token,
-      TipoTransacaoEnum.DESPESA,
-      date.toJSDate()
-    );
-  });
+  useEffect(() => {
+    if (transacoes) {
+      setReceitas(getTransacaoDate(transacoes.receitas, date));
+      setDespesas(getTransacaoDate(transacoes.despesas, date));
+    } else {
+      setReceitas([]);
+      setDespesas([]);
+    }
+  }, [date, transacoes]);
 
   const handleOpenEditModal = (id: string) => {
     onSetId(id);
@@ -72,204 +59,28 @@ export function TransacaoList({ categorias }: TransacaoListCustomProps) {
         gap: '2rem',
       }}
     >
-      <Paper
-        style={{ backgroundColor: '#D1f7d6', flex: 1 }}
-        shadow="md"
-        p="1rem"
-      >
-        <ScrollArea style={{ height: 500 }}>
-          <>
-            {isLoadingReceita && (
-              <Box
-                style={{
-                  height: '500px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <Loader />
-              </Box>
-            )}
-            {!isLoadingReceita && errorReceita && (
-              <Box
-                style={{
-                  height: '500px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <Alert
-                  icon={<AiOutlineInfoCircle size={20} />}
-                  title="Ops!"
-                  color="red"
-                >
-                  Aparentemente alguma coisa deu errado, tente novamente
-                </Alert>
-              </Box>
-            )}
+      <TransacaoTable
+        tipo={TipoTransacaoEnum.RECEITA}
+        isLoading={false}
+        data={receitas}
+        error={null}
+        handleOpenEditModal={handleOpenEditModal}
+      />
 
-            {receitas && receitas.data.length > 0 && (
-              <Table verticalSpacing="xs" fontSize="md">
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th>
-                      <Text size="sm">nome</Text>
-                    </th>
-                    <th>
-                      <Text size="sm">valor</Text>
-                    </th>
-                    <th>
-                      <Text size="sm">data</Text>
-                    </th>
-                    <th>
-                      <Text size="sm">parcelado</Text>
-                    </th>
-                    <th>
-                      <Text size="sm">ações</Text>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {receitas.data.map((transacao) => (
-                    <TransacaoItem
-                      key={transacao.id}
-                      data={transacao}
-                      onOpenEdit={handleOpenEditModal}
-                    />
-                  ))}
-                </tbody>
-              </Table>
-            )}
-            {!isLoadingReceita &&
-              !errorReceita &&
-              receitas &&
-              receitas.data.length === 0 && (
-                <Box
-                  style={{
-                    height: '500px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Alert
-                    icon={<AiOutlineInfoCircle size={20} />}
-                    title="Ops!"
-                    color="blue"
-                  >
-                    Nenhuma informação cadastradada
-                  </Alert>
-                </Box>
-              )}
-          </>
-        </ScrollArea>
-      </Paper>
+      <TransacaoTable
+        tipo={TipoTransacaoEnum.DESPESA}
+        isLoading={false}
+        data={despesas}
+        error={null}
+        handleOpenEditModal={handleOpenEditModal}
+      />
 
-      <Paper
-        style={{ backgroundColor: '#Ffd3d3', flex: 1 }}
-        shadow="md"
-        p="1rem"
-      >
-        <ScrollArea style={{ height: 500 }}>
-          <>
-            {isLoadingDespesa && (
-              <Box
-                style={{
-                  height: '500px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <Loader />
-              </Box>
-            )}
-            {!isLoadingDespesa && errorDespesa && (
-              <Box
-                style={{
-                  height: '500px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <Alert
-                  icon={<AiOutlinePlus size={20} />}
-                  title="Ops!"
-                  color="red"
-                >
-                  Aparentemente alguma coisa deu errado, tente novamente
-                </Alert>
-              </Box>
-            )}
-
-            {despesas && despesas.data.length > 0 && (
-              <Table verticalSpacing="xs" fontSize="md">
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th>
-                      <Text size="sm">nome</Text>
-                    </th>
-                    <th>
-                      <Text size="sm">valor</Text>
-                    </th>
-                    <th>
-                      <Text size="sm">data</Text>
-                    </th>
-                    <th>
-                      <Text size="sm">parcelado</Text>
-                    </th>
-                    <th>
-                      <Text size="sm">ações</Text>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {despesas.data.map((transacao) => (
-                    <TransacaoItem
-                      key={transacao.id}
-                      data={transacao}
-                      onOpenEdit={handleOpenEditModal}
-                    />
-                  ))}
-                </tbody>
-              </Table>
-            )}
-            {!isLoadingDespesa &&
-              !errorDespesa &&
-              despesas &&
-              despesas.data.length === 0 && (
-                <Box
-                  style={{
-                    height: '500px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Alert
-                    icon={<AiOutlinePlus size={20} />}
-                    title="Ops!"
-                    color="blue"
-                  >
-                    Nenhuma informação cadastradada
-                  </Alert>
-                </Box>
-              )}
-          </>
-        </ScrollArea>
-      </Paper>
-
-      {receitas && despesas && (
+      {transacoes && (
         <EditTransacaoModal
           categorias={categorias || []}
           isOpen={openedEdit}
           onClose={handlersEdit.close}
-          transacaoList={[...receitas.data, ...despesas.data] || []}
+          transacaoList={[...receitas, ...despesas] || []}
         />
       )}
     </Box>

@@ -20,7 +20,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <App />
         </AuthProvider>
       </MantineProvider>
-    {/* <ReactQueryDevtools /> */}
+    <ReactQueryDevtools />
     </QueryClientProvider>
   </React.StrictMode>
 );

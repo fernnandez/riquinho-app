@@ -68,12 +68,6 @@ export function CreateTransacaoModal({
     }),
   });
 
-  const invalidate = async () => {
-    await queryClient.invalidateQueries('receitas');
-    await queryClient.invalidateQueries('despesas');
-    await queryClient.invalidateQueries('resumo');
-  };
-
   const handleSubmit = async (data: typeof form.values) => {
     setloading(true);
     createTransacao(
@@ -88,7 +82,7 @@ export function CreateTransacaoModal({
       token.token
     )
       .then(() => {
-        invalidate().then(() => {
+        queryClient.invalidateQueries('transacoes').then(() => {
           showNotification(notify({ type: TypeNotificationEnum.SUCCESS }));
           handleClose();
         });

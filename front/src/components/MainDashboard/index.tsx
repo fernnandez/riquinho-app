@@ -22,7 +22,6 @@ import { Charts } from './components/Charts';
 import { InfoCards } from './components/InfoCards';
 import { SeletorMes } from './components/SeletorMes';
 import { TransacaoList } from './components/TransacaoList';
-import { TipoTransacaoEnum } from './components/TransacaoModals/constants';
 import { CreateTransacaoModal } from './components/TransacaoModals/CreateTransacaoModal';
 
 export function MainDashboard() {
@@ -33,6 +32,14 @@ export function MainDashboard() {
   const { data: dateCategorias } = useQuery(['categorias'], () => {
     return findAllCategorias(token.token);
   });
+
+  const { data } = useQuery(
+    ['transacoes'],
+    () => {
+      return findAllTransacao(token.token);
+    },
+    {}
+  );
 
   return (
     <Box
@@ -72,7 +79,11 @@ export function MainDashboard() {
           <BsGraphUp size={30} />
         </ThemeIcon>
       </Group>
-      <InfoCards />
+      {data && (
+        <InfoCards
+          transacoes={[...data.data.receitas, ...data.data.despesas]}
+        />
+      )}
 
       <Group align="center" mt="2rem">
         <Title order={2} align="center">
@@ -82,12 +93,12 @@ export function MainDashboard() {
           <GiMoneyStack size={30} />
         </ThemeIcon>
       </Group>
-      <TransacaoList
-        // isLoading={isLoading}
-        // error={error}
-        // transacoes={data?.data || []}
-        categorias={dateCategorias?.data || []}
-      />
+      {data && dateCategorias && (
+        <TransacaoList
+          categorias={dateCategorias.data || []}
+          transacoes={data.data || []}
+        />
+      )}
 
       <Group align="center" mt="2rem">
         <Title order={2} align="center">
@@ -97,7 +108,7 @@ export function MainDashboard() {
           <BiChart size={30} />
         </ThemeIcon>
       </Group>
-      {/* {data && data.data.length > 0 && <Charts transacoes={data?.data} />} */}
+      {data && dateCategorias && <Charts transacoes={data.data || []} />}
 
       {/* Modals */}
       {dateCategorias?.data && (

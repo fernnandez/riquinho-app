@@ -1,47 +1,45 @@
-import { Box, Center, Group, Stack, Title } from '@mantine/core';
-import { useEffect, useState } from 'react';
+import { Group, Stack, Title } from '@mantine/core';
+import { useContext, useEffect, useState } from 'react';
 import { MdAttachMoney } from 'react-icons/md';
-import {
-  TbArrowAutofitUp,
-  TbArrowBarUp,
-  TbCashBanknoteOff,
-} from 'react-icons/tb';
+import { TbArrowBarUp, TbCashBanknoteOff } from 'react-icons/tb';
+import AuthContext from '../../../../context/AuthContext/AuthContext';
 import { useMonthController } from '../../../../context/MonthContext/MonthContext';
 import { TransacaoResponse } from '../../../../services/transacao';
 import { getValuesByCategory } from '../../formatter';
 import CustomChart from './CustomChart/CustomChart';
 
 interface ChartsProps {
-  transacoes: TransacaoResponse[];
+  transacoes:
+    | { receitas: TransacaoResponse[]; despesas: TransacaoResponse[] }
+    | undefined;
 }
 
 export function Charts({ transacoes }: ChartsProps) {
+  const { token } = useContext(AuthContext);
   const { date } = useMonthController();
 
-  const [receitas, setReceitas] = useState<
-    {
+  const [resumo, setResumo] = useState<{
+    despesaCategoryValue: {
       name: string;
       value: number;
       color: string;
-    }[]
-  >([]);
-  const [despesas, setDespesas] = useState<
-    {
+    }[];
+    receitaCategoryValue: {
       name: string;
       value: number;
       color: string;
-    }[]
-  >([]);
+    }[];
+  } | null>(null);
 
   useEffect(() => {
-    if (transacoes.length > 0) {
-      const { despesaCategoryValue, receitaCategoryValue } =
-        getValuesByCategory(transacoes, date);
-
-      setReceitas(receitaCategoryValue);
-      setDespesas(despesaCategoryValue);
+    if (transacoes) {
+      setResumo(
+        getValuesByCategory(transacoes.receitas, transacoes.despesas, date)
+      );
+    } else {
+      setResumo(null);
     }
-  }, [transacoes, date]);
+  }, [date, transacoes]);
 
   return (
     <>
@@ -49,33 +47,43 @@ export function Charts({ transacoes }: ChartsProps) {
         style={{ width: '100%', justifyContent: 'center' }}
         direction={'row'}
       >
-        <Stack align={'center'}>
-          <CustomChart data={receitas} />
-          <TbArrowBarUp size={25} color="green" />
-          <Group direction="row">
-            <Title
-              sx={(theme) => ({ color: theme.colors.green, cursor: 'default' })}
-              order={3}
-            >
-              Receitas
-            </Title>
-            <MdAttachMoney size={25} color="green" />
-          </Group>
-        </Stack>
+        {resumo && (
+          <>
+            <Stack align={'center'}>
+              <CustomChart data={resumo.receitaCategoryValue} />
+              <TbArrowBarUp size={25} color="green" />
+              <Group direction="row">
+                <Title
+                  sx={(theme) => ({
+                    color: theme.colors.green,
+                    cursor: 'default',
+                  })}
+                  order={3}
+                >
+                  Receitas
+                </Title>
+                <MdAttachMoney size={25} color="green" />
+              </Group>
+            </Stack>
 
-        <Stack align={'center'}>
-          <CustomChart data={despesas} />
-          <TbArrowBarUp size={25} color="red" />
-          <Group direction="row">
-            <Title
-              sx={(theme) => ({ color: theme.colors.red, cursor: 'default' })}
-              order={3}
-            >
-              Despesas
-            </Title>
-            <TbCashBanknoteOff size={25} color="red" />
-          </Group>
-        </Stack>
+            <Stack align={'center'}>
+              <CustomChart data={resumo.despesaCategoryValue} />
+              <TbArrowBarUp size={25} color="red" />
+              <Group direction="row">
+                <Title
+                  sx={(theme) => ({
+                    color: theme.colors.red,
+                    cursor: 'default',
+                  })}
+                  order={3}
+                >
+                  Despesas
+                </Title>
+                <TbCashBanknoteOff size={25} color="red" />
+              </Group>
+            </Stack>
+          </>
+        )}
       </Group>
     </>
   );

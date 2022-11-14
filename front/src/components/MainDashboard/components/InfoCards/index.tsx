@@ -4,23 +4,39 @@ import { Card } from './components/Card';
 
 import { HiOutlineCash } from 'react-icons/hi';
 import { TbCashBanknoteOff } from 'react-icons/tb';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import AuthContext from '../../../../context/AuthContext/AuthContext';
 import { useQuery } from 'react-query';
-import { findResumo } from '../../../../services/transacao';
+import {
+  findResumo,
+  TransacaoOneParcela,
+  TransacaoResponse,
+} from '../../../../services/transacao';
 import { useMonthController } from '../../../../context/MonthContext/MonthContext';
+import { getValues } from '../../formatter';
 
-export function InfoCards() {
+interface InfoCardsProps {
+  transacoes: TransacaoResponse[];
+}
+
+export function InfoCards({ transacoes }: InfoCardsProps) {
   const { token } = useContext(AuthContext);
   const { date } = useMonthController();
 
-  const {
-    data: resumo,
-    isLoading,
-    error,
-  } = useQuery(['resumo'], () => {
-    return findResumo(token.token, date.toJSDate());
-  });
+  const [resumo, setResumo] = useState<{
+    receitas: number;
+    receitasEfetivadas: number;
+    despesas: number;
+    despesasEfetivadas: number;
+  } | null>(null);
+
+  useEffect(() => {
+    if (transacoes) {
+      setResumo(getValues(transacoes, date));
+    } else {
+      setResumo(null);
+    }
+  }, [date, transacoes]);
 
   return (
     <Box
@@ -33,34 +49,32 @@ export function InfoCards() {
       }}
     >
       <Card
-        isLoading={isLoading}
+        isLoading={false}
         title="Recebido"
-        value={resumo ? String(resumo.data.receitasEfetivadas) : null}
-        valuePrevisto={resumo ? String(resumo.data.receitas) : null}
+        value={resumo ? String(resumo.receitasEfetivadas) : null}
+        valuePrevisto={resumo ? String(resumo.receitas) : null}
         icon={<MdAttachMoney size={25} color="green" />}
         color="green"
       />
       <Card
-        isLoading={isLoading}
+        isLoading={false}
         title="Saldo"
         value={
           resumo
-            ? String(
-                resumo.data.receitasEfetivadas - resumo.data.despesasEfetivadas
-              )
+            ? String(resumo.receitasEfetivadas - resumo.despesasEfetivadas)
             : null
         }
         valuePrevisto={
-          resumo ? String(resumo.data.receitas - resumo.data.despesas) : null
+          resumo ? String(resumo.receitas - resumo.despesas) : null
         }
         icon={<HiOutlineCash size={25} color="blue" />}
         color="blue"
       />
       <Card
-        isLoading={isLoading}
+        isLoading={false}
         title="Gasto"
-        value={resumo ? String(resumo.data.despesasEfetivadas) : null}
-        valuePrevisto={resumo ? String(resumo.data.despesas) : null}
+        value={resumo ? String(resumo.despesasEfetivadas) : null}
+        valuePrevisto={resumo ? String(resumo.despesas) : null}
         icon={<TbCashBanknoteOff size={25} color="red" />}
         color="red"
       />

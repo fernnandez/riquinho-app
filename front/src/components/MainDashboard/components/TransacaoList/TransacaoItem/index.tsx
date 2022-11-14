@@ -52,12 +52,6 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
   const [isLoading, setLoading] = useState(false);
   const modals = useModals();
 
-  const invalidate = async () => {
-    await queryClient.invalidateQueries('receitas');
-    await queryClient.invalidateQueries('despesas');
-    await queryClient.invalidateQueries('resumo');
-  };
-
   const handleDelete = () => {
     deleteTransacao(data.id, token.token)
       .then(() => {
@@ -86,7 +80,7 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
     setLoading(true);
     updateStatus(data.parcela.id, token.token)
       .then(() => {
-        invalidate().then(() => {
+        queryClient.invalidateQueries('transacoes').then(() => {
           showNotification(
             notify({
               type: TypeNotificationEnum.SUCCESS,

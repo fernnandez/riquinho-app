@@ -23,16 +23,10 @@ export function SeletorMes() {
 
   const handlePlusDate = async () => {
     onSetDate(date.plus({ month: 1 }));
-    await queryClient.fetchQuery('despesas');
-    await queryClient.fetchQuery('receitas');
-    await queryClient.fetchQuery('resumo');
   };
 
   const handleLessDate = async () => {
     onSetDate(date.plus({ month: -1 }));
-    await queryClient.fetchQuery('despesas');
-    await queryClient.fetchQuery('receitas');
-    await queryClient.fetchQuery('resumo');
   };
 
   return (
