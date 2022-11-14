@@ -70,6 +70,7 @@ export function CreateTransacaoModal({
     createTransacao(
       {
         ...data,
+        parcelas: 2,
         valor: Number(data.valor),
         status: getStatus(data.status),
         tipo: getTipo(data.tipo),

@@ -1,6 +1,7 @@
-import { ActionIcon, Text, Title } from '@mantine/core';
+import { ActionIcon, Title } from '@mantine/core';
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
 import { useMonthController } from '../../../../context/MonthContext/MonthContext';
+import { queryClient } from '../../../../services/queryClient';
 
 const MonthName = {
   1: 'Janeiro',
@@ -20,12 +21,18 @@ const MonthName = {
 export function SeletorMes() {
   const { date, onSetDate } = useMonthController();
 
-  const handlePlusDate = () => {
+  const handlePlusDate = async () => {
     onSetDate(date.plus({ month: 1 }));
+    await queryClient.fetchQuery('despesas');
+    await queryClient.fetchQuery('receitas');
+    await queryClient.fetchQuery('resumo');
   };
 
-  const handleLessDate = () => {
+  const handleLessDate = async () => {
     onSetDate(date.plus({ month: -1 }));
+    await queryClient.fetchQuery('despesas');
+    await queryClient.fetchQuery('receitas');
+    await queryClient.fetchQuery('resumo');
   };
 
   return (

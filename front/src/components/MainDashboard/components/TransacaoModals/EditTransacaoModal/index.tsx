@@ -82,6 +82,7 @@ export function EditTransacaoModal({
       id,
       {
         ...data,
+        parcelas: 1,
         status: getStatus(data.status),
         tipo: getTipo(data.tipo),
       },
@@ -120,12 +121,12 @@ export function EditTransacaoModal({
     if (trancasaoToEdit) {
       form.setValues({
         categoria: trancasaoToEdit.categoria.id,
-        data: new Date(trancasaoToEdit.data),
+        data: new Date(trancasaoToEdit.parcelas.data),
         descricao: trancasaoToEdit.descricao,
-        status: trancasaoToEdit.status,
+        status: trancasaoToEdit.parcelas.status,
         tipo: trancasaoToEdit.tipo,
         titulo: trancasaoToEdit.titulo,
-        valor: Number(trancasaoToEdit.valor),
+        valor: Number(trancasaoToEdit.parcelas.valor),
       });
     }
   }, [isOpen]);
@@ -148,7 +149,7 @@ export function EditTransacaoModal({
             <ActionIcon color="green" variant="outline" size={40}>
               <MdAttachMoney size={40} />
             </ActionIcon>
-            <Title order={3}>Cadastro de</Title>
+            <Title order={3}>Edição de</Title>
             <SegmentedControl
               fullWidth
               data={TipoSelectItems}

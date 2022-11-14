@@ -6,6 +6,7 @@ import App from './App';
 import AuthProvider from './context/AuthContext/AuthProvider';
 import { queryClient } from './services/queryClient';
 import { mantineTheme } from './utils/theme';
+import { ReactQueryDevtools } from 'react-query/devtools'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -19,6 +20,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <App />
         </AuthProvider>
       </MantineProvider>
+    {/* <ReactQueryDevtools /> */}
     </QueryClientProvider>
   </React.StrictMode>
 );

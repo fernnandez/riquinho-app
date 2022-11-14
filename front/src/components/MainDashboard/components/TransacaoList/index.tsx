@@ -1,63 +1,56 @@
 import { Alert, Box, Group, Loader, Paper, ScrollArea } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { AiOutlineInfoCircle, AiOutlinePlus } from 'react-icons/ai';
 import { useQuery } from 'react-query';
 import AuthContext from '../../../../context/AuthContext/AuthContext';
 import { useModalController } from '../../../../context/ModalContext/ModalContext';
 import { useMonthController } from '../../../../context/MonthContext/MonthContext';
-import {
-  CategoriaResponse,
-  findAllCategorias,
-} from '../../../../services/categoria';
-import {
-  findAllTransacao,
-  TransacaoResponse,
-} from '../../../../services/transacao';
-import { getTransacaoByTipo } from '../../formatter';
-import { TransacaoItem } from './TransacaoItem';
+import { CategoriaResponse } from '../../../../services/categoria';
+import { findAllTransacao } from '../../../../services/transacao';
 import { TipoTransacaoEnum } from '../TransacaoModals/constants';
 import { EditTransacaoModal } from '../TransacaoModals/EditTransacaoModal';
+import { TransacaoItem } from './TransacaoItem';
 
 interface TransacaoListCustomProps {
-  transacoes: TransacaoResponse[];
   categorias: CategoriaResponse[] | undefined;
-  isLoading: boolean;
-  error: unknown;
 }
 
-export function TransacaoList({
-  categorias,
-  error,
-  isLoading,
-  transacoes,
-}: TransacaoListCustomProps) {
+export function TransacaoList({ categorias }: TransacaoListCustomProps) {
   const [openedEdit, handlersEdit] = useDisclosure(false);
+  const { token } = useContext(AuthContext);
 
   const { onSetId } = useModalController();
   const { date } = useMonthController();
 
-  const [receitas, setReceitas] = useState<TransacaoResponse[]>([]);
-  const [despesas, setDespesas] = useState<TransacaoResponse[]>([]);
+  const {
+    data: receitas,
+    isLoading: isLoadingReceita,
+    error: errorReceita,
+  } = useQuery(['receitas'], () => {
+    return findAllTransacao(
+      token.token,
+      TipoTransacaoEnum.RECEITA,
+      date.toJSDate()
+    );
+  });
+
+  const {
+    data: despesas,
+    isLoading: isLoadingDespesa,
+    error: errorDespesa,
+  } = useQuery(['despesas'], () => {
+    return findAllTransacao(
+      token.token,
+      TipoTransacaoEnum.DESPESA,
+      date.toJSDate()
+    );
+  });
 
   const handleOpenEditModal = (id: string) => {
     onSetId(id);
     handlersEdit.open();
   };
-
-  useEffect(() => {
-    if (transacoes) {
-      setReceitas(
-        getTransacaoByTipo(TipoTransacaoEnum.RECEITA, transacoes, date)
-      );
-      setDespesas(
-        getTransacaoByTipo(TipoTransacaoEnum.DESPESA, transacoes, date)
-      );
-    } else {
-      setReceitas([]);
-      setDespesas([]);
-    }
-  }, [date, transacoes]);
 
   return (
     <Box
@@ -77,7 +70,7 @@ export function TransacaoList({
       >
         <ScrollArea style={{ height: 500 }}>
           <>
-            {isLoading && (
+            {isLoadingReceita && (
               <Box
                 style={{
                   height: '500px',
@@ -89,7 +82,7 @@ export function TransacaoList({
                 <Loader />
               </Box>
             )}
-            {!isLoading && error && (
+            {!isLoadingReceita && errorReceita && (
               <Box
                 style={{
                   height: '500px',
@@ -108,9 +101,9 @@ export function TransacaoList({
               </Box>
             )}
 
-            {receitas && receitas.length > 0 && (
+            {receitas && receitas.data.length > 0 && (
               <Group>
-                {receitas.map((transacao) => (
+                {receitas.data.map((transacao) => (
                   <TransacaoItem
                     key={transacao.id}
                     data={transacao}
@@ -119,24 +112,27 @@ export function TransacaoList({
                 ))}
               </Group>
             )}
-            {!isLoading && !error && receitas && receitas.length === 0 && (
-              <Box
-                style={{
-                  height: '500px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <Alert
-                  icon={<AiOutlineInfoCircle size={20} />}
-                  title="Ops!"
-                  color="blue"
+            {!isLoadingReceita &&
+              !errorReceita &&
+              receitas &&
+              receitas.data.length === 0 && (
+                <Box
+                  style={{
+                    height: '500px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
                 >
-                  Nenhuma informação cadastradada
-                </Alert>
-              </Box>
-            )}
+                  <Alert
+                    icon={<AiOutlineInfoCircle size={20} />}
+                    title="Ops!"
+                    color="blue"
+                  >
+                    Nenhuma informação cadastradada
+                  </Alert>
+                </Box>
+              )}
           </>
         </ScrollArea>
       </Paper>
@@ -148,7 +144,7 @@ export function TransacaoList({
       >
         <ScrollArea style={{ height: 500 }}>
           <>
-            {isLoading && (
+            {isLoadingDespesa && (
               <Box
                 style={{
                   height: '500px',
@@ -160,7 +156,7 @@ export function TransacaoList({
                 <Loader />
               </Box>
             )}
-            {!isLoading && error && (
+            {!isLoadingDespesa && errorDespesa && (
               <Box
                 style={{
                   height: '500px',
@@ -179,9 +175,9 @@ export function TransacaoList({
               </Box>
             )}
 
-            {transacoes && transacoes.length > 0 && (
+            {despesas && despesas.data.length > 0 && (
               <Group>
-                {despesas.map((transacao) => (
+                {despesas.data.map((transacao) => (
                   <TransacaoItem
                     key={transacao.id}
                     data={transacao}
@@ -190,33 +186,37 @@ export function TransacaoList({
                 ))}
               </Group>
             )}
-            {!isLoading && !error && despesas && despesas.length === 0 && (
-              <Box
-                style={{
-                  height: '500px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <Alert
-                  icon={<AiOutlinePlus size={20} />}
-                  title="Ops!"
-                  color="blue"
+            {!isLoadingDespesa &&
+              !errorDespesa &&
+              despesas &&
+              despesas.data.length === 0 && (
+                <Box
+                  style={{
+                    height: '500px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
                 >
-                  Nenhuma informação cadastradada
-                </Alert>
-              </Box>
-            )}
+                  <Alert
+                    icon={<AiOutlinePlus size={20} />}
+                    title="Ops!"
+                    color="blue"
+                  >
+                    Nenhuma informação cadastradada
+                  </Alert>
+                </Box>
+              )}
           </>
         </ScrollArea>
       </Paper>
-      {transacoes && transacoes.length > 0 && (
+
+      {receitas && despesas && (
         <EditTransacaoModal
           categorias={categorias || []}
           isOpen={openedEdit}
           onClose={handlersEdit.close}
-          transacaoList={transacoes}
+          transacaoList={[...receitas.data, ...despesas.data] || []}
         />
       )}
     </Box>

@@ -34,10 +34,13 @@ interface TransacaoItemProps {
     id: string;
     titulo: string;
     categoria: CategoriaResponse;
-    status: StatusEnum;
-    data: Date;
-    valor: number;
     descricao: string | null;
+    parcelas: {
+      id: string;
+      status: StatusEnum;
+      data: Date;
+      valor: number;
+    };
   };
   onOpenEdit: (id: string) => void;
 }
@@ -136,14 +139,14 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
       p="1rem"
       style={{ minWidth: '100%' }}
       sx={
-        data.status !== StatusEnum.EFETIVADA
+        data.parcelas.status !== StatusEnum.EFETIVADA
           ? { filter: 'brightness(90%)' }
           : { filter: 'brightness(1)' }
       }
     >
       <Grid className={classes.displayFlex}>
         <Grid.Col span={2}>
-          {getCategoriaIcon(data.categoria, data.status, 60, 45)}
+          {getCategoriaIcon(data.categoria, data.parcelas.status, 60, 45)}
         </Grid.Col>
         <Box style={{ display: 'flex', flexDirection: 'column' }}>
           <Grid grow className={classes.listItem} columns={32}>
@@ -163,7 +166,7 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
                 <Box>
                   <Text size="sm">Valor</Text>
                   <Text size="lg" color="dimmed">
-                    {Number(data.valor).toLocaleString('pt-br', {
+                    {Number(data.parcelas.valor).toLocaleString('pt-br', {
                       style: 'currency',
                       currency: 'BRL',
                     })}
@@ -177,7 +180,7 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
                 <Box>
                   <Text size="sm">Data</Text>
                   <Text size="lg" color="dimmed">
-                    {DateFormatter(data.data.toString())}
+                    {DateFormatter(data.parcelas.data.toString())}
                   </Text>
                 </Box>
               </Box>
@@ -186,7 +189,7 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
             <Grid.Col span={2}>
               <Tooltip label="trocar status">
                 <ActionIcon
-                  color={data.status === StatusEnum.EFETIVADA ? 'green' : 'red'}
+                  color={data.parcelas.status === StatusEnum.EFETIVADA ? 'green' : 'red'}
                   variant="filled"
                   size="md"
                   onClick={handleStatus}

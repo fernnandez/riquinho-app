@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Center,
   Divider,
   Group,
   TextInput,
@@ -19,23 +18,17 @@ import AuthContext from '../../context/AuthContext/AuthContext';
 import { useMonthController } from '../../context/MonthContext/MonthContext';
 import { findAllCategorias } from '../../services/categoria';
 import { findAllTransacao } from '../../services/transacao';
+import { Charts } from './components/Charts';
 import { InfoCards } from './components/InfoCards';
 import { SeletorMes } from './components/SeletorMes';
-import { CreateTransacaoModal } from './components/TransacaoModals/CreateTransacaoModal';
 import { TransacaoList } from './components/TransacaoList';
-import CustomChart from './components/Charts/CustomChart/CustomChart';
-import { getValues } from './formatter';
-import { Charts } from './components/Charts';
+import { TipoTransacaoEnum } from './components/TransacaoModals/constants';
+import { CreateTransacaoModal } from './components/TransacaoModals/CreateTransacaoModal';
 
 export function MainDashboard() {
   const [openedCreate, handlersCreate] = useDisclosure(false);
 
-  const { date } = useMonthController();
   const { token } = useContext(AuthContext);
-
-  const { data, isLoading, error } = useQuery(['transacoes'], () => {
-    return findAllTransacao(token.token);
-  });
 
   const { data: dateCategorias } = useQuery(['categorias'], () => {
     return findAllCategorias(token.token);
@@ -79,12 +72,7 @@ export function MainDashboard() {
           <BsGraphUp size={30} />
         </ThemeIcon>
       </Group>
-      <InfoCards
-        isLoading={isLoading}
-        values={
-          data && data.data.length > 0 ? getValues(data.data, date) : null
-        }
-      />
+      <InfoCards />
 
       <Group align="center" mt="2rem">
         <Title order={2} align="center">
@@ -95,9 +83,9 @@ export function MainDashboard() {
         </ThemeIcon>
       </Group>
       <TransacaoList
-        isLoading={isLoading}
-        error={error}
-        transacoes={data?.data || []}
+        // isLoading={isLoading}
+        // error={error}
+        // transacoes={data?.data || []}
         categorias={dateCategorias?.data || []}
       />
 
@@ -109,7 +97,7 @@ export function MainDashboard() {
           <BiChart size={30} />
         </ThemeIcon>
       </Group>
-      {data && data.data.length > 0 && <Charts transacoes={data?.data} />}
+      {/* {data && data.data.length > 0 && <Charts transacoes={data?.data} />} */}
 
       {/* Modals */}
       {dateCategorias?.data && (

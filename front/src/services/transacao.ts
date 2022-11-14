@@ -14,17 +14,21 @@ interface TransacaoType {
   tipo: TipoTransacaoEnum | undefined;
   descricao: string | null;
   status: StatusEnum | undefined;
+  parcelas: number;
 }
 
 export interface TransacaoResponse {
   id: string;
   titulo: string;
-  valor: number;
-  data: Date;
   categoria: CategoriaResponse;
   tipo: TipoTransacaoEnum;
   descricao: string;
-  status: StatusEnum;
+  parcelas: {
+    id: string;
+    status: StatusEnum;
+    data: Date;
+    valor: number;
+  };
 }
 
 export const createTransacao = async (data: TransacaoType, token: string) => {
@@ -57,8 +61,25 @@ export const deleteTransacao = async (idTransacao: string, token: string) => {
   });
 };
 
-export const findAllTransacao = async (token: string) => {
+export const findAllTransacao = async (
+  token: string,
+  tipo: TipoTransacaoEnum,
+  data: Date
+) => {
   return api.get<TransacaoResponse[]>('/transacao', {
+    params: { tipo: tipo, data: data },
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
+
+export const findResumo = async (token: string, data: Date) => {
+  return api.get<{
+    receitas: number;
+    receitasEfetivadas: number;
+    despesas: number;
+    despesasEfetivadas: number;
+  }>('/transacao/resumo', {
+    params: { data: data },
     headers: { Authorization: `Bearer ${token}` },
   });
 };
