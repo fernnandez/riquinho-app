@@ -62,8 +62,8 @@ export function EditTransacaoModal({
       data: new Date(),
       categoria: '',
       tipo: 'RECEITA',
+      status: true,
       descricao: '',
-      efetivada: true,
       parcelado: false,
       parcelas: 1,
     },
@@ -81,26 +81,28 @@ export function EditTransacaoModal({
     onClose();
   };
 
+  const invalidate = async () => {
+    await queryClient.invalidateQueries('receitas');
+    await queryClient.invalidateQueries('despesas');
+    await queryClient.invalidateQueries('resumo');
+  };
+
   const handleSubmit = (data: typeof form.values) => {
     setloading(true);
     updateTransacao(
       id,
       {
         ...data,
-        parcelas: 1,
-        status: getStatus(data.efetivada === true ? 'EFETIVADA' : 'PENDENTE'),
+        parcelado: data.parcelas > 1,
+        parcelas: data.parcelas,
+        status: getStatus(data.status === true ? 'EFETIVADA' : 'PENDENTE'),
         tipo: getTipo(data.tipo),
       },
       token.token
     )
       .then(() => {
-        queryClient.invalidateQueries('transacoes').then(() => {
-          showNotification(
-            notify({
-              type: TypeNotificationEnum.SUCCESS,
-              title: 'Atualizado com sucesso',
-            })
-          );
+        invalidate().then(() => {
+          showNotification(notify({ type: TypeNotificationEnum.SUCCESS }));
           handleClose();
         });
       })
@@ -128,10 +130,10 @@ export function EditTransacaoModal({
         categoria: trancasaoToEdit.categoria.id,
         data: new Date(trancasaoToEdit.parcela.data),
         descricao: trancasaoToEdit.descricao,
-        efetivada: trancasaoToEdit.parcela.status === 'EFETIVADA',
+        status: trancasaoToEdit.parcela.status === 'EFETIVADA' ? true : false,
         tipo: trancasaoToEdit.tipo,
         titulo: trancasaoToEdit.titulo,
-        valor: Number(trancasaoToEdit.parcela.valor),
+        valor: Number(trancasaoToEdit.valorTotal),
         parcelado: trancasaoToEdit.parcelado,
         parcelas: trancasaoToEdit.parcelas,
       });
@@ -142,6 +144,10 @@ export function EditTransacaoModal({
   useEffect(() => {
     form.setFieldValue('categoria', '');
   }, [form.getInputProps('tipo').value]);
+
+  useEffect(() => {
+    form.setFieldValue('parcelas', 1);
+  }, [form.getInputProps('parcelado').value]);
 
   return (
     <Modal
@@ -281,8 +287,8 @@ export function EditTransacaoModal({
               size="md"
               mt="4rem"
               label="Efetivada"
-              checked={form.getInputProps('efetivada').value}
-              {...form.getInputProps('efetivada')}
+              checked={form.getInputProps('status').value}
+              {...form.getInputProps('status')}
             />
             <Switch
               className={classes.textInput}

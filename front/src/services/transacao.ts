@@ -26,6 +26,7 @@ export interface TransacaoResponse {
   descricao: string;
   parcelado: boolean;
   parcelas: number;
+  valorTotal: number;
   parcela: {
     descricao: string;
     id: string;
