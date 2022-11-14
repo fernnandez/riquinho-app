@@ -62,8 +62,6 @@ export class TransacaoController {
 
   @Get('/change-status/:id')
   async updateStatus(@Param('id') id: string): Promise<void> {
-    const responseById = await this.transacaoService.findOne(id);
-
-    return this.transacaoService.updateStatus(id, responseById);
+    return this.transacaoService.updateStatus(id);
   }
 }

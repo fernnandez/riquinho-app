@@ -47,4 +47,16 @@ export class ParcelaService {
       .where('transacao_id = :id', { id: idTransacao })
       .execute();
   }
+
+  async updateStatus(idParcela: string) {
+    const parcela = await this.parcelaRepository.findOne(idParcela);
+
+    await this.parcelaRepository.save({
+      ...parcela,
+      status:
+        parcela.status === Status.EFETIVADA
+          ? Status.PENDENTE
+          : Status.EFETIVADA,
+    });
+  }
 }

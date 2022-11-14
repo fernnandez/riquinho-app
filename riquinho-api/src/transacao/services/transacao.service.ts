@@ -99,8 +99,6 @@ export class TransacaoService {
 
     await this.parcelaService.removeParcelas(id);
 
-    console.log(updateTransacaoDto);
-
     const parcelas = await this.parcelaService.createParcelas(
       updateTransacaoDto.valor,
       updateTransacaoDto.parcelas,
@@ -116,15 +114,8 @@ export class TransacaoService {
     });
   }
 
-  async updateStatus(id: string, updateTransacaoDto: Transacao): Promise<void> {
-    /**Verificação e atribuição do novo status */
-    // if (updateTransacaoDto.status == Status.EFETIVADA) {
-    //   updateTransacaoDto.status = Status.PENDENTE;
-    // } else {
-    //   updateTransacaoDto.status = Status.EFETIVADA;
-    // }
-
-    await this.transacaoRepository.update(id, updateTransacaoDto);
+  async updateStatus(id: string): Promise<void> {
+    await this.parcelaService.updateStatus(id);
   }
 
   async delete(id: string): Promise<void> {
@@ -151,7 +142,7 @@ export class TransacaoService {
 
     if (dataReceitas.length) {
       dataReceitas.forEach((transacao) => {
-        if (transacao.parcelas.status === Status.EFETIVADA) {
+        if (transacao.parcela.status === Status.EFETIVADA) {
           receitasEfetivadas += Number(transacao.parcela.valor);
         }
         receitas += Number(transacao.parcela.valor);
@@ -160,7 +151,7 @@ export class TransacaoService {
 
     if (dataReceitas.length) {
       dataDespesas.forEach((transacao) => {
-        if (transacao.parcelas.status === Status.EFETIVADA) {
+        if (transacao.parcela.status === Status.EFETIVADA) {
           despesasEfetivadas += Number(transacao.parcela.valor);
         }
         despesas += Number(transacao.parcela.valor);
