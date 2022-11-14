@@ -33,6 +33,9 @@ export class Transacao {
   @Column({ nullable: true })
   descricao: string;
 
+  @Column()
+  parcelado: boolean;
+
   // @Column({ type: 'timestamp' })
   // data: Date;
 

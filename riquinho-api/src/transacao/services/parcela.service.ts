@@ -30,6 +30,7 @@ export class ParcelaService {
         valor: valorParcela,
         status: Status.PENDENTE,
         data: dataParcela,
+        descricao: `${index + 1}º parcela`,
         transacao,
       });
       parcelas.push(parcela);

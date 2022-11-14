@@ -26,6 +26,9 @@ export class Parcela {
   @Column({ type: 'enum', enum: Status })
   status: Status;
 
+  @Column()
+  descricao: string;
+
   @ManyToOne(() => Transacao, (transacao) => transacao.parcelas)
   @JoinColumn({ name: 'transacao_id' })
   transacao: Transacao;

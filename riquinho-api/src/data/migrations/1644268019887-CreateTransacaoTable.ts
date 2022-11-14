@@ -44,12 +44,10 @@ export class CreateTransacaoTable1644268019887 implements MigrationInterface {
           //   type: 'enum',
           //   enum: Object.values(Status),
           // },
-          // {
-          //   name: 'valor',
-          //   type: 'numeric',
-          //   scale: 2,
-          //   precision: 10,
-          // },
+          {
+            name: 'parcelado',
+            type: 'boolean',
+          },
           {
             name: 'created_at',
             type: 'Date',

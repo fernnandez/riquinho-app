@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsDateString,
   IsEnum,
   IsNotEmpty,
@@ -35,6 +36,10 @@ export class CreateUpdateTransacaoDto {
   @IsNotEmpty()
   @IsNumber()
   valor: number;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  parcelado: boolean;
 
   @IsNotEmpty()
   @IsNumber()

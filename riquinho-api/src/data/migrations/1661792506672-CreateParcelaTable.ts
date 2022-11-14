@@ -43,6 +43,10 @@ export class CreateParcelaTable1661792506672 implements MigrationInterface {
             type: 'Date',
           },
           {
+            name: 'descricao',
+            type: 'varchar',
+          },
+          {
             name: 'transacao_id',
             type: 'uuid',
           },

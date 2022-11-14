@@ -38,7 +38,11 @@ export class TransacaoService {
           DateTimeParcela.month === DateTimeToCompare.month &&
           DateTimeParcela.year === DateTimeToCompare.year
         ) {
-          transacoesDoMes.push({ ...transacao, parcelas: { ...parcela } });
+          transacoesDoMes.push({
+            ...transacao,
+            parcelas: transacao.parcelas.length,
+            parcela: { ...parcela },
+          });
         }
       });
     });
@@ -58,8 +62,11 @@ export class TransacaoService {
       createTransacaoDto.categoria,
     );
 
+    console.log(createTransacaoDto);
+
     const transacao = await this.transacaoRepository.save({
       ...createTransacaoDto,
+      parcelado: createTransacaoDto.parcelado,
       user,
       categoria,
       parcelas: [],
