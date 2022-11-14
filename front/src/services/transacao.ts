@@ -15,6 +15,7 @@ interface TransacaoType {
   descricao: string | null;
   status: StatusEnum | undefined;
   parcelas: number;
+  parcelado: boolean;
 }
 
 export interface TransacaoResponse {
@@ -23,7 +24,10 @@ export interface TransacaoResponse {
   categoria: CategoriaResponse;
   tipo: TipoTransacaoEnum;
   descricao: string;
-  parcelas: {
+  parcelado: boolean;
+  parcelas: number;
+  parcela: {
+    descricao: string;
     id: string;
     status: StatusEnum;
     data: Date;

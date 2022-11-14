@@ -2,11 +2,14 @@ import {
   ActionIcon,
   Box,
   Button,
+  Center,
   Grid,
   Modal,
   NumberInput,
+  Paper,
   SegmentedControl,
   Select,
+  Switch,
   TextInput,
   Title,
 } from '@mantine/core';
@@ -60,7 +63,9 @@ export function EditTransacaoModal({
       categoria: '',
       tipo: 'RECEITA',
       descricao: '',
-      status: 'EFETIVADA',
+      efetivada: true,
+      parcelado: false,
+      parcelas: 1,
     },
     validate: (values) => ({
       titulo: values.titulo === '' ? 'titulo é obrigatório' : null,
@@ -83,7 +88,7 @@ export function EditTransacaoModal({
       {
         ...data,
         parcelas: 1,
-        status: getStatus(data.status),
+        status: getStatus(data.efetivada === true ? 'EFETIVADA' : 'PENDENTE'),
         tipo: getTipo(data.tipo),
       },
       token.token
@@ -121,12 +126,14 @@ export function EditTransacaoModal({
     if (trancasaoToEdit) {
       form.setValues({
         categoria: trancasaoToEdit.categoria.id,
-        data: new Date(trancasaoToEdit.parcelas.data),
+        data: new Date(trancasaoToEdit.parcela.data),
         descricao: trancasaoToEdit.descricao,
-        status: trancasaoToEdit.parcelas.status,
+        efetivada: trancasaoToEdit.parcela.status === 'EFETIVADA',
         tipo: trancasaoToEdit.tipo,
         titulo: trancasaoToEdit.titulo,
-        valor: Number(trancasaoToEdit.parcelas.valor),
+        valor: Number(trancasaoToEdit.parcela.valor),
+        parcelado: trancasaoToEdit.parcelado,
+        parcelas: trancasaoToEdit.parcelas,
       });
     }
   }, [isOpen]);
@@ -211,6 +218,35 @@ export function EditTransacaoModal({
               size="md"
               {...form.getInputProps('descricao')}
             />
+            <NumberInput
+              icon={<MdAttachMoney size={18} />}
+              className={classes.numberInput}
+              size="md"
+              label="Parcelas"
+              mb="md"
+              mt="md"
+              hideControls
+              min={0}
+              precision={0}
+              disabled={!form.getInputProps('parcelado').value}
+              {...form.getInputProps('parcelas')}
+            />
+            <NumberInput
+              icon={<MdAttachMoney size={18} />}
+              className={classes.numberInput}
+              size="md"
+              label="Valor Parcela"
+              mb="md"
+              mt="md"
+              hideControls
+              min={0}
+              precision={2}
+              disabled={true}
+              value={
+                form.getInputProps('valor').value /
+                form.getInputProps('parcelas').value
+              }
+            />
           </Grid.Col>
           <Grid.Col span={6}>
             <Select
@@ -240,17 +276,21 @@ export function EditTransacaoModal({
               className={classes.datePicker}
               {...form.getInputProps('data')}
             />
-            <Select
+            <Switch
               className={classes.selectInput}
               size="md"
-              mb="md"
-              label="Status"
-              placeholder="Status"
-              data={[
-                { label: 'Efetivada', value: 'EFETIVADA' },
-                { label: 'Pendente', value: 'PENDENTE' },
-              ]}
-              {...form.getInputProps('status')}
+              mt="4rem"
+              label="Efetivada"
+              checked={form.getInputProps('efetivada').value}
+              {...form.getInputProps('efetivada')}
+            />
+            <Switch
+              className={classes.textInput}
+              label="Parcelado"
+              size="md"
+              mt="4rem"
+              checked={form.getInputProps('parcelado').value}
+              {...form.getInputProps('parcelado')}
             />
           </Grid.Col>
         </Grid>

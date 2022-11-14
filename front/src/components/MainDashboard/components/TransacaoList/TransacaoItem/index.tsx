@@ -35,7 +35,7 @@ interface TransacaoItemProps {
     titulo: string;
     categoria: CategoriaResponse;
     descricao: string | null;
-    parcelas: {
+    parcela: {
       id: string;
       status: StatusEnum;
       data: Date;
@@ -139,14 +139,14 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
       p="1rem"
       style={{ minWidth: '100%' }}
       sx={
-        data.parcelas.status !== StatusEnum.EFETIVADA
+        data.parcela.status !== StatusEnum.EFETIVADA
           ? { filter: 'brightness(90%)' }
           : { filter: 'brightness(1)' }
       }
     >
       <Grid className={classes.displayFlex}>
         <Grid.Col span={2}>
-          {getCategoriaIcon(data.categoria, data.parcelas.status, 60, 45)}
+          {getCategoriaIcon(data.categoria, data.parcela.status, 60, 45)}
         </Grid.Col>
         <Box style={{ display: 'flex', flexDirection: 'column' }}>
           <Grid grow className={classes.listItem} columns={32}>
@@ -166,7 +166,7 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
                 <Box>
                   <Text size="sm">Valor</Text>
                   <Text size="lg" color="dimmed">
-                    {Number(data.parcelas.valor).toLocaleString('pt-br', {
+                    {Number(data.parcela.valor).toLocaleString('pt-br', {
                       style: 'currency',
                       currency: 'BRL',
                     })}
@@ -180,7 +180,7 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
                 <Box>
                   <Text size="sm">Data</Text>
                   <Text size="lg" color="dimmed">
-                    {DateFormatter(data.parcelas.data.toString())}
+                    {DateFormatter(data.parcela.data.toString())}
                   </Text>
                 </Box>
               </Box>
@@ -189,7 +189,7 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
             <Grid.Col span={2}>
               <Tooltip label="trocar status">
                 <ActionIcon
-                  color={data.parcelas.status === StatusEnum.EFETIVADA ? 'green' : 'red'}
+                  color={data.parcela.status === StatusEnum.EFETIVADA ? 'green' : 'red'}
                   variant="filled"
                   size="md"
                   onClick={handleStatus}

@@ -78,10 +78,8 @@ export function CreateTransacaoModal({
     setloading(true);
     createTransacao(
       {
-        categoria: data.categoria,
-        data: data.data,
-        descricao: data.descricao,
-        titulo: data.titulo,
+        ...data,
+        parcelado: data.parcelas > 1,
         parcelas: data.parcelas,
         valor: Number(data.valor),
         status: getStatus(data.status === true ? 'EFETIVADA' : 'PENDENTE'),
@@ -202,10 +200,26 @@ export function CreateTransacaoModal({
               mb="md"
               mt="md"
               hideControls
-              min={0}
+              min={1}
               precision={0}
               disabled={!form.getInputProps('parcelado').value}
               {...form.getInputProps('parcelas')}
+            />
+            <NumberInput
+              icon={<MdAttachMoney size={18} />}
+              className={classes.numberInput}
+              size="md"
+              label="Valor Parcela"
+              mb="md"
+              mt="md"
+              hideControls
+              min={0}
+              precision={2}
+              disabled={true}
+              value={
+                form.getInputProps('valor').value /
+                form.getInputProps('parcelas').value
+              }
             />
           </Grid.Col>
           <Grid.Col span={6}>
