@@ -7,7 +7,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { Status, TipoTransacao } from '../entities/transacao.entity';
+import { TipoTransacao } from '../entities/transacao.entity';
 
 export class CreateUpdateTransacaoDto {
   @IsNotEmpty()
@@ -28,10 +28,6 @@ export class CreateUpdateTransacaoDto {
 
   @IsNotEmpty()
   categoria: string;
-
-  @IsNotEmpty()
-  @IsEnum(Status)
-  status: Status;
 
   @IsNotEmpty()
   @IsNumber()

@@ -1,5 +1,6 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { DateTime } from 'luxon';
 import { Repository } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { CategoriaService } from '../../user/services/categoria.service';
@@ -101,6 +102,30 @@ export class TransacaoService {
       id,
       categoria,
       parcelas,
+    });
+  }
+
+  async updateDescricaoAndData(
+    id: string,
+    descricao: string,
+    data: Date,
+  ): Promise<void> {
+    const transacao = await this.transacaoRepository
+      .createQueryBuilder('transacao')
+      .where('transacao.id = :id', { id: id })
+      .leftJoinAndSelect('transacao.parcelas', 'parcelas')
+      .getOne();
+
+    transacao.parcelas.forEach((element, index) => {
+      const dataParcela = DateTime.fromJSDate(new Date(data))
+        .plus({ month: index })
+        .toJSDate();
+      element.data = dataParcela;
+    });
+
+    await this.transacaoRepository.save({
+      ...transacao,
+      descricao: `Valor Mensal da meta ${descricao}`,
     });
   }
 
