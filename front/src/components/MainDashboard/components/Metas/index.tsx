@@ -1,12 +1,15 @@
 import {
   ActionIcon,
+  Box,
   Button,
   Center,
   Group,
   Paper,
   Progress,
+  Stack,
   Text,
   ThemeIcon,
+  Title,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useModals } from '@mantine/modals';
@@ -125,68 +128,82 @@ function MetaCard({ meta, onOpen }: MetaProps) {
 
   return (
     <Paper
-      p="lg"
+      p="md"
       shadow="lg"
       withBorder
       style={{
         cursor: 'default',
         minWidth: 350,
-        minHeight: 150,
+        maxWidth: 350,
+        minHeight: 500,
+        maxHeight: 500,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'center',
       }}
     >
-      <Group mb="1rem">
-        <ThemeIcon
-          size={40}
-          radius="xl"
-          variant={'outline'}
-          style={{
-            cursor: 'default',
-            backgroundColor: 'blue',
-            border: 'none',
-          }}
-        >
-          {getSimpleIcon('CUSTOM', 'white', 30)}
-        </ThemeIcon>
-        <Text size="md">{meta.titulo}</Text>
-      </Group>
-      <Group mb="1rem">
-        <Text color="dimmed">Valor</Text>
-        <Text size="md">{`R$ ${meta.valor}`}</Text>
-      </Group>
-      <Group mb="1rem">
-        <Text color="dimmed">Prazo</Text>
-        <Text size="md">{meta.prazo} meses</Text>
-      </Group>
-      <Center mb=".5rem">
-        <Text>Progresso</Text>
-      </Center>
-      <Progress value={+meta.progresso} mb="1rem" />
-
-      <Group>
-        <Button
-          type="submit"
-          color="blue"
-          variant="light"
-          size="sm"
-          pl="xl"
-          pr="xl"
-          rightIcon={<AiFillEdit size={25} />}
-          onClick={() => onOpen(meta.id)}
-        >
-          Editar
-        </Button>
-        <Button
-          color="red"
-          size="sm"
-          variant="subtle"
-          pl="xl"
-          pr="xl"
-          rightIcon={<AiFillDelete size={25} />}
-          onClick={() => openConfirmDialog()}
-        >
-          Excluir
-        </Button>
-      </Group>
+      <Box>
+        <Center mb="2rem">
+          <ThemeIcon
+            size={30}
+            radius="xl"
+            variant={'outline'}
+            mr="xs"
+            style={{
+              cursor: 'default',
+              backgroundColor: 'blue',
+              border: 'none',
+            }}
+          >
+            {getSimpleIcon('CUSTOM', 'white', 20)}
+          </ThemeIcon>
+          <Title order={2} align="center">
+            {meta.titulo}
+          </Title>
+        </Center>
+        <Group mb="1rem">
+          <Text color="dimmed">Valor</Text>
+          <Text size="md">{`R$ ${meta.valor}`}</Text>
+        </Group>
+        <Group mb="1rem">
+          <Text color="dimmed">Prazo</Text>
+          <Text size="md">{meta.prazo} meses</Text>
+        </Group>
+        <Group mb="1rem">
+          <Text color="dimmed">Descrição</Text>
+          <Text size="md">
+            {meta.descricao.trim().length ? meta.descricao : 'Não consta'}
+          </Text>
+        </Group>
+      </Box>
+      <Box>
+        <Center mb=".5rem">
+          <Text>Progresso</Text>
+        </Center>
+        <Progress value={+meta.progresso} mb="2rem" />
+        <Group>
+          <Button
+            type="submit"
+            color="blue"
+            variant="light"
+            size="xs"
+            rightIcon={<AiFillEdit size={25} />}
+            onClick={() => onOpen(meta.id)}
+          >
+            Editar
+          </Button>
+          <Button
+            color="red"
+            size="xs"
+            variant="subtle"
+            rightIcon={<AiFillDelete size={25} />}
+            onClick={() => openConfirmDialog()}
+          >
+            Excluir
+          </Button>
+        </Group>
+      </Box>
     </Paper>
   );
 }
