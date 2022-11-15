@@ -32,7 +32,12 @@ export class TransacaoController {
       TipoTransacao.DESPESA,
     );
 
-    return { receitas, despesas };
+    const metas = await this.transacaoService.findAllByTipo(
+      req.user,
+      TipoTransacao.META,
+    );
+
+    return { receitas, despesas: [...metas, ...despesas] };
   }
 
   @Get('resumo')
@@ -71,8 +76,11 @@ export class TransacaoController {
     return this.transacaoService.delete(id);
   }
 
-  @Get('/change-status/:id')
-  async updateStatus(@Param('id') id: string): Promise<void> {
-    return this.transacaoService.updateStatus(id);
+  @Get('/change-status/:idTransacao/:idParcela')
+  async updateStatus(
+    @Param('idTransacao') idTransacao: string,
+    @Param('idParcela') idParcela: string,
+  ): Promise<void> {
+    return this.transacaoService.updateStatus(idTransacao, idParcela);
   }
 }

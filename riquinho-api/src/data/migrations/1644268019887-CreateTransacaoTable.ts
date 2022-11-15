@@ -3,6 +3,7 @@ import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 enum TipoTransacao {
   RECEITA = 'RECEITA',
   DESPESA = 'DESPESA',
+  META = 'META',
 }
 
 export class CreateTransacaoTable1644268019887 implements MigrationInterface {
@@ -30,20 +31,11 @@ export class CreateTransacaoTable1644268019887 implements MigrationInterface {
             type: 'varchar',
             isNullable: true,
           },
-          // {
-          //   name: 'data',
-          //   type: 'Date',
-          // },
           {
             name: 'tipo',
             type: 'enum',
             enum: Object.values(TipoTransacao),
           },
-          // {
-          //   name: 'status',
-          //   type: 'enum',
-          //   enum: Object.values(Status),
-          // },
           {
             name: 'parcelado',
             type: 'boolean',

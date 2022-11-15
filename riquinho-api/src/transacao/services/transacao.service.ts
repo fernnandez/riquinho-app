@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
@@ -6,6 +6,7 @@ import { CategoriaService } from '../../user/services/categoria.service';
 import { CreateUpdateTransacaoDto } from '../dtos/create-update-transacao.dto';
 import { Status } from '../entities/parcela.entity';
 import { TipoTransacao, Transacao } from '../entities/transacao.entity';
+import { MetaService } from './meta.service';
 import { ParcelaService } from './parcela.service';
 
 @Injectable()
@@ -15,6 +16,8 @@ export class TransacaoService {
     private readonly transacaoRepository: Repository<Transacao>,
     private readonly categoriaService: CategoriaService,
     private readonly parcelaService: ParcelaService,
+    @Inject(forwardRef(() => MetaService))
+    private readonly metaService: MetaService,
   ) {}
 
   async findAllByTipo(user: User, tipo: TipoTransacao) {
@@ -101,8 +104,29 @@ export class TransacaoService {
     });
   }
 
-  async updateStatus(id: string): Promise<void> {
-    await this.parcelaService.updateStatus(id);
+  async updateStatus(idTransacao: string, idParcela: string): Promise<void> {
+    await this.parcelaService.updateStatus(idParcela);
+
+    const meta = await this.metaService.findMeta(idTransacao);
+
+    const transacao = await this.findOne(idTransacao);
+
+    if (transacao.tipo === TipoTransacao.META) {
+      let valorEfetivado = 0;
+      meta.transacao.parcelas.forEach((parcela) => {
+        if (parcela.status === Status.EFETIVADA) {
+          valorEfetivado += +parcela.valor;
+        }
+      });
+
+      if (valorEfetivado === 0) {
+        await this.metaService.updateProgresso(meta.id, 0);
+      } else {
+        const onePercent = meta.valor / 100;
+        const progress = valorEfetivado / onePercent;
+        await this.metaService.updateProgresso(meta.id, progress);
+      }
+    }
   }
 
   async delete(id: string): Promise<void> {
