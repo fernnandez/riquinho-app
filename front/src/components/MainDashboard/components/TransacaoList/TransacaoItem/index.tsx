@@ -81,17 +81,20 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
         );
       });
   };
+
   const handleStatus = () => {
     setLoading(true);
     updateStatus(data.id, data.parcela.id, token.token)
       .then(() => {
         queryClient.invalidateQueries('transacoes').then(() => {
-          showNotification(
-            notify({
-              type: TypeNotificationEnum.SUCCESS,
-              title: 'Atualizado com sucesso.',
-            })
-          );
+          queryClient.invalidateQueries('metas').then(() => {
+            showNotification(
+              notify({
+                type: TypeNotificationEnum.SUCCESS,
+                title: 'Atualizado com sucesso.',
+              })
+            );
+          });
         });
       })
       .catch((error: any) => {

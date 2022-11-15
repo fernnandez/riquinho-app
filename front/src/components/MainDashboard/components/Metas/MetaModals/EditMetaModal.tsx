@@ -5,9 +5,6 @@ import {
   Grid,
   Modal,
   NumberInput,
-  SegmentedControl,
-  Select,
-  Switch,
   TextInput,
   Title,
 } from '@mantine/core';
@@ -17,35 +14,42 @@ import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { useContext, useEffect, useState } from 'react';
 import { MdAttachMoney } from 'react-icons/md';
-import { TbCashBanknoteOff, TbCup, TbCurlyLoop } from 'react-icons/tb';
-import AuthContext from '../../../../context/AuthContext/AuthContext';
-import { createMeta } from '../../../../services/meta';
-import { queryClient } from '../../../../services/queryClient';
-import { notify, TypeNotificationEnum } from '../../../../utils/notify';
-
+import { TbCurlyLoop } from 'react-icons/tb';
+import AuthContext from '../../../../../context/AuthContext/AuthContext';
+import { useModalController } from '../../../../../context/ModalContext/ModalContext';
+import { createMeta, Meta, updateMeta } from '../../../../../services/meta';
+import { queryClient } from '../../../../../services/queryClient';
+import { notify, TypeNotificationEnum } from '../../../../../utils/notify';
 import { useStyles } from './styles';
-interface CreateMetaModalProps {
+
+interface EditMetaModalProps {
   isOpen: boolean;
   onClose: () => void;
+  metaList: Meta[];
 }
 
-export function CreateMetaModal({ isOpen, onClose }: CreateMetaModalProps) {
+export function EditMetaModal({
+  isOpen,
+  onClose,
+  metaList,
+}: EditMetaModalProps) {
   const { classes } = useStyles();
   const [Loading, setloading] = useState(false);
   const { token } = useContext(AuthContext);
+  const { id } = useModalController();
 
   const form = useForm({
     initialValues: {
       titulo: '',
       descricao: '',
-      valor: '',
-      prazo: '',
+      valor: 0,
+      prazo: 0,
       dataInicio: new Date(),
     },
     validate: (values) => ({
       titulo: values.titulo === '' ? 'titulo é obrigatório' : null,
-      valor: values.valor === '' ? 'valor é obrigatório' : null,
-      prazo: values.prazo === '' ? 'prazo é obrigatório' : null,
+      valor: values.valor === 0 ? 'valor é obrigatório' : null,
+      prazo: values.prazo === 0 ? 'prazo é obrigatório' : null,
       dataInicio:
         values.dataInicio === null ? 'data de inicio é obrigatória' : null,
     }),
@@ -53,7 +57,8 @@ export function CreateMetaModal({ isOpen, onClose }: CreateMetaModalProps) {
 
   const handleSubmit = async (data: typeof form.values) => {
     setloading(true);
-    createMeta(
+    updateMeta(
+      id,
       {
         ...data,
       },
@@ -61,8 +66,10 @@ export function CreateMetaModal({ isOpen, onClose }: CreateMetaModalProps) {
     )
       .then(() => {
         queryClient.invalidateQueries('metas').then(() => {
-          showNotification(notify({ type: TypeNotificationEnum.SUCCESS }));
-          handleClose();
+          queryClient.invalidateQueries('transacoes').then(() => {
+            showNotification(notify({ type: TypeNotificationEnum.SUCCESS }));
+            handleClose();
+          });
         });
       })
       .catch((error: any) => {
@@ -84,6 +91,20 @@ export function CreateMetaModal({ isOpen, onClose }: CreateMetaModalProps) {
     onClose();
   };
 
+  useEffect(() => {
+    const metaToEdit = metaList.find((meta) => meta.id === id);
+
+    if (metaToEdit) {
+      form.setValues({
+        titulo: metaToEdit.titulo,
+        valor: +metaToEdit.valor,
+        descricao: metaToEdit.descricao,
+        prazo: metaToEdit.prazo,
+        dataInicio: new Date(metaToEdit.dataInicio),
+      });
+    }
+  }, [isOpen]);
+
   return (
     <Modal
       centered
@@ -96,7 +117,7 @@ export function CreateMetaModal({ isOpen, onClose }: CreateMetaModalProps) {
           <ActionIcon color="red" variant="outline" size={40}>
             <TbCurlyLoop size={40} />
           </ActionIcon>
-          <Title order={3}>Cadastro de Meta</Title>
+          <Title order={3}>Edição de Meta</Title>
         </Box>
       }
     >

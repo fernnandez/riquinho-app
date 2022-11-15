@@ -83,8 +83,10 @@ export function CreateTransacaoModal({
     )
       .then(() => {
         queryClient.invalidateQueries('transacoes').then(() => {
-          showNotification(notify({ type: TypeNotificationEnum.SUCCESS }));
-          handleClose();
+          queryClient.invalidateQueries('metas').then(() => {
+            showNotification(notify({ type: TypeNotificationEnum.SUCCESS }));
+            handleClose();
+          });
         });
       })
       .catch((error: any) => {

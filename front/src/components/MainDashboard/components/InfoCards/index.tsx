@@ -2,17 +2,11 @@ import { Box } from '@mantine/core';
 import { MdAttachMoney } from 'react-icons/md';
 import { Card } from './components/Card';
 
+import { useEffect, useState } from 'react';
 import { HiOutlineCash } from 'react-icons/hi';
 import { TbCashBanknoteOff } from 'react-icons/tb';
-import { useContext, useEffect, useState } from 'react';
-import AuthContext from '../../../../context/AuthContext/AuthContext';
-import { useQuery } from 'react-query';
-import {
-  findResumo,
-  TransacaoOneParcela,
-  TransacaoResponse,
-} from '../../../../services/transacao';
 import { useMonthController } from '../../../../context/MonthContext/MonthContext';
+import { TransacaoResponse } from '../../../../services/transacao';
 import { getValues } from '../../formatter';
 
 interface InfoCardsProps {
@@ -20,7 +14,6 @@ interface InfoCardsProps {
 }
 
 export function InfoCards({ transacoes }: InfoCardsProps) {
-  const { token } = useContext(AuthContext);
   const { date } = useMonthController();
 
   const [resumo, setResumo] = useState<{
