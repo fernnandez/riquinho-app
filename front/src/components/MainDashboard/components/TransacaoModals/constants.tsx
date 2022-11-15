@@ -3,7 +3,7 @@ import { TbCashBanknoteOff } from 'react-icons/tb';
 
 import { BiBuildingHouse, BiCategory, BiHome } from 'react-icons/bi';
 import { BsStars } from 'react-icons/bs';
-import { GiMoneyStack } from 'react-icons/gi';
+import { GiMoneyStack, GiStairsGoal } from 'react-icons/gi';
 import { IoFastFoodSharp, IoGameController } from 'react-icons/io5';
 import { FaGamepad } from 'react-icons/fa';
 
@@ -98,6 +98,7 @@ export function getSimpleIcon(
     ['MORADIA']: <BiBuildingHouse size={sizeIcon} color={color} />,
     ['PAGAMENTO']: <GiMoneyStack size={sizeIcon} color={color} />,
     ['OUTROS']: <BsStars size={sizeIcon} color={color} />,
+    ['META']: <GiStairsGoal size={sizeIcon} color={color} />,
     ['CUSTOM']: <BiCategory size={sizeIcon} color={color} />,
     ['VIDEO-GAME']: <FaGamepad size={sizeIcon} color={color} />,
     ['VIDEO-GAME2']: <IoGameController size={sizeIcon} color={color} />,

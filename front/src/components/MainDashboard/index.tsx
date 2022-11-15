@@ -12,7 +12,7 @@ import { useContext } from 'react';
 import { AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai';
 import { BiChart, BiCube } from 'react-icons/bi';
 import { BsGraphUp } from 'react-icons/bs';
-import { GiMoneyStack } from 'react-icons/gi';
+import { GiMoneyStack, GiStairsGoal } from 'react-icons/gi';
 import { useQuery } from 'react-query';
 import AuthContext from '../../context/AuthContext/AuthContext';
 import { findAllCategorias } from '../../services/categoria';
@@ -117,7 +117,7 @@ export function MainDashboard() {
           Metas
         </Title>
         <ThemeIcon size={30}>
-          <BiCube size={30} />
+          <GiStairsGoal size={30} />
         </ThemeIcon>
       </Group>
       <Button

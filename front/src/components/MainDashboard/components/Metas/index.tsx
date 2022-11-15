@@ -146,17 +146,14 @@ function MetaCard({ meta, onOpen }: MetaProps) {
       <Box>
         <Center mb="2rem">
           <ThemeIcon
-            size={30}
-            radius="xl"
-            variant={'outline'}
+            size={40}
             mr="xs"
             style={{
               cursor: 'default',
-              backgroundColor: 'blue',
               border: 'none',
             }}
           >
-            {getSimpleIcon('CUSTOM', 'white', 20)}
+            {getSimpleIcon('META', 'white', 30)}
           </ThemeIcon>
           <Title order={2} align="center">
             {meta.titulo}
