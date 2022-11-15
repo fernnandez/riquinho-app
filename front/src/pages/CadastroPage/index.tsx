@@ -1,6 +1,6 @@
 import { Box, Image, Title } from '@mantine/core';
 import cadastroIlustration from '../../assets/mobileInterface.svg';
-import { CadastroForm } from '../../components/CadastroForm';
+import { CadastroForm } from './components/CadastroForm';
 import { useStyles } from './styles';
 
 export function CadastroPage() {

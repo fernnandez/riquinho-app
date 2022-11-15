@@ -2,11 +2,8 @@ import { DateTime } from 'luxon';
 import {
   TransacaoOneParcela,
   TransacaoResponse,
-} from '../../services/transacao';
-import {
-  StatusEnum,
-  TipoTransacaoEnum,
-} from '../../utils/constants';
+} from '../../../../services/transacao';
+import { StatusEnum, TipoTransacaoEnum } from '../../../../utils/constants';
 
 export function getTransacaoDate(
   transacoes: TransacaoResponse[],

@@ -10,20 +10,20 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { useContext } from 'react';
 import { AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai';
-import { BiChart, BiCube } from 'react-icons/bi';
+import { BiChart } from 'react-icons/bi';
 import { BsGraphUp } from 'react-icons/bs';
 import { GiMoneyStack, GiStairsGoal } from 'react-icons/gi';
 import { useQuery } from 'react-query';
-import AuthContext from '../../context/AuthContext/AuthContext';
-import { findAllCategorias } from '../../services/categoria';
-import { findAllTransacao } from '../../services/transacao';
-import { Charts } from './components/Charts';
-import { InfoCards } from './components/InfoCards';
-import { Metas } from './components/Metas';
-import { CreateMetaModal } from './components/Metas/MetaModals/CreateMetaModal';
-import { SeletorMes } from './components/SeletorMes';
-import { TransacaoList } from './components/TransacaoList';
-import { CreateTransacaoModal } from './components/TransacaoModals/CreateTransacaoModal';
+import AuthContext from '../../../../context/AuthContext/AuthContext';
+import { findAllCategorias } from '../../../../services/categoria';
+import { findAllTransacao } from '../../../../services/transacao';
+import { Charts } from '../Charts';
+import { InfoCards } from '../InfoCards';
+import { Metas } from '../Metas';
+import { CreateMetaModal } from '../Metas/MetaModals/CreateMetaModal';
+import { SeletorMes } from '../SeletorMes';
+import { TransacaoList } from '../TransacaoList';
+import { CreateTransacaoModal } from '../TransacaoModals/CreateTransacaoModal';
 
 export function MainDashboard() {
   const [openedCreate, handlersCreate] = useDisclosure(false);

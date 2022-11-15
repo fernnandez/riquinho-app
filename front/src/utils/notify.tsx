@@ -5,6 +5,7 @@ interface NotificationProps {
   type: TypeNotificationEnum;
   title?: string;
 }
+
 export enum TypeNotificationEnum {
   SUCCESS = 'success',
   INFO = 'info',

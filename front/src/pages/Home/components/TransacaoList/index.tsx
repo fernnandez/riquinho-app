@@ -1,7 +1,6 @@
 import { Box } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { useContext, useEffect, useState } from 'react';
-import AuthContext from '../../../../context/AuthContext/AuthContext';
+import { useEffect, useState } from 'react';
 import { useModalController } from '../../../../context/ModalContext/ModalContext';
 import { useMonthController } from '../../../../context/MonthContext/MonthContext';
 import { CategoriaResponse } from '../../../../services/categoria';
@@ -9,8 +8,8 @@ import {
   TransacaoOneParcela,
   TransacaoResponse,
 } from '../../../../services/transacao';
-import { getTransacaoDate } from '../../formatter';
 import { TipoTransacaoEnum } from '../../../../utils/constants';
+import { getTransacaoDate } from '../MainDashboard/formatter';
 import { EditTransacaoModal } from '../TransacaoModals/EditTransacaoModal';
 import { TransacaoTable } from './TransacaoTable';
 

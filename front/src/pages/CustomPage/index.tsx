@@ -9,16 +9,15 @@ import {
   Title,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { BiWallet } from 'react-icons/bi';
 import { FiAlertCircle, FiUser } from 'react-icons/fi';
 import { useQuery } from 'react-query';
-import { useNavigate } from 'react-router-dom';
-import { CategoriaList } from '../../components/CategoriaList';
 import { Navigation } from '../../components/Navigation';
-import { UpdateNomeModal } from '../../components/UpdateNomeForm/UpdateNomeForm';
 import AuthContext from '../../context/AuthContext/AuthContext';
 import { findOneUser } from '../../services/user';
+import { CategoriaList } from './components/CategoriaList';
+import { UpdateNomeModal } from './components/UpdateNomeForm/UpdateNomeForm';
 
 export function CustomPage() {
   const { token } = useContext(AuthContext);

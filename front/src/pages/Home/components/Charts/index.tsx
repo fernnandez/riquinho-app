@@ -1,11 +1,10 @@
 import { Box, Center, Group, Loader, Stack, Title } from '@mantine/core';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MdAttachMoney } from 'react-icons/md';
 import { TbArrowBarUp, TbCashBanknoteOff } from 'react-icons/tb';
-import AuthContext from '../../../../context/AuthContext/AuthContext';
 import { useMonthController } from '../../../../context/MonthContext/MonthContext';
 import { TransacaoResponse } from '../../../../services/transacao';
-import { getValuesByCategory } from '../../formatter';
+import { getValuesByCategory } from '../MainDashboard/formatter';
 import CustomChart from './CustomChart/CustomChart';
 
 interface ChartsProps {
@@ -16,7 +15,6 @@ interface ChartsProps {
 }
 
 export function Charts({ transacoes, isLoading }: ChartsProps) {
-  const { token } = useContext(AuthContext);
   const { date } = useMonthController();
 
   const [resumo, setResumo] = useState<{

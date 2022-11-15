@@ -16,68 +16,29 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
-import { useContext, useEffect, useState } from 'react';
-import { BiCategory, BiCustomize } from 'react-icons/bi';
-import AuthContext from '../../../../context/AuthContext/AuthContext';
-import { useModalController } from '../../../../context/ModalContext/ModalContext';
-import {
-  CategoriaResponse,
-  updateCategoria,
-} from '../../../../services/categoria';
-import { queryClient } from '../../../../services/queryClient';
-import { SelectItemIcon } from '../../../../utils/customSelect';
-import { notify, TypeNotificationEnum } from '../../../../utils/notify';
-import {
-  getSimpleIcon,
-  iconList,
-} from '../../../../utils/constants';
+import { useContext, useState } from 'react';
+import { BiCategory } from 'react-icons/bi';
+import AuthContext from '../../../../../../context/AuthContext/AuthContext';
+import { createCategoria } from '../../../../../../services/categoria';
+import { queryClient } from '../../../../../../services/queryClient';
+import { getSimpleIcon, iconList } from '../../../../../../utils/constants';
+import { SelectItemIcon } from '../../../../../../utils/customSelect';
+import { notify, TypeNotificationEnum } from '../../../../../../utils/notify';
+
 import { useStyles } from '../styles';
 
-interface EditCategoriaModalProps {
+interface CreateCategoriaModalProps {
   isOpen: boolean;
   onClose: () => void;
-  categoriaList: CategoriaResponse[];
 }
 
-export function EditCategoriaModal({
+export function CreateCategoriaModal({
   isOpen,
   onClose,
-  categoriaList,
-}: EditCategoriaModalProps) {
+}: CreateCategoriaModalProps) {
   const { classes } = useStyles();
   const { token } = useContext(AuthContext);
   const [Loading, setloading] = useState(false);
-
-  const { id } = useModalController();
-
-  const form = useForm({
-    initialValues: {
-      nome: '',
-      icon: 'CUSTOM',
-      color: '#6b6b6b',
-      isForReceita: true,
-      isForDespesa: true,
-    },
-    validate: (values) => ({
-      nome: values.nome === '' ? 'nome é obrigatório' : null,
-    }),
-  });
-
-  useEffect(() => {
-    const categoriaToEdit = categoriaList.find(
-      (categoria) => categoria.id === id
-    );
-
-    if (categoriaToEdit) {
-      form.setValues({
-        nome: categoriaToEdit.nome,
-        color: categoriaToEdit.color,
-        icon: categoriaToEdit.icon,
-        isForDespesa: categoriaToEdit.isForDespesa,
-        isForReceita: categoriaToEdit.isForReceita,
-      });
-    }
-  }, [isOpen]);
 
   const handleClose = () => {
     form.reset();
@@ -93,7 +54,7 @@ export function EditCategoriaModal({
         })
       );
     } else {
-      updateCategoria(id, data, token.token)
+      createCategoria(data, token.token)
         .then(() => {
           queryClient.invalidateQueries('categorias').then(() => {
             showNotification(notify({ type: TypeNotificationEnum.SUCCESS }));
@@ -115,6 +76,19 @@ export function EditCategoriaModal({
     }
   };
 
+  const form = useForm({
+    initialValues: {
+      nome: '',
+      icon: '',
+      color: '#6b6b6b',
+      isForReceita: true,
+      isForDespesa: true,
+    },
+    validate: (values) => ({
+      nome: values.nome === '' ? 'nome é obrigatório' : null,
+    }),
+  });
+
   return (
     <Modal
       opened={isOpen}
@@ -127,7 +101,7 @@ export function EditCategoriaModal({
           <ActionIcon color="blue" variant="outline" size={40}>
             <BiCategory size={40} />
           </ActionIcon>
-          <Title order={3}>Edição de Categoria</Title>
+          <Title order={3}>Cadastro de Categoria</Title>
         </Box>
       }
     >

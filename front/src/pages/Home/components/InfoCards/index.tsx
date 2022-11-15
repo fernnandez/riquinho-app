@@ -1,13 +1,13 @@
 import { Box } from '@mantine/core';
 import { MdAttachMoney } from 'react-icons/md';
-import { Card } from './components/Card';
+import { Card } from './Card';
 
 import { useEffect, useState } from 'react';
 import { HiOutlineCash } from 'react-icons/hi';
 import { TbCashBanknoteOff } from 'react-icons/tb';
 import { useMonthController } from '../../../../context/MonthContext/MonthContext';
 import { TransacaoResponse } from '../../../../services/transacao';
-import { getValues } from '../../formatter';
+import { getValues } from '../MainDashboard/formatter';
 
 interface InfoCardsProps {
   transacoes:

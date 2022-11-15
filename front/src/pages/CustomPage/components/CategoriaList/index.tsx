@@ -16,29 +16,23 @@ import { useDisclosure } from '@mantine/hooks';
 import { useModals } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
 import { useContext } from 'react';
-import {
-  AiFillCustomerService,
-  AiFillDelete,
-  AiFillEdit,
-  AiOutlinePlus,
-} from 'react-icons/ai';
-import { BiCategory, BiCustomize } from 'react-icons/bi';
-import { FiImage } from 'react-icons/fi';
+import { AiFillDelete, AiFillEdit, AiOutlinePlus } from 'react-icons/ai';
+import { BiCategory } from 'react-icons/bi';
 import { useQuery } from 'react-query';
-import AuthContext from '../../context/AuthContext/AuthContext';
-import { useModalController } from '../../context/ModalContext/ModalContext';
-import { deleteCategoria, findAllCategorias } from '../../services/categoria';
-import { queryClient } from '../../services/queryClient';
-import { notify, TypeNotificationEnum } from '../../utils/notify';
+import AuthContext from '../../../../context/AuthContext/AuthContext';
+import { useModalController } from '../../../../context/ModalContext/ModalContext';
 import {
-  getCategoriaIcon,
-  StatusEnum,
-} from '../../utils/constants';
+  deleteCategoria,
+  findAllCategorias,
+} from '../../../../services/categoria';
+import { queryClient } from '../../../../services/queryClient';
+import { getCategoriaIcon, StatusEnum } from '../../../../utils/constants';
+import { notify, TypeNotificationEnum } from '../../../../utils/notify';
 import { CreateCategoriaModal } from './components/CreateCategoriaModal';
 import { EditCategoriaModal } from './components/EditCategoriaModal';
 
 export function CategoriaList() {
-  const { data, isLoading, error } = useQuery(['categorias'], () => {
+  const { data, isLoading } = useQuery(['categorias'], () => {
     return findAllCategorias(token.token);
   });
 
