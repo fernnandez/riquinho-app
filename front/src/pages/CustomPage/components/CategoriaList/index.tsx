@@ -28,8 +28,8 @@ import {
 import { queryClient } from '../../../../services/queryClient';
 import { getCategoriaIcon, StatusEnum } from '../../../../utils/constants';
 import { notify, TypeNotificationEnum } from '../../../../utils/notify';
-import { CreateCategoriaModal } from './components/CreateCategoriaModal';
-import { EditCategoriaModal } from './components/EditCategoriaModal';
+import { CreateCategoriaModal } from './CreateCategoriaModal';
+import { EditCategoriaModal } from './EditCategoriaModal';
 
 export function CategoriaList() {
   const { data, isLoading } = useQuery(['categorias'], () => {

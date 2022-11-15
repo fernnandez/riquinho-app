@@ -3,11 +3,11 @@ import { Box, Button, Grid, Modal, TextInput, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { useContext, useState } from 'react';
-import { useQuery } from 'react-query';
-import AuthContext from '../../context/AuthContext/AuthContext';
-import { queryClient } from '../../services/queryClient';
-import { findOneUser, updateNome } from '../../services/user';
-import { notify, TypeNotificationEnum } from '../../utils/notify';
+import AuthContext from '../../../../context/AuthContext/AuthContext';
+import { queryClient } from '../../../../services/queryClient';
+import { updateNome } from '../../../../services/user';
+import { notify, TypeNotificationEnum } from '../../../../utils/notify';
+
 import { useStyles } from './styles';
 
 interface UpdateNomeModalProps {

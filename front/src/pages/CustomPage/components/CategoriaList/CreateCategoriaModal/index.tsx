@@ -18,12 +18,12 @@ import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { useContext, useState } from 'react';
 import { BiCategory } from 'react-icons/bi';
-import AuthContext from '../../../../../../context/AuthContext/AuthContext';
-import { createCategoria } from '../../../../../../services/categoria';
-import { queryClient } from '../../../../../../services/queryClient';
-import { getSimpleIcon, iconList } from '../../../../../../utils/constants';
-import { SelectItemIcon } from '../../../../../../utils/customSelect';
-import { notify, TypeNotificationEnum } from '../../../../../../utils/notify';
+import AuthContext from '../../../../../context/AuthContext/AuthContext';
+import { createCategoria } from '../../../../../services/categoria';
+import { queryClient } from '../../../../../services/queryClient';
+import { getSimpleIcon, iconList } from '../../../../../utils/constants';
+import { SelectItemIcon } from '../../../../../utils/customSelect';
+import { notify, TypeNotificationEnum } from '../../../../../utils/notify';
 
 import { useStyles } from '../styles';
 

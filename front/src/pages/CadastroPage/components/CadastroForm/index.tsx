@@ -13,7 +13,7 @@ import { showNotification } from '@mantine/notifications';
 import { Link, useNavigate } from 'react-router-dom';
 import { authCadastro } from '../../../../services/auth';
 import { notify, TypeNotificationEnum } from '../../../../utils/notify';
-import logo from '../../assets/logo.svg';
+import logo from '../../../../assets/logo.svg';
 import { useStyles } from './styles';
 
 export function CadastroForm() {

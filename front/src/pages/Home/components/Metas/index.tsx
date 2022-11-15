@@ -51,8 +51,10 @@ export function Metas() {
       )}
       {data &&
         data.data.length > 0 &&
-        data.data.map((el: any) => {
-          return <MetaCard meta={el} onOpen={handleOpenEditModal} />;
+        data.data.map((el) => {
+          return (
+            <MetaCard meta={el} onOpen={handleOpenEditModal} key={el.id} />
+          );
         })}
       {data && (
         <EditMetaModal

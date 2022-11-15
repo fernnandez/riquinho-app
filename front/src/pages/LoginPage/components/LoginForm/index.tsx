@@ -12,11 +12,12 @@ import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import logo from '../../assets/logo.svg';
-import AuthContext from '../../context/AuthContext/AuthContext';
-import { authLogin } from '../../services/auth';
-import { queryClient } from '../../services/queryClient';
-import { notify, TypeNotificationEnum } from '../../utils/notify';
+import AuthContext from '../../../../context/AuthContext/AuthContext';
+import { authLogin } from '../../../../services/auth';
+import { queryClient } from '../../../../services/queryClient';
+import { notify, TypeNotificationEnum } from '../../../../utils/notify';
+import logo from '../../../../assets/logo.svg';
+
 import { useStyles } from './styles';
 
 export function LoginForm() {
