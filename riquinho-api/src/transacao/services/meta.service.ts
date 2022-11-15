@@ -40,6 +40,7 @@ export class MetaService {
       prazo: createMetaDto.prazo,
       progresso: 0,
       valor: createMetaDto.valor,
+      dataInicio: createMetaDto.dataInicio,
       transacao,
     });
   }
@@ -65,5 +66,45 @@ export class MetaService {
       .innerJoinAndSelect('meta.transacao', 'transacao')
       .innerJoinAndSelect('transacao.parcelas', 'parcelas')
       .getOne();
+  }
+
+  async updateMeta(idMeta: string, updateMetaDto: CreateUpdateMetaDto) {
+    const categoria = await this.categoriaService.findByName('OUTROS');
+
+    const meta = await this.metaRepository.findOne(idMeta, {
+      relations: ['transacao'],
+    });
+
+    await this.transacaoService.update(meta.transacao.id, {
+      categoria: categoria.id,
+      data: updateMetaDto.dataInicio,
+      descricao: `Valor Mensal da meta ${updateMetaDto.titulo}`,
+      tipo: TipoTransacao.META,
+      titulo: `Meta`,
+      status: Status.PENDENTE,
+      parcelado: true,
+      parcelas: updateMetaDto.prazo,
+      valor: updateMetaDto.valor,
+    });
+
+    await this.metaRepository.save({
+      id: meta.id,
+      titulo: updateMetaDto.titulo,
+      descricao: updateMetaDto.descricao,
+      prazo: updateMetaDto.prazo,
+      progresso: 0,
+      valor: updateMetaDto.valor,
+      dataInicio: updateMetaDto.dataInicio,
+    });
+  }
+
+  async deleteMeta(idMeta: string) {
+    const meta = await this.metaRepository.findOne(idMeta, {
+      relations: ['transacao'],
+    });
+
+    await this.transacaoService.delete(meta.transacao.id);
+
+    await this.metaRepository.delete(idMeta);
   }
 }

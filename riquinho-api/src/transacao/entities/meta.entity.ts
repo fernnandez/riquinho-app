@@ -27,6 +27,9 @@ export class Meta {
   @Column()
   progresso: number;
 
+  @Column({ type: 'timestamp', name: 'data_inicio' })
+  dataInicio: Date;
+
   @OneToOne(() => Transacao, (transacao) => transacao.parcelas)
   @JoinColumn({ name: 'transacao_id' })
   transacao: Transacao;

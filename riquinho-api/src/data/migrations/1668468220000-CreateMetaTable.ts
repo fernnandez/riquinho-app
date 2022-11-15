@@ -48,6 +48,10 @@ export class CreateMetaTable1668468220000 implements MigrationInterface {
             type: 'varchar',
           },
           {
+            name: 'data_inicio',
+            type: 'Date',
+          },
+          {
             name: 'transacao_id',
             type: 'uuid',
           },
