@@ -18,7 +18,7 @@ export class MetaService {
   ) {}
 
   async createMeta(user: User, createMetaDto: CreateUpdateMetaDto) {
-    const categoria = await this.categoriaService.findByName('OUTROS');
+    const categoria = await this.categoriaService.findByName('META');
     const transacao = await this.transacaoService.create(
       {
         categoria: categoria.id,
