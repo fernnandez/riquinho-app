@@ -30,7 +30,7 @@ import { notify, TypeNotificationEnum } from '../../../../utils/notify';
 import {
   getSimpleIcon,
   iconList,
-} from '../../../MainDashboard/components/TransacaoModals/constants';
+} from '../../../../utils/constants';
 import { useStyles } from '../styles';
 
 interface EditCategoriaModalProps {

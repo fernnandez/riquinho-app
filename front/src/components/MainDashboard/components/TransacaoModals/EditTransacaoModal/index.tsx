@@ -35,7 +35,7 @@ import {
   getTipo,
   TipoSelectItems,
   getCategoriaSelectList,
-} from '../constants';
+} from '../../../../../utils/constants';
 import { useStyles } from '../styles';
 
 interface EditTransacaoModalProps {
@@ -63,7 +63,6 @@ export function EditTransacaoModal({
       data: new Date(),
       categoria: '',
       tipo: 'RECEITA',
-      status: false,
       descricao: '',
       parcelado: false,
       parcelas: 1,
@@ -90,7 +89,6 @@ export function EditTransacaoModal({
         ...data,
         parcelado: data.parcelas > 1,
         parcelas: data.parcelas,
-        status: getStatus(data.status === true ? 'EFETIVADA' : 'PENDENTE'),
         tipo: getTipo(data.tipo),
       },
       token.token
@@ -127,7 +125,6 @@ export function EditTransacaoModal({
         categoria: trancasaoToEdit.categoria.id,
         data: new Date(trancasaoToEdit.parcela.data),
         descricao: trancasaoToEdit.descricao,
-        status: trancasaoToEdit.parcela.status === 'EFETIVADA' ? true : false,
         tipo: trancasaoToEdit.tipo,
         titulo: trancasaoToEdit.titulo,
         valor: Number(trancasaoToEdit.valorTotal),

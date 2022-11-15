@@ -22,7 +22,7 @@ import { useModalController } from '../../../../context/ModalContext/ModalContex
 import { deleteMeta, findAllMeta, Meta } from '../../../../services/meta';
 import { queryClient } from '../../../../services/queryClient';
 import { notify, TypeNotificationEnum } from '../../../../utils/notify';
-import { getSimpleIcon } from '../TransacaoModals/constants';
+import { getSimpleIcon } from '../../../../utils/constants';
 import { EditMetaModal } from './MetaModals/EditMetaModal';
 
 export function Metas() {

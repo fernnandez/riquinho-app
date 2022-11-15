@@ -30,7 +30,7 @@ import {
   getStatus,
   getTipo,
   TipoSelectItems,
-} from '../constants';
+} from '../../../../../utils/constants';
 import { useStyles } from '../styles';
 interface CreateTransacaoModalProps {
   isOpen: boolean;
@@ -55,7 +55,7 @@ export function CreateTransacaoModal({
       categoria: '',
       tipo: 'RECEITA',
       descricao: '',
-      status: false,
+      // status: false,
       parcelado: false,
       parcelas: 1,
     },
@@ -76,7 +76,7 @@ export function CreateTransacaoModal({
         parcelado: data.parcelas > 1,
         parcelas: data.parcelas,
         valor: Number(data.valor),
-        status: getStatus(data.status === true ? 'EFETIVADA' : 'PENDENTE'),
+        // status: getStatus(data.status === true ? 'EFETIVADA' : 'PENDENTE'),
         tipo: getTipo(data.tipo),
       },
       token.token

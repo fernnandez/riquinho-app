@@ -30,7 +30,7 @@ import {
   getCategoriaIcon,
   StatusEnum,
   TipoTransacaoEnum,
-} from '../../TransacaoModals/constants';
+} from '../../../../../utils/constants';
 import { useStyles } from './styles';
 
 interface TransacaoItemProps {

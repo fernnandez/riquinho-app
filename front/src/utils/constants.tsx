@@ -8,7 +8,7 @@ import { IoFastFoodSharp, IoGameController } from 'react-icons/io5';
 import { FaGamepad } from 'react-icons/fa';
 
 import { ThemeIcon } from '@mantine/core';
-import { CategoriaResponse } from '../../../../services/categoria';
+import { CategoriaResponse } from '../services/categoria';
 import { ReactNode } from 'react';
 import { AiFillCar } from 'react-icons/ai';
 import { HiDesktopComputer } from 'react-icons/hi';
@@ -63,8 +63,6 @@ export function getCategoriaSelectList(categorias: CategoriaResponse[]) {
     };
   });
 }
-
-export function getDataCategoriaIcon() {}
 
 export function getCategoriaIcon(
   categoria: CategoriaResponse,

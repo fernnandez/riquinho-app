@@ -1,8 +1,7 @@
 import {
-  CategoriaEnum,
   StatusEnum,
   TipoTransacaoEnum,
-} from '../components/MainDashboard/components/TransacaoModals/constants';
+} from '../utils/constants';
 import api from './api';
 import { CategoriaResponse } from './categoria';
 
@@ -13,7 +12,6 @@ interface TransacaoType {
   categoria: string;
   tipo: TipoTransacaoEnum | undefined;
   descricao: string | null;
-  status: StatusEnum | undefined;
   parcelas: number;
   parcelado: boolean;
 }

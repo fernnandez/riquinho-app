@@ -3,10 +3,10 @@ import { CadastroPage } from './pages/CadastroPage';
 import { LoginPage } from './pages/LoginPage';
 
 import { NotificationsProvider } from '@mantine/notifications';
-import { Navigation } from './components/Navigation';
 import { ModalProvider } from './context/ModalContext/ModalContext';
-import { Home } from './pages/Home';
 import { CustomPage } from './pages/CustomPage';
+import { Home } from './pages/Home';
+import AuthProvider from './context/AuthContext/AuthProvider';
 
 function App() {
   return (
@@ -18,12 +18,14 @@ function App() {
           autoClose={4000}
         >
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/custom" element={<CustomPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/cadastro" element={<CadastroPage />} />
-            </Routes>
+            <AuthProvider>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/custom" element={<CustomPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/cadastro" element={<CadastroPage />} />
+              </Routes>
+            </AuthProvider>
           </BrowserRouter>
         </NotificationsProvider>
       </ModalProvider>

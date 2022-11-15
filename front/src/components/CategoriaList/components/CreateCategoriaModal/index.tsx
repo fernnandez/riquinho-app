@@ -28,7 +28,7 @@ import {
   getSimpleIcon,
   iconList,
   StatusEnum,
-} from '../../../MainDashboard/components/TransacaoModals/constants';
+} from '../../../../utils/constants';
 import { useStyles } from '../styles';
 
 interface CreateCategoriaModalProps {

@@ -10,7 +10,7 @@ import {
   TransacaoResponse,
 } from '../../../../services/transacao';
 import { getTransacaoDate } from '../../formatter';
-import { TipoTransacaoEnum } from '../TransacaoModals/constants';
+import { TipoTransacaoEnum } from '../../../../utils/constants';
 import { EditTransacaoModal } from '../TransacaoModals/EditTransacaoModal';
 import { TransacaoTable } from './TransacaoTable';
 

@@ -1,5 +1,4 @@
 import api from './api';
-import { TransacaoResponse } from './transacao';
 
 export interface Meta {
   id: string;

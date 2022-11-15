@@ -6,7 +6,7 @@ import {
 import {
   StatusEnum,
   TipoTransacaoEnum,
-} from './components/TransacaoModals/constants';
+} from '../../utils/constants';
 
 export function getTransacaoDate(
   transacoes: TransacaoResponse[],

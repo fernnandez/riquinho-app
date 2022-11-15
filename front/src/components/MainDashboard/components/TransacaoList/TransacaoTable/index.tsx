@@ -9,7 +9,7 @@ import {
 } from '@mantine/core';
 import { AiOutlineInfoCircle } from 'react-icons/ai';
 import { TransacaoOneParcela } from '../../../../../services/transacao';
-import { TipoTransacaoEnum } from '../../TransacaoModals/constants';
+import { TipoTransacaoEnum } from '../../../../../utils/constants';
 import { TransacaoItem } from '../TransacaoItem';
 
 interface TransacaoTableProp {
