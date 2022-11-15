@@ -26,7 +26,11 @@ import {
 } from '../../../../../services/transacao';
 import { DateFormatter } from '../../../../../utils/dateFormatter';
 import { notify, TypeNotificationEnum } from '../../../../../utils/notify';
-import { getCategoriaIcon, StatusEnum } from '../../TransacaoModals/constants';
+import {
+  getCategoriaIcon,
+  StatusEnum,
+  TipoTransacaoEnum,
+} from '../../TransacaoModals/constants';
 import { useStyles } from './styles';
 
 interface TransacaoItemProps {
@@ -36,6 +40,7 @@ interface TransacaoItemProps {
     categoria: CategoriaResponse;
     descricao: string | null;
     parcelado: boolean;
+    tipo: TipoTransacaoEnum;
     parcela: {
       id: string;
       status: StatusEnum;
@@ -78,7 +83,7 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
   };
   const handleStatus = () => {
     setLoading(true);
-    updateStatus(data.parcela.id, token.token)
+    updateStatus(data.id, data.parcela.id, token.token)
       .then(() => {
         queryClient.invalidateQueries('transacoes').then(() => {
           showNotification(
@@ -184,7 +189,13 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
           </ActionIcon>
         </Tooltip>
 
-        <Tooltip label="ações">
+        <Tooltip
+          label={
+            data.tipo === TipoTransacaoEnum.META
+              ? 'Não é possivel editar ou excluir transações de Meta'
+              : 'Ações'
+          }
+        >
           <Menu
             transition="pop"
             withArrow
@@ -199,6 +210,7 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
               icon={<AiFillEdit size={25} />}
               onClick={() => onOpenEdit(data.id)}
               color="blue"
+              disabled={data.tipo === TipoTransacaoEnum.META}
             >
               Editar
             </Menu.Item>
@@ -206,6 +218,7 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
               icon={<AiFillDelete size={25} />}
               onClick={openConfirmDialog}
               color="red"
+              disabled={data.tipo === TipoTransacaoEnum.META}
             >
               Excluir
             </Menu.Item>

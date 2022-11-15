@@ -10,7 +10,7 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { useContext } from 'react';
 import { AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai';
-import { BiChart } from 'react-icons/bi';
+import { BiChart, BiCube } from 'react-icons/bi';
 import { BsGraphUp } from 'react-icons/bs';
 import { GiMoneyStack } from 'react-icons/gi';
 import { useQuery } from 'react-query';
@@ -20,12 +20,15 @@ import { findAllCategorias } from '../../services/categoria';
 import { findAllTransacao } from '../../services/transacao';
 import { Charts } from './components/Charts';
 import { InfoCards } from './components/InfoCards';
+import { Metas } from './components/Metas';
+import { CreateMetaModal } from './components/Metas/CreateMetaModal';
 import { SeletorMes } from './components/SeletorMes';
 import { TransacaoList } from './components/TransacaoList';
 import { CreateTransacaoModal } from './components/TransacaoModals/CreateTransacaoModal';
 
 export function MainDashboard() {
   const [openedCreate, handlersCreate] = useDisclosure(false);
+  const [openedCreateMeta, handlersCreateMeta] = useDisclosure(false);
 
   const { token } = useContext(AuthContext);
 
@@ -110,6 +113,24 @@ export function MainDashboard() {
       </Group>
       {data && dateCategorias && <Charts transacoes={data.data || []} />}
 
+      <Group align="center" mt="2rem">
+        <Title order={2} align="center">
+          Metas
+        </Title>
+        <ThemeIcon size={30}>
+          <BiCube size={30} />
+        </ThemeIcon>
+      </Group>
+      <Button
+        color="blue"
+        mt="2rem"
+        leftIcon={<AiOutlinePlus />}
+        onClick={() => handlersCreateMeta.open()}
+      >
+        Adicionar nova meta
+      </Button>
+      <Metas />
+
       {/* Modals */}
       {dateCategorias?.data && (
         <>
@@ -120,6 +141,10 @@ export function MainDashboard() {
           />
         </>
       )}
+      <CreateMetaModal
+        isOpen={openedCreateMeta}
+        onClose={handlersCreateMeta.close}
+      />
     </Box>
   );
 }

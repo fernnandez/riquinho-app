@@ -92,38 +92,12 @@ export const findAllTransacao = async (token: string) => {
   });
 };
 
-export const findResumo = async (token: string, data: Date) => {
-  return api.get<{
-    receitas: number;
-    receitasEfetivadas: number;
-    despesas: number;
-    despesasEfetivadas: number;
-  }>('/transacao/resumo', {
-    params: { data: data },
-    headers: { Authorization: `Bearer ${token}` },
-  });
-};
-
-export const findResumoCategoria = async (token: string, data: Date) => {
-  return api.get<{
-    despesaCategoryValue: {
-      name: string;
-      value: number;
-      color: string;
-    }[];
-    receitaCategoryValue: {
-      name: string;
-      value: number;
-      color: string;
-    }[];
-  }>('/transacao/resumo/categoria', {
-    params: { data: data },
-    headers: { Authorization: `Bearer ${token}` },
-  });
-};
-
-export const updateStatus = async (idTransacao: string, token: string) => {
-  return api.get(`/transacao/change-status/${idTransacao}`, {
+export const updateStatus = async (
+  idTransacao: string,
+  idParcela: string,
+  token: string
+) => {
+  return api.get(`/transacao/change-status/${idTransacao}/${idParcela}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 };

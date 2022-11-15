@@ -23,6 +23,7 @@ export enum CategoriaEnum {
 export enum TipoTransacaoEnum {
   RECEITA = 'RECEITA',
   DESPESA = 'DESPESA',
+  META = 'META',
 }
 
 export enum StatusEnum {
