@@ -69,7 +69,7 @@ export class MetaService {
   }
 
   async updateMeta(idMeta: string, updateMetaDto: CreateUpdateMetaDto) {
-    const categoria = await this.categoriaService.findByName('OUTROS');
+    const categoria = await this.categoriaService.findByName('META');
 
     const meta = await this.metaRepository.findOne(idMeta, {
       relations: ['transacao'],

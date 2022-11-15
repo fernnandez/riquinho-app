@@ -19,11 +19,13 @@ interface TransacaoListCustomProps {
     | { receitas: TransacaoResponse[]; despesas: TransacaoResponse[] }
     | undefined;
   categorias: CategoriaResponse[] | undefined;
+  isLoading: boolean;
 }
 
 export function TransacaoList({
   categorias,
   transacoes,
+  isLoading,
 }: TransacaoListCustomProps) {
   const [openedEdit, handlersEdit] = useDisclosure(false);
 
@@ -61,7 +63,7 @@ export function TransacaoList({
     >
       <TransacaoTable
         tipo={TipoTransacaoEnum.RECEITA}
-        isLoading={false}
+        isLoading={isLoading}
         data={receitas}
         error={null}
         handleOpenEditModal={handleOpenEditModal}
@@ -69,7 +71,7 @@ export function TransacaoList({
 
       <TransacaoTable
         tipo={TipoTransacaoEnum.DESPESA}
-        isLoading={false}
+        isLoading={isLoading}
         data={despesas}
         error={null}
         handleOpenEditModal={handleOpenEditModal}

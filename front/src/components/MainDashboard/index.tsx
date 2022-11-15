@@ -35,7 +35,11 @@ export function MainDashboard() {
     return findAllCategorias(token.token);
   });
 
-  const { data } = useQuery(
+  const {
+    data: transacoes,
+    isLoading,
+    error,
+  } = useQuery(
     ['transacoes'],
     () => {
       return findAllTransacao(token.token);
@@ -81,11 +85,8 @@ export function MainDashboard() {
           <BsGraphUp size={30} />
         </ThemeIcon>
       </Group>
-      {data && (
-        <InfoCards
-          transacoes={[...data.data.receitas, ...data.data.despesas]}
-        />
-      )}
+
+      <InfoCards isLoading={isLoading} transacoes={transacoes?.data} />
 
       <Group align="center" mt="2rem">
         <Title order={2} align="center">
@@ -95,12 +96,11 @@ export function MainDashboard() {
           <GiMoneyStack size={30} />
         </ThemeIcon>
       </Group>
-      {data && dateCategorias && (
-        <TransacaoList
-          categorias={dateCategorias.data || []}
-          transacoes={data.data || []}
-        />
-      )}
+      <TransacaoList
+        categorias={dateCategorias?.data}
+        transacoes={transacoes?.data}
+        isLoading={isLoading}
+      />
 
       <Group align="center" mt="2rem">
         <Title order={2} align="center">
@@ -110,7 +110,7 @@ export function MainDashboard() {
           <BiChart size={30} />
         </ThemeIcon>
       </Group>
-      {data && dateCategorias && <Charts transacoes={data.data || []} />}
+      <Charts transacoes={transacoes?.data} isLoading={isLoading} />
 
       <Group align="center" mt="2rem">
         <Title order={2} align="center">

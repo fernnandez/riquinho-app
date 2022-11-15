@@ -17,7 +17,7 @@ import { MdAttachMoney } from 'react-icons/md';
 import { TbCurlyLoop } from 'react-icons/tb';
 import AuthContext from '../../../../../context/AuthContext/AuthContext';
 import { useModalController } from '../../../../../context/ModalContext/ModalContext';
-import { createMeta, Meta, updateMeta } from '../../../../../services/meta';
+import { Meta, updateMeta } from '../../../../../services/meta';
 import { queryClient } from '../../../../../services/queryClient';
 import { notify, TypeNotificationEnum } from '../../../../../utils/notify';
 import { useStyles } from './styles';

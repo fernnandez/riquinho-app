@@ -10,10 +10,13 @@ import { TransacaoResponse } from '../../../../services/transacao';
 import { getValues } from '../../formatter';
 
 interface InfoCardsProps {
-  transacoes: TransacaoResponse[];
+  transacoes:
+    | { receitas: TransacaoResponse[]; despesas: TransacaoResponse[] }
+    | undefined;
+  isLoading: boolean;
 }
 
-export function InfoCards({ transacoes }: InfoCardsProps) {
+export function InfoCards({ transacoes, isLoading }: InfoCardsProps) {
   const { date } = useMonthController();
 
   const [resumo, setResumo] = useState<{
@@ -25,7 +28,9 @@ export function InfoCards({ transacoes }: InfoCardsProps) {
 
   useEffect(() => {
     if (transacoes) {
-      setResumo(getValues(transacoes, date));
+      setResumo(
+        getValues([...transacoes.despesas, ...transacoes.receitas], date)
+      );
     } else {
       setResumo(null);
     }
@@ -42,7 +47,7 @@ export function InfoCards({ transacoes }: InfoCardsProps) {
       }}
     >
       <Card
-        isLoading={false}
+        isLoading={isLoading}
         title="Recebido"
         value={resumo ? String(resumo.receitasEfetivadas) : null}
         valuePrevisto={resumo ? String(resumo.receitas) : null}
@@ -50,7 +55,7 @@ export function InfoCards({ transacoes }: InfoCardsProps) {
         color="green"
       />
       <Card
-        isLoading={false}
+        isLoading={isLoading}
         title="Saldo"
         value={
           resumo
@@ -64,7 +69,7 @@ export function InfoCards({ transacoes }: InfoCardsProps) {
         color="blue"
       />
       <Card
-        isLoading={false}
+        isLoading={isLoading}
         title="Gasto"
         value={resumo ? String(resumo.despesasEfetivadas) : null}
         valuePrevisto={resumo ? String(resumo.despesas) : null}

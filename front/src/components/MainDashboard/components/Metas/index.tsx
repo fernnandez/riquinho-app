@@ -4,9 +4,9 @@ import {
   Button,
   Center,
   Group,
+  Loader,
   Paper,
   Progress,
-  Stack,
   Text,
   ThemeIcon,
   Title,
@@ -21,7 +21,6 @@ import AuthContext from '../../../../context/AuthContext/AuthContext';
 import { useModalController } from '../../../../context/ModalContext/ModalContext';
 import { deleteMeta, findAllMeta, Meta } from '../../../../services/meta';
 import { queryClient } from '../../../../services/queryClient';
-import { deleteTransacao } from '../../../../services/transacao';
 import { notify, TypeNotificationEnum } from '../../../../utils/notify';
 import { getSimpleIcon } from '../TransacaoModals/constants';
 import { EditMetaModal } from './MetaModals/EditMetaModal';
@@ -45,6 +44,11 @@ export function Metas() {
       style={{ width: '100%', justifyContent: 'center', marginTop: '2rem' }}
       direction={'row'}
     >
+      {isLoading && (
+        <Center>
+          <Loader />
+        </Center>
+      )}
       {data &&
         data.data.length > 0 &&
         data.data.map((el: any) => {
