@@ -49,8 +49,8 @@ export function InfoCards({ transacoes, isLoading }: InfoCardsProps) {
       <Card
         isLoading={isLoading}
         title="Recebido"
-        value={resumo ? String(resumo.receitasEfetivadas) : null}
-        valuePrevisto={resumo ? String(resumo.receitas) : null}
+        value={resumo ? resumo.receitasEfetivadas.toFixed(2) : null}
+        valuePrevisto={resumo ? resumo.receitas.toFixed(2) : null}
         icon={<MdAttachMoney size={25} color="green" />}
         color="green"
       />
@@ -59,11 +59,11 @@ export function InfoCards({ transacoes, isLoading }: InfoCardsProps) {
         title="Saldo"
         value={
           resumo
-            ? String(resumo.receitasEfetivadas - resumo.despesasEfetivadas)
+            ? (resumo.receitasEfetivadas - resumo.despesasEfetivadas).toFixed(2)
             : null
         }
         valuePrevisto={
-          resumo ? String(resumo.receitas - resumo.despesas) : null
+          resumo ? (resumo.receitas - resumo.despesas).toFixed(2) : null
         }
         icon={<HiOutlineCash size={25} color="blue" />}
         color="blue"
@@ -71,8 +71,8 @@ export function InfoCards({ transacoes, isLoading }: InfoCardsProps) {
       <Card
         isLoading={isLoading}
         title="Gasto"
-        value={resumo ? String(resumo.despesasEfetivadas) : null}
-        valuePrevisto={resumo ? String(resumo.despesas) : null}
+        value={resumo ? resumo.despesasEfetivadas.toFixed(2) : null}
+        valuePrevisto={resumo ? resumo.despesas.toFixed(2) : null}
         icon={<TbCashBanknoteOff size={25} color="red" />}
         color="red"
       />

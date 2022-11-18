@@ -17,7 +17,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       >
         <App />
       </MantineProvider>
-      <ReactQueryDevtools />
+      {/* <ReactQueryDevtools /> */}
     </QueryClientProvider>
   </React.StrictMode>
 );
