@@ -31,4 +31,4 @@ export const updateSenha = async (
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-}
+};

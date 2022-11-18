@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { compare } from 'bcrypt';
+import { compare, hashSync } from 'bcrypt';
 import { FindOneOptions, Repository } from 'typeorm';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { UpdateNameUserDto } from '../dtos/update-name-user.dto';
@@ -74,7 +74,7 @@ export class UserService {
     }
     return this.userRepository.save({
       ...userToEdit,
-      senha: updateSenhaUserDto.senha,
+      senha: hashSync(updateSenhaUserDto.senha, 10),
     });
   }
 
