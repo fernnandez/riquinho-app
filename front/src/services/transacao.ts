@@ -1,8 +1,7 @@
 import {
-  CategoriaEnum,
   StatusEnum,
   TipoTransacaoEnum,
-} from '../components/MainDashboard/components/TransacaoModals/constants';
+} from '../utils/constants';
 import api from './api';
 import { CategoriaResponse } from './categoria';
 
@@ -13,18 +12,43 @@ interface TransacaoType {
   categoria: string;
   tipo: TipoTransacaoEnum | undefined;
   descricao: string | null;
-  status: StatusEnum | undefined;
+  parcelas: number;
+  parcelado: boolean;
 }
 
 export interface TransacaoResponse {
   id: string;
   titulo: string;
-  valor: number;
-  data: Date;
   categoria: CategoriaResponse;
   tipo: TipoTransacaoEnum;
   descricao: string;
-  status: StatusEnum;
+  parcelado: boolean;
+  valorTotal: number;
+  parcelas: {
+    descricao: string;
+    id: string;
+    status: StatusEnum;
+    data: Date;
+    valor: number;
+  }[];
+}
+
+export interface TransacaoOneParcela {
+  id: string;
+  titulo: string;
+  categoria: CategoriaResponse;
+  tipo: TipoTransacaoEnum;
+  descricao: string;
+  parcelado: boolean;
+  valorTotal: number;
+  parcelas: number;
+  parcela: {
+    descricao: string;
+    id: string;
+    status: StatusEnum;
+    data: Date;
+    valor: number;
+  };
 }
 
 export const createTransacao = async (data: TransacaoType, token: string) => {
@@ -58,13 +82,20 @@ export const deleteTransacao = async (idTransacao: string, token: string) => {
 };
 
 export const findAllTransacao = async (token: string) => {
-  return api.get<TransacaoResponse[]>('/transacao', {
+  return api.get<{
+    receitas: TransacaoResponse[];
+    despesas: TransacaoResponse[];
+  }>('/transacao', {
     headers: { Authorization: `Bearer ${token}` },
   });
 };
 
-export const updateStatus = async (idTransacao: string, token: string) => {
-  return api.get(`/transacao/change-status/${idTransacao}`, {
+export const updateStatus = async (
+  idTransacao: string,
+  idParcela: string,
+  token: string
+) => {
+  return api.get(`/transacao/change-status/${idTransacao}/${idParcela}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 };

@@ -29,6 +29,10 @@ export class CategoriaService {
     return this.categoriaRepository.findOne(id);
   }
 
+  async findByName(name: string) {
+    return this.categoriaRepository.findOne({ where: { icon: name } });
+  }
+
   async delete(id: string) {
     // TODO ajustar possiveis receitas que tenham essa categoria com outra categoria
     return this.categoriaRepository.delete(id);

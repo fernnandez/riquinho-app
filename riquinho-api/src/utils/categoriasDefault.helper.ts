@@ -25,6 +25,14 @@ export const categoriasDefault = [
     color: '#1C7ED6',
   },
   {
+    icon: 'META',
+    nome: 'meta',
+    isForReceita: false,
+    isForDespesa: false,
+    isDefault: true,
+    color: '#993399',
+  },
+  {
     icon: 'OUTROS',
     nome: 'Outros',
     isForReceita: true,

@@ -4,15 +4,20 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Categoria } from '../../user/entities/categoria.entity';
 import { User } from '../../user/entities/user.entity';
+import { Meta } from './meta.entity';
+import { Parcela } from './parcela.entity';
 
 export enum TipoTransacao {
   RECEITA = 'RECEITA',
   DESPESA = 'DESPESA',
+  META = 'META',
 }
 
 export enum Status {
@@ -28,11 +33,11 @@ export class Transacao {
   @Column()
   titulo: string;
 
-  @Column()
+  @Column({ nullable: true })
   descricao: string;
 
-  @Column({ type: 'timestamp' })
-  data: Date;
+  @Column()
+  parcelado: boolean;
 
   @Column({ type: 'enum', enum: TipoTransacao })
   tipo: TipoTransacao;
@@ -41,11 +46,12 @@ export class Transacao {
   @JoinColumn({ name: 'categoria_id' })
   categoria: Categoria;
 
-  @Column({ type: 'enum', enum: Status })
-  status: Status;
+  @OneToMany(() => Parcela, (parcela) => parcela.transacao)
+  parcelas: Parcela[];
 
-  @Column()
-  valor: number;
+  @OneToOne(() => Meta, (meta) => meta.transacao, { nullable: true })
+  @JoinColumn({ name: 'meta_id' })
+  meta: Meta;
 
   @ManyToOne(() => User, (user) => user.transacoes)
   @JoinColumn({ name: 'user_id' })
