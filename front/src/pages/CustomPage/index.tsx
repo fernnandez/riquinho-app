@@ -105,7 +105,6 @@ export function CustomPage() {
         <UpdateSenhaModal
           isOpen={openedUpdateSenha}
           onClose={() => handlersUpdateSenha.close()}
-          // senha={data.data.Senha}
           id={data.data.id}
         />
       )}

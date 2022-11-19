@@ -1,14 +1,22 @@
-import { Box, Button, Grid, Modal, TextInput, Title } from '@mantine/core';
+import {
+  Box,
+  Button,
+  Grid,
+  Modal,
+  TextInput,
+  Title,
+  PasswordInput,
+} from "@mantine/core";
 
-import { useForm } from '@mantine/form';
-import { showNotification } from '@mantine/notifications';
-import { useContext, useState } from 'react';
-import { useQuery } from 'react-query';
-import AuthContext from '../../context/AuthContext/AuthContext';
-import { queryClient } from '../../services/queryClient';
-import { findOneUser, updateNome, updateSenha } from '../../services/user';
-import { notify, TypeNotificationEnum } from '../../utils/notify';
-import { useStyles } from './styles';
+import { useForm } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
+import { useContext, useState } from "react";
+import { useQuery } from "react-query";
+import AuthContext from "../../context/AuthContext/AuthContext";
+import { queryClient } from "../../services/queryClient";
+import { findOneUser, updateNome, updateSenha } from "../../services/user";
+import { notify, TypeNotificationEnum } from "../../utils/notify";
+import { useStyles } from "./styles";
 
 interface UpdateSenhaModalProps {
   isOpen: boolean;
@@ -27,12 +35,13 @@ export function UpdateSenhaModal({
 
   const form = useForm({
     initialValues: {
-      senha: '',
-      lastSenha: '',
+      senha: "",
+      lastSenha: "",
     },
     validate: (values) => ({
-      lastSenha: values.lastSenha === '' ? 'A senha antiga é obrigatória' : null,
-      senha: values.senha === '' ? 'Nova senha é obrigatória' : null,
+      lastSenha:
+        values.lastSenha === "" ? "A senha antiga é obrigatória" : null,
+      senha: values.senha === "" ? "Nova senha é obrigatória" : null,
     }),
   });
 
@@ -51,7 +60,7 @@ export function UpdateSenhaModal({
       token.token
     )
       .then(() => {
-        queryClient.invalidateQueries('user').then(() => {
+        queryClient.invalidateQueries("user").then(() => {
           showNotification(notify({ type: TypeNotificationEnum.SUCCESS }));
           handleClose();
         });
@@ -86,21 +95,22 @@ export function UpdateSenhaModal({
       >
         <Grid grow gutter="xl" mt=".5rem">
           <Grid.Col span={12}>
-          <TextInput
+
+            <PasswordInput
               label="Senha Antiga"
               placeholder="Senha Antiga"
               size="md"
               mb="md"
-              className={classes.textInput}
-              {...form.getInputProps('lastSenha')}
+          
+              {...form.getInputProps("lastSenha")}
             />
-            <TextInput
-              label="Nova Senha"
+            <PasswordInput
+              label="NovaSenha"
               placeholder="Senha Nova"
               size="md"
               mb="md"
-              className={classes.textInput}
-              {...form.getInputProps('senha')}
+          
+              {...form.getInputProps("senha")}
             />
           </Grid.Col>
         </Grid>

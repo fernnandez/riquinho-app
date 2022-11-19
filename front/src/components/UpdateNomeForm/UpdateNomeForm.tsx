@@ -1,14 +1,22 @@
-import { Box, Button, Grid, Modal, TextInput, Title } from '@mantine/core';
+import {
+  Box,
+  Button,
+  Grid,
+  Modal,
+  TextInput,
+  Title,
+  PasswordInput,
+} from "@mantine/core";
 
-import { useForm } from '@mantine/form';
-import { showNotification } from '@mantine/notifications';
-import { useContext, useState } from 'react';
-import { useQuery } from 'react-query';
-import AuthContext from '../../context/AuthContext/AuthContext';
-import { queryClient } from '../../services/queryClient';
-import { findOneUser, updateNome } from '../../services/user';
-import { notify, TypeNotificationEnum } from '../../utils/notify';
-import { useStyles } from './styles';
+import { useForm } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
+import { useContext, useState } from "react";
+import { useQuery } from "react-query";
+import AuthContext from "../../context/AuthContext/AuthContext";
+import { queryClient } from "../../services/queryClient";
+import { findOneUser, updateNome } from "../../services/user";
+import { notify, TypeNotificationEnum } from "../../utils/notify";
+import { useStyles } from "./styles";
 
 interface UpdateNomeModalProps {
   isOpen: boolean;
@@ -30,11 +38,11 @@ export function UpdateNomeModal({
   const form = useForm({
     initialValues: {
       nome: nome,
-      senha: '',
+      senha: "",
     },
     validate: (values) => ({
-      nome: values.nome === '' ? 'nome é obrigatório' : null,
-      senha: values.senha === '' ? 'senha é obrigatória' : null,
+      nome: values.nome === "" ? "nome é obrigatório" : null,
+      senha: values.senha === "" ? "senha é obrigatória" : null,
     }),
   });
 
@@ -53,7 +61,7 @@ export function UpdateNomeModal({
       token.token
     )
       .then(() => {
-        queryClient.invalidateQueries('user').then(() => {
+        queryClient.invalidateQueries("user").then(() => {
           showNotification(notify({ type: TypeNotificationEnum.SUCCESS }));
           handleClose();
         });
@@ -94,15 +102,15 @@ export function UpdateNomeModal({
               size="md"
               mb="md"
               className={classes.textInput}
-              {...form.getInputProps('nome')}
+              {...form.getInputProps("nome")}
             />
-            <TextInput
+            <PasswordInput
               label="Senha"
               placeholder="Senha"
               size="md"
               mb="md"
               className={classes.textInput}
-              {...form.getInputProps('senha')}
+              {...form.getInputProps("senha")}
             />
           </Grid.Col>
         </Grid>
