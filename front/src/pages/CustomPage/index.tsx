@@ -14,6 +14,7 @@ import { BiWallet } from 'react-icons/bi';
 import { FiAlertCircle, FiUser } from 'react-icons/fi';
 import { useQuery } from 'react-query';
 import { Navigation } from '../../components/Navigation';
+import { UpdateSenhaModal } from './components/UpdateSenhaForm/UpdateSenhaForm';
 import AuthContext from '../../context/AuthContext/AuthContext';
 import { findOneUser } from '../../services/user';
 import { CategoriaList } from './components/CategoriaList';
@@ -22,6 +23,7 @@ import { UpdateNomeModal } from './components/UpdateNomeForm/UpdateNomeForm';
 export function CustomPage() {
   const { token } = useContext(AuthContext);
   const [openedUpdateName, handlersUpdateName] = useDisclosure(false);
+  const [openedUpdateSenha, handlersUpdateSenha] = useDisclosure(false);
 
   const { data } = useQuery(['user'], () => {
     return findOneUser(token.token);
@@ -48,7 +50,9 @@ export function CustomPage() {
               <Button onClick={() => handlersUpdateName.open()}>
                 Ajustar Nome de Usuario
               </Button>
-              <Button variant="light">Redefinir Senha</Button>
+              <Button onClick={() => handlersUpdateSenha.open()}>
+                Redefinir senha
+              </Button>
               <Button color="red" variant="light">
                 Excluir Conta
               </Button>
@@ -86,6 +90,13 @@ export function CustomPage() {
           isOpen={openedUpdateName}
           onClose={() => handlersUpdateName.close()}
           nome={data.data.nome}
+          id={data.data.id}
+        />
+      )}
+      {data && (
+        <UpdateSenhaModal
+          isOpen={openedUpdateSenha}
+          onClose={() => handlersUpdateSenha.close()}
           id={data.data.id}
         />
       )}

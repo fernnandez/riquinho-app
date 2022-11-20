@@ -8,41 +8,40 @@ import {
   PasswordInput,
 } from "@mantine/core";
 
-import { useForm } from '@mantine/form';
-import { showNotification } from '@mantine/notifications';
-import { useContext, useState } from 'react';
-import AuthContext from '../../../../context/AuthContext/AuthContext';
-import { queryClient } from '../../../../services/queryClient';
-import { updateNome } from '../../../../services/user';
-import { notify, TypeNotificationEnum } from '../../../../utils/notify';
+import { useForm } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
+import { useContext, useState } from "react";
+import { useQuery } from "react-query";
+import AuthContext from "../../../../context/AuthContext/AuthContext";
+import { queryClient } from "../../../../services/queryClient";
+import { findOneUser, updateNome, updateSenha } from "../../../../services/user";
+import { notify, TypeNotificationEnum } from "../../../../utils/notify";
+import { useStyles } from "./styles";
 
-import { useStyles } from './styles';
-
-interface UpdateNomeModalProps {
+interface UpdateSenhaModalProps {
   isOpen: boolean;
   onClose: () => void;
-  nome: string;
   id: string;
 }
 
-export function UpdateNomeModal({
+export function UpdateSenhaModal({
   isOpen,
   onClose,
-  nome,
   id,
-}: UpdateNomeModalProps) {
+}: UpdateSenhaModalProps) {
   const [Loading, setloading] = useState(false);
   const { token } = useContext(AuthContext);
   const { classes } = useStyles();
 
   const form = useForm({
     initialValues: {
-      nome: nome,
       senha: "",
+      lastSenha: "",
     },
     validate: (values) => ({
-      nome: values.nome === "" ? "nome é obrigatório" : null,
-      senha: values.senha === "" ? "senha é obrigatória" : null,
+      lastSenha:
+        values.lastSenha === "" ? "A senha antiga é obrigatória" : null,
+      senha: values.senha === "" ? "Nova senha é obrigatória" : null,
     }),
   });
 
@@ -53,7 +52,7 @@ export function UpdateNomeModal({
 
   const handleSubmit = (data: typeof form.values) => {
     setloading(true);
-    updateNome(
+    updateSenha(
       id,
       {
         ...data,
@@ -96,20 +95,21 @@ export function UpdateNomeModal({
       >
         <Grid grow gutter="xl" mt=".5rem">
           <Grid.Col span={12}>
-            <TextInput
-              label="Nome"
-              placeholder="Nome"
+
+            <PasswordInput
+              label="Senha Antiga"
+              placeholder="Senha Antiga"
               size="md"
               mb="md"
-              className={classes.textInput}
-              {...form.getInputProps("nome")}
+          
+              {...form.getInputProps("lastSenha")}
             />
             <PasswordInput
-              label="Senha"
-              placeholder="Senha"
+              label="NovaSenha"
+              placeholder="Senha Nova"
               size="md"
               mb="md"
-              className={classes.textInput}
+          
               {...form.getInputProps("senha")}
             />
           </Grid.Col>

@@ -5,10 +5,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { compare } from 'bcrypt';
+import { compare, hashSync } from 'bcrypt';
 import { FindOneOptions, Repository } from 'typeorm';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { UpdateNameUserDto } from '../dtos/update-name-user.dto';
+import { UpdateSenhaUserDto } from '../dtos/update-password-user-dto';
 import { User } from '../entities/user.entity';
 import { CategoriaService } from './categoria.service';
 
@@ -63,6 +64,18 @@ export class UserService {
     } catch (error) {
       throw new NotFoundException('Usuario não encontrado');
     }
+  }
+
+  async updateSenha(updateSenhaUserDto: UpdateSenhaUserDto, id: string) {
+    const userToEdit = await this.findOneOrFail({ where: { id } });
+
+    if (!(await compare(updateSenhaUserDto.lastSenha, userToEdit.senha))) {
+      throw new BadRequestException('Senha incorreta');
+    }
+    return this.userRepository.save({
+      ...userToEdit,
+      senha: hashSync(updateSenhaUserDto.senha, 10),
+    });
   }
 
   async delete(id: string) {
