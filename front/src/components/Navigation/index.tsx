@@ -7,10 +7,9 @@ import {
   Image,
 } from '@mantine/core';
 import { ReactNode, useContext } from 'react';
-import { AiFillWallet } from 'react-icons/ai';
 import { BiWallet } from 'react-icons/bi';
 import { FiLogOut, FiSettings } from 'react-icons/fi';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo.svg';
 import AuthContext from '../../context/AuthContext/AuthContext';
 import { useStyles } from './styles';

@@ -1,6 +1,6 @@
 import { Box, Image, Title } from '@mantine/core';
 import loginIlustration from '../../assets/calculator.svg';
-import { LoginForm } from '../../components/LoginForm';
+import { LoginForm } from './components/LoginForm';
 import { Navigation } from '../../components/Navigation';
 import { useStyles } from './styles';
 

@@ -9,33 +9,25 @@ import {
   Title,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { BiWallet } from 'react-icons/bi';
 import { FiAlertCircle, FiUser } from 'react-icons/fi';
 import { useQuery } from 'react-query';
-import { useNavigate } from 'react-router-dom';
-import { CategoriaList } from '../../components/CategoriaList';
 import { Navigation } from '../../components/Navigation';
-import { UpdateNomeModal } from '../../components/UpdateNomeForm/UpdateNomeForm';
-import { UpdateSenhaModal } from '../../components/UpdateSenhaForm/UpdateSenhaForm';
+import { UpdateSenhaModal } from './components/UpdateSenhaForm/UpdateSenhaForm';
 import AuthContext from '../../context/AuthContext/AuthContext';
 import { findOneUser } from '../../services/user';
+import { CategoriaList } from './components/CategoriaList';
+import { UpdateNomeModal } from './components/UpdateNomeForm/UpdateNomeForm';
 
 export function CustomPage() {
-  const navigate = useNavigate();
   const { token } = useContext(AuthContext);
   const [openedUpdateName, handlersUpdateName] = useDisclosure(false);
   const [openedUpdateSenha, handlersUpdateSenha] = useDisclosure(false);
 
-  const { data, isLoading, error } = useQuery(['user'], () => {
+  const { data } = useQuery(['user'], () => {
     return findOneUser(token.token);
   });
-
-  useEffect(() => {
-    if (!token) {
-      navigate('/login');
-    }
-  }, []);
 
   return (
     <Navigation>
