@@ -24,7 +24,11 @@ export const createMeta = async (data: any, token: string) => {
   );
 };
 
-export const updateMeta = async (id: string, data: any, token: string) => {
+export const updateMeta = async (
+  id: string,
+  data: { titulo: string; descricao: string },
+  token: string
+) => {
   return api.put(
     `/meta/${id}`,
     { ...data },

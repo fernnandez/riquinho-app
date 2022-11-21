@@ -10,7 +10,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { CreateUpdateMetaDto } from '../dtos/create-update-meta.dto';
+import { CreateMetaDto } from '../dtos/create-meta.dto';
+import { UpdateMetaDto } from '../dtos/update-meta.dto';
 import { MetaService } from '../services/meta.service';
 
 @UseGuards(AuthGuard('jwt'))
@@ -19,15 +20,12 @@ export class MetaController {
   constructor(private metaService: MetaService) {}
 
   @Post()
-  async create(@Req() req, @Body() createMetaDto: CreateUpdateMetaDto) {
+  async create(@Req() req, @Body() createMetaDto: CreateMetaDto) {
     return this.metaService.createMeta(req.user, createMetaDto);
   }
 
   @Put(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() updateMetaDto: CreateUpdateMetaDto,
-  ) {
+  async update(@Param('id') id: string, @Body() updateMetaDto: UpdateMetaDto) {
     return this.metaService.updateMeta(id, updateMetaDto);
   }
 
