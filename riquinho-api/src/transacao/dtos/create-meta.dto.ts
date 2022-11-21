@@ -6,7 +6,7 @@ import {
   IsString,
 } from 'class-validator';
 
-export class CreateUpdateMetaDto {
+export class CreateMetaDto {
   @IsNotEmpty()
   @IsString()
   titulo: string;

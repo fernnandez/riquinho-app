@@ -18,7 +18,7 @@ export class ParcelaService {
     dataBase: Date,
     transacao: Transacao,
   ) {
-    const valorParcela = +(valor / qtdParcelas).toFixed(3);
+    const valorParcela = +(valor / qtdParcelas).toFixed(2);
 
     const parcelas = new Array<Parcela>();
 

@@ -7,14 +7,15 @@ import {
   NumberInput,
   TextInput,
   Title,
+  Tooltip,
 } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { useContext, useEffect, useState } from 'react';
+import { GiStairsGoal } from 'react-icons/gi';
 import { MdAttachMoney } from 'react-icons/md';
-import { TbCurlyLoop } from 'react-icons/tb';
 import AuthContext from '../../../../../context/AuthContext/AuthContext';
 import { useModalController } from '../../../../../context/ModalContext/ModalContext';
 import { Meta, updateMeta } from '../../../../../services/meta';
@@ -60,7 +61,8 @@ export function EditMetaModal({
     updateMeta(
       id,
       {
-        ...data,
+        descricao: data.descricao,
+        titulo: data.titulo,
       },
       token.token
     )
@@ -114,8 +116,8 @@ export function EditMetaModal({
       size="lg"
       title={
         <Box className={classes.formHeader}>
-          <ActionIcon color="red" variant="outline" size={40}>
-            <TbCurlyLoop size={40} />
+          <ActionIcon color="blue" variant="outline" size={40}>
+            <GiStairsGoal size={40} />
           </ActionIcon>
           <Title order={3}>Edição de Meta</Title>
         </Box>
@@ -136,26 +138,32 @@ export function EditMetaModal({
               className={classes.textInput}
               {...form.getInputProps('titulo')}
             />
-            <NumberInput
-              icon={<MdAttachMoney size={18} />}
-              className={classes.numberInput}
-              size="md"
-              label="Valor Total"
-              mb="md"
-              hideControls
-              min={0}
-              precision={2}
-              decimalSeparator=","
-              {...form.getInputProps('valor')}
-            />
-            <DatePicker
-              placeholder="Data de Inicio"
-              label="Data de Incio"
-              size="md"
-              mb="25px"
-              className={classes.datePicker}
-              {...form.getInputProps('dataInicio')}
-            />
+            <Tooltip label="Não é possivel editar o valor total de uma meta">
+              <NumberInput
+                icon={<MdAttachMoney size={18} />}
+                className={classes.numberInput}
+                size="md"
+                label="Valor Total"
+                mb="md"
+                hideControls
+                min={0}
+                precision={2}
+                decimalSeparator=","
+                disabled
+                {...form.getInputProps('valor')}
+              />
+            </Tooltip>
+            <Tooltip label="Não é possivel editar a data de lançamento de uma meta">
+              <DatePicker
+                placeholder="Data de Lançamento"
+                label="Data de Lançamento"
+                size="md"
+                mb="25px"
+                disabled
+                className={classes.datePicker}
+                {...form.getInputProps('dataInicio')}
+              />
+            </Tooltip>
           </Grid.Col>
           <Grid.Col span={6}>
             <TextInput
@@ -166,17 +174,20 @@ export function EditMetaModal({
               size="md"
               {...form.getInputProps('descricao')}
             />
-            <NumberInput
-              className={classes.numberInput}
-              size="md"
-              label="Prazo (meses)"
-              mb="md"
-              hideControls
-              min={0}
-              precision={0}
-              decimalSeparator=","
-              {...form.getInputProps('prazo')}
-            />
+            <Tooltip label="Não é possivel editar o prazo de uma meta">
+              <NumberInput
+                className={classes.numberInput}
+                size="md"
+                label="Prazo (meses)"
+                mb="md"
+                hideControls
+                min={0}
+                precision={0}
+                disabled
+                decimalSeparator=","
+                {...form.getInputProps('prazo')}
+              />
+            </Tooltip>
           </Grid.Col>
         </Grid>
         <Box className={classes.formButtonsCreate}>

@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { CategoriaService } from '../../user/services/categoria.service';
-import { CreateUpdateMetaDto } from '../dtos/create-update-meta.dto';
+import { CreateMetaDto } from '../dtos/create-meta.dto';
+import { UpdateMetaDto } from '../dtos/update-meta.dto';
 import { Meta } from '../entities/meta.entity';
+import { Status } from '../entities/parcela.entity';
 import { TipoTransacao } from '../entities/transacao.entity';
 import { TransacaoService } from './transacao.service';
 
@@ -17,8 +19,9 @@ export class MetaService {
     private readonly categoriaService: CategoriaService,
   ) {}
 
-  async createMeta(user: User, createMetaDto: CreateUpdateMetaDto) {
+  async createMeta(user: User, createMetaDto: CreateMetaDto) {
     const categoria = await this.categoriaService.findByName('META');
+
     const transacao = await this.transacaoService.create(
       {
         categoria: categoria.id,
@@ -67,60 +70,41 @@ export class MetaService {
       .getOne();
   }
 
-  async updateMeta(idMeta: string, updateMetaDto: CreateUpdateMetaDto) {
-    const categoria = await this.categoriaService.findByName('META');
-
+  async updateMeta(idMeta: string, updateMetaDto: UpdateMetaDto) {
     const meta = await this.metaRepository.findOne(idMeta, {
       relations: ['transacao'],
     });
 
-    if (
-      updateMetaDto.valor !== meta.valor &&
-      updateMetaDto.prazo !== meta.prazo
-    ) {
-      await this.transacaoService.update(meta.transacao.id, {
-        categoria: categoria.id,
-        data: updateMetaDto.dataInicio,
-        descricao: `Valor Mensal da meta ${updateMetaDto.titulo}`,
-        tipo: TipoTransacao.META,
-        titulo: `Meta`,
-        parcelado: true,
-        parcelas: updateMetaDto.prazo,
-        valor: updateMetaDto.valor,
-      });
+    await this.transacaoService.updateDescricao(
+      meta.transacao.id,
+      updateMetaDto.titulo,
+    );
 
-      await this.metaRepository.save({
-        id: meta.id,
-        titulo: updateMetaDto.titulo,
-        descricao: updateMetaDto.descricao,
-        prazo: updateMetaDto.prazo,
-        progresso: 0,
-        valor: updateMetaDto.valor,
-        dataInicio: updateMetaDto.dataInicio,
-      });
-    } else {
-      await this.transacaoService.updateDescricaoAndData(
-        meta.transacao.id,
-        updateMetaDto.descricao,
-        updateMetaDto.dataInicio,
-      );
-
-      await this.metaRepository.save({
-        id: meta.id,
-        titulo: updateMetaDto.titulo,
-        descricao: updateMetaDto.descricao,
-        prazo: updateMetaDto.prazo,
-        progresso: meta.progresso,
-        valor: updateMetaDto.valor,
-        dataInicio: updateMetaDto.dataInicio,
-      });
-    }
+    await this.metaRepository.save({
+      id: meta.id,
+      titulo: updateMetaDto.titulo,
+      descricao: updateMetaDto.descricao,
+      prazo: meta.prazo,
+      progresso: meta.progresso,
+      valor: meta.valor,
+      dataInicio: meta.dataInicio,
+    });
   }
 
   async deleteMeta(idMeta: string) {
     const meta = await this.metaRepository.findOne(idMeta, {
-      relations: ['transacao'],
+      relations: ['transacao', 'transacao.parcelas'],
     });
+
+    const isEfetivada = meta.transacao.parcelas.find(
+      (parcela) => parcela.status === Status.EFETIVADA,
+    );
+
+    if (isEfetivada) {
+      throw new BadRequestException(
+        'Não é possivel excluir uma meta que já foi iniciada',
+      );
+    }
 
     await this.transacaoService.delete(meta.transacao.id);
 

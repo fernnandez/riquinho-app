@@ -13,6 +13,7 @@ import { DatePicker } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { useContext, useState } from 'react';
+import { GiStairsGoal } from 'react-icons/gi';
 import { MdAttachMoney } from 'react-icons/md';
 import { TbCurlyLoop } from 'react-icons/tb';
 import AuthContext from '../../../../../context/AuthContext/AuthContext';
@@ -92,8 +93,8 @@ export function CreateMetaModal({ isOpen, onClose }: CreateMetaModalProps) {
       size="lg"
       title={
         <Box className={classes.formHeader}>
-          <ActionIcon color="red" variant="outline" size={40}>
-            <TbCurlyLoop size={40} />
+          <ActionIcon color="blue" variant="outline" size={40}>
+            <GiStairsGoal size={40} />
           </ActionIcon>
           <Title order={3}>Cadastro de Meta</Title>
         </Box>
@@ -127,8 +128,8 @@ export function CreateMetaModal({ isOpen, onClose }: CreateMetaModalProps) {
               {...form.getInputProps('valor')}
             />
             <DatePicker
-              placeholder="Data de Inicio"
-              label="Data de Incio"
+              placeholder="Data de Lançamento"
+              label="Data de Lançamento"
               size="md"
               mb="25px"
               className={classes.datePicker}
