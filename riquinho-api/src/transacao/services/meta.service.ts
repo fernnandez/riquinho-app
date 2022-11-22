@@ -56,9 +56,21 @@ export class MetaService {
   }
 
   async updateProgresso(id: string, progresso: number) {
-    const meta = await this.metaRepository.findOne(id);
+    const meta = await this.metaRepository.findOne(id, {
+      relations: ['transacao'],
+    });
 
-    await this.metaRepository.save({ ...meta, progresso });
+    if (progresso === 100) {
+      await this.metaRepository.save({
+        ...meta,
+        progresso,
+      });
+    } else {
+      await this.metaRepository.save({
+        ...meta,
+        progresso,
+      });
+    }
   }
 
   async findMeta(idTransacao: string) {
@@ -89,6 +101,16 @@ export class MetaService {
       valor: meta.valor,
       dataInicio: meta.dataInicio,
     });
+  }
+
+  async finishMeta(idMeta: string) {
+    const meta = await this.metaRepository.findOne(idMeta, {
+      relations: ['transacao'],
+    });
+
+    await this.transacaoService.finishTransacao(meta.transacao.id);
+
+    await this.updateProgresso(meta.id, 100);
   }
 
   async deleteMeta(idMeta: string) {

@@ -15,6 +15,6 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt'))
   @Get('verify')
   async verify(@Req() req: any) {
-    return req.user;
+    return this.authService.findUser(req.user.id);
   }
 }

@@ -1,10 +1,11 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { DateTime } from 'luxon';
 import { Repository } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { CategoriaService } from '../../user/services/categoria.service';
 import { CreateUpdateTransacaoDto } from '../dtos/create-update-transacao.dto';
-import { Status } from '../entities/parcela.entity';
+import { Parcela, Status } from '../entities/parcela.entity';
 import { TipoTransacao, Transacao } from '../entities/transacao.entity';
 import { MetaService } from './meta.service';
 import { ParcelaService } from './parcela.service';
@@ -47,7 +48,7 @@ export class TransacaoService {
     return transacoesDoMes;
   }
 
-  findOne(id: string): Promise<Transacao> {
+  async findOne(id: string): Promise<Transacao> {
     return this.transacaoRepository.findOne({ where: { id } });
   }
 
@@ -226,5 +227,47 @@ export class TransacaoService {
       }
     });
     return { receitaCategoryValue, despesaCategoryValue };
+  }
+
+  async finishTransacao(idTransacao: string) {
+    const today = DateTime.now();
+
+    const transacao = await this.transacaoRepository.findOne(idTransacao, {
+      relations: ['parcelas'],
+    });
+
+    const newParcelas = new Array<Parcela>();
+    let lastParcela = {} as Parcela;
+
+    transacao.parcelas.forEach((parcela) => {
+      const dataParcela = DateTime.fromJSDate(new Date(parcela.data));
+
+      if (dataParcela.year < today.year && dataParcela.month < today.month) {
+        newParcelas.push({ ...parcela, status: Status.EFETIVADA, transacao });
+      } else if (
+        dataParcela.year === today.year &&
+        dataParcela.month < today.month
+      ) {
+        newParcelas.push({ ...parcela, status: Status.EFETIVADA, transacao });
+      } else if (
+        dataParcela.year === today.year &&
+        dataParcela.month === today.month
+      ) {
+        lastParcela = {
+          ...parcela,
+          valor: Number(parcela.valor),
+          status: Status.EFETIVADA,
+          transacao,
+        };
+      } else {
+        lastParcela.valor += Number(parcela.valor);
+      }
+    });
+
+    // Parcela de finalização
+    newParcelas.push(lastParcela);
+
+    await this.parcelaService.removeParcelas(transacao.id);
+    await this.parcelaService.saveParcelas(newParcelas);
   }
 }

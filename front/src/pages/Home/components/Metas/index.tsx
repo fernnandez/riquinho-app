@@ -15,14 +15,19 @@ import { useDisclosure } from '@mantine/hooks';
 import { useModals } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
 import { useContext } from 'react';
-import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
+import { AiFillCheckCircle, AiFillDelete, AiFillEdit } from 'react-icons/ai';
 import { useQuery } from 'react-query';
 import AuthContext from '../../../../context/AuthContext/AuthContext';
 import { useModalController } from '../../../../context/ModalContext/ModalContext';
-import { deleteMeta, findAllMeta, Meta } from '../../../../services/meta';
+import {
+  deleteMeta,
+  findAllMeta,
+  finishMeta,
+  Meta,
+} from '../../../../services/meta';
 import { queryClient } from '../../../../services/queryClient';
-import { notify, TypeNotificationEnum } from '../../../../utils/notify';
 import { getSimpleIcon } from '../../../../utils/constants';
+import { notify, TypeNotificationEnum } from '../../../../utils/notify';
 import { EditMetaModal } from './MetaModals/EditMetaModal';
 
 export function Metas() {
@@ -103,7 +108,34 @@ function MetaCard({ meta, onOpen }: MetaProps) {
       });
   };
 
-  const openConfirmDialog = () => {
+  const handleFinish = () => {
+    finishMeta(meta.id, token.token)
+      .then(() => {
+        queryClient.invalidateQueries('metas').then(() => {
+          queryClient.invalidateQueries('transacoes').then(() => {
+            showNotification(
+              notify({
+                type: TypeNotificationEnum.SUCCESS,
+                title: 'Finalizada com sucesso',
+              })
+            );
+          });
+        });
+      })
+      .catch((error: any) => {
+        showNotification(
+          notify({
+            type: TypeNotificationEnum.ERROR,
+            title:
+              error.response && error.response.data.status !== 500
+                ? error.response.data.message
+                : null,
+          })
+        );
+      });
+  };
+
+  const openConfirmDeleteDialog = () => {
     return modals.openConfirmModal({
       size: 'lg',
       centered: true,
@@ -129,6 +161,40 @@ function MetaCard({ meta, onOpen }: MetaProps) {
         variant: 'light',
       },
       onConfirm: async () => handleDelete(),
+    });
+  };
+
+  const openConfirmFinishDialog = () => {
+    return modals.openConfirmModal({
+      size: 'lg',
+      centered: true,
+      title: (
+        <Group>
+          <ActionIcon size="lg" color={'green'} radius="xl" variant="hover">
+            <AiFillCheckCircle size={25} />
+          </ActionIcon>
+          <Text>Você está prestes a finalizar sua meta antecipadamente</Text>
+        </Group>
+      ),
+      children: (
+        <Text size="sm">
+          Ao fazer isso será criada uma parcela com o todo o saldo restante da
+          meta e lançada no mês atual, tem certeza?
+        </Text>
+      ),
+      labels: {
+        confirm: 'Finalizar',
+        cancel: 'Cancelar',
+      },
+      confirmProps: {
+        color: 'green',
+        variant: 'filled',
+      },
+      cancelProps: {
+        color: 'blue',
+        variant: 'light',
+      },
+      onConfirm: async () => handleFinish(),
     });
   };
 
@@ -185,6 +251,17 @@ function MetaCard({ meta, onOpen }: MetaProps) {
           <Text>Progresso</Text>
         </Center>
         <Progress value={+meta.progresso} mb="2rem" />
+        <Button
+          fullWidth
+          mb="2rem"
+          color="green"
+          size="sm"
+          onClick={openConfirmFinishDialog}
+          disabled={+meta.progresso === 100}
+          rightIcon={<AiFillCheckCircle size={25} />}
+        >
+          Finalizar Meta
+        </Button>
         <Group>
           <Button
             type="submit"
@@ -201,7 +278,8 @@ function MetaCard({ meta, onOpen }: MetaProps) {
             size="xs"
             variant="subtle"
             rightIcon={<AiFillDelete size={25} />}
-            onClick={() => openConfirmDialog()}
+            disabled={+meta.progresso !== 0}
+            onClick={() => openConfirmDeleteDialog()}
           >
             Excluir
           </Button>

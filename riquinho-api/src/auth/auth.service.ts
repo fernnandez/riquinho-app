@@ -33,4 +33,9 @@ export class AuthService {
       return null;
     }
   }
+
+  async findUser(id: string) {
+    const user = await this.userService.findOneOrFail({ where: { id } });
+    return user;
+  }
 }
