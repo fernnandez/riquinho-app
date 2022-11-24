@@ -59,11 +59,11 @@ export class UserController {
 
   @Put('/update-email/:id')
   async updateEmail(
-    
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateEmailUserDto: UpdateEmailUserDto,
   ) {
     return this.userService.updateEmail(updateEmailUserDto, id);
+  }
 
   @Put('changePassword/:id')
   async updateSenha(
@@ -71,6 +71,5 @@ export class UserController {
     @Body() updateSenhaUserDto: UpdateSenhaUserDto,
   ) {
     return this.userService.updateSenha(updateSenhaUserDto, id);
-
   }
 }
