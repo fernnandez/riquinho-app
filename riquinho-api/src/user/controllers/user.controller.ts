@@ -15,6 +15,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { UpdateNameUserDto } from '../dtos/update-name-user.dto';
+import { UpdateEmailUserDto } from '../dtos/update-email-user.dto';
 import { UpdateSenhaUserDto } from '../dtos/update-password-user-dto';
 import { User } from '../entities/user.entity';
 import { UserService } from '../services/user.service';
@@ -56,11 +57,20 @@ export class UserController {
     return this.userService.updateName(updateNameUserDto, id);
   }
 
+  @Put('/update-email/:id')
+  async updateEmail(
+    
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() updateEmailUserDto: UpdateEmailUserDto,
+  ) {
+    return this.userService.updateEmail(updateEmailUserDto, id);
+
   @Put('changePassword/:id')
   async updateSenha(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateSenhaUserDto: UpdateSenhaUserDto,
   ) {
     return this.userService.updateSenha(updateSenhaUserDto, id);
+
   }
 }
