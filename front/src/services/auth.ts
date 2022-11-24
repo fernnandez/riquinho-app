@@ -16,6 +16,12 @@ export const authLogin = async ({ email, password }: authLoginType) => {
   return api.post('/auth/login', { email, password });
 };
 
+export const authVerify = async (token: string) => {
+  return api.get('/auth/verify', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
+
 export const authCadastro = async ({
   nome,
   email,

@@ -1,18 +1,20 @@
 import {
+  IsBoolean,
   IsDateString,
   IsEnum,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
 } from 'class-validator';
-import { Status, TipoTransacao } from '../entities/transacao.entity';
+import { TipoTransacao } from '../entities/transacao.entity';
 
 export class CreateUpdateTransacaoDto {
   @IsNotEmpty()
   @IsString()
   titulo: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   descricao: string;
 
@@ -28,10 +30,14 @@ export class CreateUpdateTransacaoDto {
   categoria: string;
 
   @IsNotEmpty()
-  @IsEnum(Status)
-  status: Status;
+  @IsNumber()
+  valor: number;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  parcelado: boolean;
 
   @IsNotEmpty()
   @IsNumber()
-  valor: number;
+  parcelas: number;
 }

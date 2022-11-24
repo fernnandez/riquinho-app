@@ -1,10 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { CategoriaService } from '../../user/services/categoria.service';
 import { CreateUpdateTransacaoDto } from '../dtos/create-update-transacao.dto';
-import { Status, Transacao } from '../entities/transacao.entity';
+import { Status } from '../entities/parcela.entity';
+import { TipoTransacao, Transacao } from '../entities/transacao.entity';
+import { MetaService } from './meta.service';
+import { ParcelaService } from './parcela.service';
 
 @Injectable()
 export class TransacaoService {
@@ -12,14 +15,36 @@ export class TransacaoService {
     @InjectRepository(Transacao)
     private readonly transacaoRepository: Repository<Transacao>,
     private readonly categoriaService: CategoriaService,
+    private readonly parcelaService: ParcelaService,
+    @Inject(forwardRef(() => MetaService))
+    private readonly metaService: MetaService,
   ) {}
 
-  findAll(user: User): Promise<Transacao[]> {
-    return this.transacaoRepository
+  async findAllByTipo(user: User, tipo: TipoTransacao) {
+    const transacoes = await this.transacaoRepository
       .createQueryBuilder('transacao')
       .where('transacao.user = :id', { id: user.id })
+      .andWhere('transacao.tipo = :tipo', { tipo })
       .innerJoinAndSelect('transacao.categoria', 'categoria')
+      .leftJoinAndSelect('transacao.parcelas', 'parcelas')
       .getMany();
+
+    const transacoesDoMes = [];
+
+    transacoes.forEach((transacao) => {
+      let valorTotal = 0;
+
+      transacao.parcelas.forEach((el) => {
+        valorTotal += Number(el.valor);
+      });
+
+      transacoesDoMes.push({
+        ...transacao,
+        valorTotal,
+      });
+    });
+
+    return transacoesDoMes;
   }
 
   findOne(id: string): Promise<Transacao> {
@@ -30,16 +55,26 @@ export class TransacaoService {
     createTransacaoDto: CreateUpdateTransacaoDto,
     user: User,
   ): Promise<Transacao> {
-    // TODO tratamento de erros
     const categoria = await this.categoriaService.findOne(
       createTransacaoDto.categoria,
     );
 
-    return this.transacaoRepository.save({
+    const transacao = await this.transacaoRepository.save({
       ...createTransacaoDto,
+      parcelado: createTransacaoDto.parcelado,
       user,
       categoria,
+      parcelas: [],
     });
+
+    await this.parcelaService.createParcelas(
+      createTransacaoDto.valor,
+      createTransacaoDto.parcelas,
+      createTransacaoDto.data,
+      transacao,
+    );
+
+    return transacao;
   }
 
   async update(
@@ -50,24 +85,146 @@ export class TransacaoService {
       updateTransacaoDto.categoria,
     );
 
-    await this.transacaoRepository.update(id, {
+    const transacao = await this.findOne(id);
+
+    await this.parcelaService.removeParcelas(id);
+
+    const parcelas = await this.parcelaService.createParcelas(
+      updateTransacaoDto.valor,
+      updateTransacaoDto.parcelas,
+      updateTransacaoDto.data,
+      transacao,
+    );
+
+    await this.transacaoRepository.save({
       ...updateTransacaoDto,
+      id,
       categoria,
+      parcelas,
     });
   }
 
-  async updateStatus(id: string, updateTransacaoDto: Transacao): Promise<void> {
-    /**Verificação e atribuição do novo status */
-    if (updateTransacaoDto.status == Status.EFETIVADA) {
-      updateTransacaoDto.status = Status.PENDENTE;
-    } else {
-      updateTransacaoDto.status = Status.EFETIVADA;
-    }
+  async updateDescricao(id: string, descricao: string): Promise<void> {
+    const transacao = await this.transacaoRepository
+      .createQueryBuilder('transacao')
+      .where('transacao.id = :id', { id: id })
+      .leftJoinAndSelect('transacao.parcelas', 'parcelas')
+      .getOne();
 
-    await this.transacaoRepository.update(id, updateTransacaoDto);
+    await this.transacaoRepository.save({
+      ...transacao,
+      descricao: `Valor Mensal da meta ${descricao}`,
+    });
+  }
+
+  async updateStatus(idTransacao: string, idParcela: string): Promise<void> {
+    await this.parcelaService.updateStatus(idParcela);
+
+    const meta = await this.metaService.findMeta(idTransacao);
+
+    const transacao = await this.findOne(idTransacao);
+
+    if (transacao.tipo === TipoTransacao.META) {
+      let valorEfetivado = 0;
+      meta.transacao.parcelas.forEach((parcela) => {
+        if (parcela.status === Status.EFETIVADA) {
+          valorEfetivado += +parcela.valor;
+        }
+      });
+
+      if (valorEfetivado === 0) {
+        await this.metaService.updateProgresso(meta.id, 0);
+      } else {
+        const onePercent = meta.valor / 100;
+        const progress = valorEfetivado / onePercent;
+        await this.metaService.updateProgresso(meta.id, progress);
+      }
+    }
   }
 
   async delete(id: string): Promise<void> {
     await this.transacaoRepository.delete(id);
+  }
+
+  async findResumo(user: User) {
+    let receitas = 0;
+    let despesas = 0;
+    let receitasEfetivadas = 0;
+    let despesasEfetivadas = 0;
+
+    const dataReceitas = await this.findAllByTipo(user, TipoTransacao.RECEITA);
+
+    const dataDespesas = await this.findAllByTipo(user, TipoTransacao.DESPESA);
+
+    if (dataReceitas.length) {
+      dataReceitas.forEach((transacao) => {
+        if (transacao.parcela.status === Status.EFETIVADA) {
+          receitasEfetivadas += Number(transacao.parcela.valor);
+        }
+        receitas += Number(transacao.parcela.valor);
+      });
+    }
+
+    if (dataReceitas.length) {
+      dataDespesas.forEach((transacao) => {
+        if (transacao.parcela.status === Status.EFETIVADA) {
+          despesasEfetivadas += Number(transacao.parcela.valor);
+        }
+        despesas += Number(transacao.parcela.valor);
+      });
+    }
+
+    return { receitas, receitasEfetivadas, despesas, despesasEfetivadas };
+  }
+
+  async findResumoCategoria(user: User) {
+    const receitas = await this.findAllByTipo(user, TipoTransacao.RECEITA);
+
+    const despesas = await this.findAllByTipo(user, TipoTransacao.DESPESA);
+
+    const receitaCategoryValue = new Array<{
+      name: string;
+      value: number;
+      color: string;
+    }>();
+
+    const despesaCategoryValue = new Array<{
+      name: string;
+      value: number;
+      color: string;
+    }>();
+
+    receitas.forEach((transacao) => {
+      const categoriaFound = receitaCategoryValue.find(
+        (element) => element.name === transacao.categoria.nome,
+      );
+
+      if (categoriaFound) {
+        categoriaFound.value += Number(transacao.parcela.valor);
+      } else {
+        receitaCategoryValue.push({
+          name: transacao.categoria.nome,
+          value: Number(transacao.parcela.valor),
+          color: transacao.categoria.color,
+        });
+      }
+    });
+
+    despesas.forEach((transacao) => {
+      const categoriaFound = despesaCategoryValue.find(
+        (element) => element.name === transacao.categoria.nome,
+      );
+
+      if (categoriaFound) {
+        categoriaFound.value += Number(transacao.parcela.valor);
+      } else {
+        despesaCategoryValue.push({
+          name: transacao.categoria.nome,
+          value: Number(transacao.parcela.valor),
+          color: transacao.categoria.color,
+        });
+      }
+    });
+    return { receitaCategoryValue, despesaCategoryValue };
   }
 }

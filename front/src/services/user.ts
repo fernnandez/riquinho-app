@@ -19,3 +19,16 @@ export const updateNome = async (
     }
   );
 };
+export const updateSenha = async (
+  id: string,
+  data: { lastSenha: string; senha: string },
+  token: string
+) => {
+  return await api.put(
+    `/user/changePassword/${id}`,
+    { ...data },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+};
