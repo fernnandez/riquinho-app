@@ -7,6 +7,10 @@ import {
 } from 'typeorm';
 import { Transacao } from './transacao.entity';
 
+export enum StatusMeta {
+  EM_ANDAMENTO = 'EM_ANDAMENTO',
+  FINALIZADA = 'FINALIZADA',
+}
 @Entity('meta')
 export class Meta {
   @PrimaryGeneratedColumn('uuid')
@@ -29,6 +33,9 @@ export class Meta {
 
   @Column({ type: 'timestamp', name: 'data_inicio' })
   dataInicio: Date;
+
+  @Column({ type: 'enum', enum: StatusMeta })
+  status: StatusMeta;
 
   @OneToOne(() => Transacao, (transacao) => transacao.parcelas)
   @JoinColumn({ name: 'transacao_id' })

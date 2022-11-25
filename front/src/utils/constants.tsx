@@ -31,6 +31,11 @@ export enum StatusEnum {
   PENDENTE = 'PENDENTE',
 }
 
+export enum StatusMetaEnum {
+  EM_ANDAMENTO = 'EM_ANDAMENTO',
+  FINALIZADA = 'FINALIZADA',
+}
+
 export const TipoSelectItems = [
   { value: 'RECEITA', label: 'Receita', icon: <MdAttachMoney /> },
   {

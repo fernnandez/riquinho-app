@@ -28,12 +28,16 @@ export class TransacaoService {
       .andWhere('transacao.tipo = :tipo', { tipo })
       .innerJoinAndSelect('transacao.categoria', 'categoria')
       .leftJoinAndSelect('transacao.parcelas', 'parcelas')
+      .leftJoin('transacao.meta', 'meta')
+      .addSelect('meta.status')
       .getMany();
 
     const transacoesDoMes = [];
 
-    transacoes.forEach((transacao) => {
+    for (const transacao of transacoes) {
       let valorTotal = 0;
+
+      const meta = await this.metaService.findMetaByTransacao(transacao.id);
 
       transacao.parcelas.forEach((el) => {
         valorTotal += Number(el.valor);
@@ -42,8 +46,9 @@ export class TransacaoService {
       transacoesDoMes.push({
         ...transacao,
         valorTotal,
+        statusMeta: meta ? meta.status : null,
       });
-    });
+    }
 
     return transacoesDoMes;
   }

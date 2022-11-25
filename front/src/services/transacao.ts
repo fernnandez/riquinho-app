@@ -1,5 +1,6 @@
 import {
   StatusEnum,
+  StatusMetaEnum,
   TipoTransacaoEnum,
 } from '../utils/constants';
 import api from './api';
@@ -24,6 +25,7 @@ export interface TransacaoResponse {
   descricao: string;
   parcelado: boolean;
   valorTotal: number;
+  statusMeta: StatusMetaEnum | null;
   parcelas: {
     descricao: string;
     id: string;
@@ -42,6 +44,7 @@ export interface TransacaoOneParcela {
   parcelado: boolean;
   valorTotal: number;
   parcelas: number;
+  statusMeta: StatusMetaEnum | null;
   parcela: {
     descricao: string;
     id: string;
