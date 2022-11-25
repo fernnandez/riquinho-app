@@ -19,6 +19,21 @@ export const updateNome = async (
     }
   );
 };
+
+export const updateEmail = async (
+  id: string,
+  data: { email: string; senha: string },
+  token: string
+) => {
+  return await api.put(
+    `/user/update-email/${id}`,
+    { ...data },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+};
+
 export const updateSenha = async (
   id: string,
   data: { lastSenha: string; senha: string },

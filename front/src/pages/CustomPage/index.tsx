@@ -14,15 +14,17 @@ import { BiWallet } from 'react-icons/bi';
 import { FiAlertCircle, FiUser } from 'react-icons/fi';
 import { useQuery } from 'react-query';
 import { Navigation } from '../../components/Navigation';
-import { UpdateSenhaModal } from './components/UpdateSenhaForm/UpdateSenhaForm';
+import { UpdateSenhaModal } from './components/UpdateSenhaModal/UpdateSenhaModal';
 import AuthContext from '../../context/AuthContext/AuthContext';
 import { findOneUser } from '../../services/user';
 import { CategoriaList } from './components/CategoriaList';
-import { UpdateNomeModal } from './components/UpdateNomeForm/UpdateNomeForm';
+import { UpdateNomeModal } from './components/UpdateNomeModal/UpdateNomeModal';
+import { UpdateEmailModal } from './components/UpdateEmailModal/UpdateEmailModal';
 
 export function CustomPage() {
   const { token } = useContext(AuthContext);
   const [openedUpdateName, handlersUpdateName] = useDisclosure(false);
+  const [openedUpdateEmail, handlersUpdateEmail] = useDisclosure(false);
   const [openedUpdateSenha, handlersUpdateSenha] = useDisclosure(false);
 
   const { data } = useQuery(['user'], () => {
@@ -47,10 +49,25 @@ export function CustomPage() {
           </Group>
           <Center mt="xl">
             <Group>
-              <Button onClick={() => handlersUpdateName.open()}>
+              <Button
+                color="blue"
+                variant="light"
+                onClick={() => handlersUpdateName.open()}
+              >
                 Ajustar Nome de Usuario
               </Button>
-              <Button onClick={() => handlersUpdateSenha.open()}>
+              <Button
+                color="blue"
+                variant="light"
+                onClick={() => handlersUpdateEmail.open()}
+              >
+                Ajustar Email
+              </Button>
+              <Button
+                color="blue"
+                variant="light"
+                onClick={() => handlersUpdateSenha.open()}
+              >
                 Redefinir senha
               </Button>
               <Button color="red" variant="light">
@@ -86,19 +103,25 @@ export function CustomPage() {
         </Box>
       </Box>
       {data && (
-        <UpdateNomeModal
-          isOpen={openedUpdateName}
-          onClose={() => handlersUpdateName.close()}
-          nome={data.data.nome}
-          id={data.data.id}
-        />
-      )}
-      {data && (
-        <UpdateSenhaModal
-          isOpen={openedUpdateSenha}
-          onClose={() => handlersUpdateSenha.close()}
-          id={data.data.id}
-        />
+        <>
+          <UpdateNomeModal
+            isOpen={openedUpdateName}
+            onClose={() => handlersUpdateName.close()}
+            nome={data.data.nome}
+            id={data.data.id}
+          />
+          <UpdateSenhaModal
+            isOpen={openedUpdateSenha}
+            onClose={() => handlersUpdateSenha.close()}
+            id={data.data.id}
+          />
+          <UpdateEmailModal
+            isOpen={openedUpdateEmail}
+            onClose={() => handlersUpdateEmail.close()}
+            email={data.data.email}
+            id={data.data.id}
+          />
+        </>
       )}
     </Navigation>
   );
