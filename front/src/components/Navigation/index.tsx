@@ -7,8 +7,9 @@ import {
   Image,
 } from '@mantine/core';
 import { ReactNode, useContext } from 'react';
-import { BiWallet } from 'react-icons/bi';
+import { BiChart, BiWallet } from 'react-icons/bi';
 import { FiLogOut, FiSettings } from 'react-icons/fi';
+import { GiStairsGoal } from 'react-icons/gi';
 import { useLocation, useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo.svg';
 import AuthContext from '../../context/AuthContext/AuthContext';
@@ -56,6 +57,28 @@ export function Navigation({ children }: NavigationProps) {
                 }}
               >
                 Carteira
+              </Button>
+              <Button
+                rightIcon={<GiStairsGoal />}
+                variant={
+                  useLocation().pathname === '/metas' ? 'light' : 'outline'
+                }
+                onClick={() => {
+                  navigate('/metas');
+                }}
+              >
+                Metas
+              </Button>
+              <Button
+                rightIcon={<BiChart />}
+                variant={
+                  useLocation().pathname === '/dashboard' ? 'light' : 'outline'
+                }
+                onClick={() => {
+                  navigate('/dashboard');
+                }}
+              >
+                Dashboard
               </Button>
               <Button
                 rightIcon={<FiSettings />}

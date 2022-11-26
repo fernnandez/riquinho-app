@@ -27,7 +27,6 @@ import { CreateTransacaoModal } from '../TransacaoModals/CreateTransacaoModal';
 
 export function MainDashboard() {
   const [openedCreate, handlersCreate] = useDisclosure(false);
-  const [openedCreateMeta, handlersCreateMeta] = useDisclosure(false);
 
   const { token } = useContext(AuthContext);
 
@@ -112,24 +111,6 @@ export function MainDashboard() {
       </Group>
       <Charts transacoes={transacoes?.data} isLoading={isLoading} />
 
-      <Group align="center" mt="2rem">
-        <Title order={2} align="center">
-          Metas
-        </Title>
-        <ThemeIcon size={30}>
-          <GiStairsGoal size={30} />
-        </ThemeIcon>
-      </Group>
-      <Button
-        color="blue"
-        mt="2rem"
-        leftIcon={<AiOutlinePlus />}
-        onClick={() => handlersCreateMeta.open()}
-      >
-        Adicionar nova meta
-      </Button>
-      <Metas />
-
       {/* Modals */}
       {dateCategorias?.data && (
         <>
@@ -140,10 +121,7 @@ export function MainDashboard() {
           />
         </>
       )}
-      <CreateMetaModal
-        isOpen={openedCreateMeta}
-        onClose={handlersCreateMeta.close}
-      />
+      
     </Box>
   );
 }
