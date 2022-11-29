@@ -3,10 +3,12 @@ import { CadastroPage } from './pages/CadastroPage';
 import { LoginPage } from './pages/LoginPage';
 
 import { NotificationsProvider } from '@mantine/notifications';
+import AuthProvider from './context/AuthContext/AuthProvider';
 import { ModalProvider } from './context/ModalContext/ModalContext';
 import { CustomPage } from './pages/CustomPage';
+import { DashboardPage } from './pages/DashboardPage';
 import { Home } from './pages/Home';
-import AuthProvider from './context/AuthContext/AuthProvider';
+import { MetasPage } from './pages/MetasPage';
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
                 <Route path="/custom" element={<CustomPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/cadastro" element={<CadastroPage />} />
+                <Route path="/metas" element={<MetasPage />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
               </Routes>
             </AuthProvider>
           </BrowserRouter>
