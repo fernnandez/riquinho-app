@@ -40,6 +40,8 @@ export function SeletorMes() {
         <BsChevronLeft size={25} />
       </ActionIcon>
       <Title
+        ml={'10rem'}
+        mr={'10rem'}
         order={2}
         sx={(theme) => ({ color: theme.colors.blue, cursor: 'default' })}
       >

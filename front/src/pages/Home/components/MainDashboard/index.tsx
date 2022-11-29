@@ -19,15 +19,12 @@ import { findAllCategorias } from '../../../../services/categoria';
 import { findAllTransacao } from '../../../../services/transacao';
 import { Charts } from '../Charts';
 import { InfoCards } from '../InfoCards';
-import { Metas } from '../Metas';
-import { CreateMetaModal } from '../Metas/MetaModals/CreateMetaModal';
 import { SeletorMes } from '../SeletorMes';
 import { TransacaoList } from '../TransacaoList';
 import { CreateTransacaoModal } from '../TransacaoModals/CreateTransacaoModal';
 
 export function MainDashboard() {
   const [openedCreate, handlersCreate] = useDisclosure(false);
-  const [openedCreateMeta, handlersCreateMeta] = useDisclosure(false);
 
   const { token } = useContext(AuthContext);
 
@@ -35,17 +32,9 @@ export function MainDashboard() {
     return findAllCategorias(token.token);
   });
 
-  const {
-    data: transacoes,
-    isLoading,
-    error,
-  } = useQuery(
-    ['transacoes'],
-    () => {
-      return findAllTransacao(token.token);
-    },
-    {}
-  );
+  const { data: transacoes, isLoading } = useQuery(['transacoes'], () => {
+    return findAllTransacao(token.token);
+  });
 
   return (
     <Box
@@ -102,34 +91,6 @@ export function MainDashboard() {
         isLoading={isLoading}
       />
 
-      <Group align="center" mt="2rem">
-        <Title order={2} align="center">
-          Dashboards
-        </Title>
-        <ThemeIcon size={30}>
-          <BiChart size={30} />
-        </ThemeIcon>
-      </Group>
-      <Charts transacoes={transacoes?.data} isLoading={isLoading} />
-
-      <Group align="center" mt="2rem">
-        <Title order={2} align="center">
-          Metas
-        </Title>
-        <ThemeIcon size={30}>
-          <GiStairsGoal size={30} />
-        </ThemeIcon>
-      </Group>
-      <Button
-        color="blue"
-        mt="2rem"
-        leftIcon={<AiOutlinePlus />}
-        onClick={() => handlersCreateMeta.open()}
-      >
-        Adicionar nova meta
-      </Button>
-      <Metas />
-
       {/* Modals */}
       {dateCategorias?.data && (
         <>
@@ -140,10 +101,6 @@ export function MainDashboard() {
           />
         </>
       )}
-      <CreateMetaModal
-        isOpen={openedCreateMeta}
-        onClose={handlersCreateMeta.close}
-      />
     </Box>
   );
 }
