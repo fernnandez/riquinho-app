@@ -29,6 +29,7 @@ import { notify, TypeNotificationEnum } from '../../../../../utils/notify';
 import {
   getCategoriaIcon,
   StatusEnum,
+  StatusMetaEnum,
   TipoTransacaoEnum,
 } from '../../../../../utils/constants';
 import { useStyles } from './styles';
@@ -41,6 +42,7 @@ interface TransacaoItemProps {
     descricao: string | null;
     parcelado: boolean;
     tipo: TipoTransacaoEnum;
+    statusMeta: StatusMetaEnum | null;
     parcela: {
       id: string;
       status: StatusEnum;
@@ -142,6 +144,16 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
     });
   };
 
+  const verifyStatus = () => {
+    if (data.statusMeta) {
+      return data.statusMeta === StatusMetaEnum.FINALIZADA;
+    } else {
+      return false;
+    }
+  };
+
+  const status = verifyStatus();
+
   return (
     <tr key={data.parcela.id}>
       <td>{getCategoriaIcon(data.categoria, data.parcela.status, 40, 25)}</td>
@@ -186,7 +198,7 @@ export function TransacaoItem({ data, onOpenEdit }: TransacaoItemProps) {
             variant="filled"
             size="md"
             onClick={handleStatus}
-            disabled={isLoading}
+            disabled={status || isLoading}
           >
             <TbCheck />
           </ActionIcon>

@@ -41,3 +41,13 @@ export const deleteMeta = async (id: string, token: string) => {
     headers: { Authorization: `Bearer ${token}` },
   });
 };
+
+export const finishMeta = async (id: string, token: string) => {
+  return api.patch(
+    `/meta/finish/${id}`,
+    {},
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+};

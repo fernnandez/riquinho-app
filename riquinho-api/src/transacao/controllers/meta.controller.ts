@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Req,
@@ -37,5 +38,10 @@ export class MetaController {
   @Get()
   async findAll(@Req() req) {
     return this.metaService.findAll(req.user);
+  }
+
+  @Patch('finish/:id')
+  async finish(@Param('id') id: string) {
+    return this.metaService.finishMeta(id);
   }
 }

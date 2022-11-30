@@ -5,6 +5,11 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
+enum StatusMeta {
+  EM_ANDAMENTO = 'EM_ANDAMENTO',
+  FINALIZADA = 'FINALIZADA',
+}
+
 export class CreateMetaTable1668468220000 implements MigrationInterface {
   private tableName = 'meta';
 
@@ -50,6 +55,11 @@ export class CreateMetaTable1668468220000 implements MigrationInterface {
           {
             name: 'data_inicio',
             type: 'Date',
+          },
+          {
+            name: 'status',
+            type: 'enum',
+            enum: Object.values(StatusMeta),
           },
           {
             name: 'transacao_id',

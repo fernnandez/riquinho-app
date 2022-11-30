@@ -1,10 +1,16 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  forwardRef,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { DateTime } from 'luxon';
 import { Repository } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { CategoriaService } from '../../user/services/categoria.service';
 import { CreateUpdateTransacaoDto } from '../dtos/create-update-transacao.dto';
-import { Status } from '../entities/parcela.entity';
+import { Parcela, Status } from '../entities/parcela.entity';
 import { TipoTransacao, Transacao } from '../entities/transacao.entity';
 import { MetaService } from './meta.service';
 import { ParcelaService } from './parcela.service';
@@ -27,12 +33,16 @@ export class TransacaoService {
       .andWhere('transacao.tipo = :tipo', { tipo })
       .innerJoinAndSelect('transacao.categoria', 'categoria')
       .leftJoinAndSelect('transacao.parcelas', 'parcelas')
+      .leftJoin('transacao.meta', 'meta')
+      .addSelect('meta.status')
       .getMany();
 
     const transacoesDoMes = [];
 
-    transacoes.forEach((transacao) => {
+    for (const transacao of transacoes) {
       let valorTotal = 0;
+
+      const meta = await this.metaService.findMetaByTransacao(transacao.id);
 
       transacao.parcelas.forEach((el) => {
         valorTotal += Number(el.valor);
@@ -41,13 +51,14 @@ export class TransacaoService {
       transacoesDoMes.push({
         ...transacao,
         valorTotal,
+        statusMeta: meta ? meta.status : null,
       });
-    });
+    }
 
     return transacoesDoMes;
   }
 
-  findOne(id: string): Promise<Transacao> {
+  async findOne(id: string): Promise<Transacao> {
     return this.transacaoRepository.findOne({ where: { id } });
   }
 
@@ -226,5 +237,66 @@ export class TransacaoService {
       }
     });
     return { receitaCategoryValue, despesaCategoryValue };
+  }
+
+  async finishTransacao(idTransacao: string) {
+    const today = DateTime.now();
+
+    const transacao = await this.transacaoRepository
+      .createQueryBuilder('transacao')
+      .leftJoinAndSelect('transacao.parcelas', 'parcelas')
+      .orderBy('parcelas.data', 'ASC')
+      .where('transacao.id = :id', { id: idTransacao })
+      .getOne();
+
+    const newParcelas = new Array<Parcela>();
+    let lastParcela = {} as Parcela;
+
+    const mesPrimeiraParcela = DateTime.fromJSDate(
+      new Date(transacao.parcelas[0].data),
+    ).month;
+    const anoPrimeiraParcela = DateTime.fromJSDate(
+      new Date(transacao.parcelas[0].data),
+    ).year;
+
+    if (
+      anoPrimeiraParcela > today.year ||
+      (anoPrimeiraParcela === today.year && mesPrimeiraParcela > today.month)
+    ) {
+      throw new ConflictException(
+        'Não é possivel finalizar uma meta cuja primeira parcela é maior que a data atual',
+      );
+    }
+
+    transacao.parcelas.forEach((parcela) => {
+      const dataParcela = DateTime.fromJSDate(new Date(parcela.data));
+
+      if (dataParcela.year < today.year && dataParcela.month < today.month) {
+        newParcelas.push({ ...parcela, status: Status.EFETIVADA, transacao });
+      } else if (
+        dataParcela.year === today.year &&
+        dataParcela.month < today.month
+      ) {
+        newParcelas.push({ ...parcela, status: Status.EFETIVADA, transacao });
+      } else if (
+        dataParcela.year === today.year &&
+        dataParcela.month === today.month
+      ) {
+        lastParcela = {
+          ...parcela,
+          valor: Number(parcela.valor),
+          status: Status.EFETIVADA,
+          transacao,
+        };
+      } else {
+        lastParcela.valor += Number(parcela.valor);
+      }
+    });
+
+    // Parcela de finalização
+    newParcelas.push(lastParcela);
+
+    await this.parcelaService.removeParcelas(transacao.id);
+    await this.parcelaService.saveParcelas(newParcelas);
   }
 }

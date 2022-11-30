@@ -5,7 +5,7 @@ import { User } from '../../user/entities/user.entity';
 import { CategoriaService } from '../../user/services/categoria.service';
 import { CreateMetaDto } from '../dtos/create-meta.dto';
 import { UpdateMetaDto } from '../dtos/update-meta.dto';
-import { Meta } from '../entities/meta.entity';
+import { Meta, StatusMeta } from '../entities/meta.entity';
 import { Status } from '../entities/parcela.entity';
 import { TipoTransacao } from '../entities/transacao.entity';
 import { TransacaoService } from './transacao.service';
@@ -28,7 +28,7 @@ export class MetaService {
         data: createMetaDto.dataInicio,
         descricao: `Valor Mensal da meta ${createMetaDto.titulo}`,
         tipo: TipoTransacao.META,
-        titulo: `Meta`,
+        titulo: createMetaDto.titulo,
         parcelado: true,
         parcelas: createMetaDto.prazo,
         valor: createMetaDto.valor,
@@ -43,6 +43,7 @@ export class MetaService {
       progresso: 0,
       valor: createMetaDto.valor,
       dataInicio: createMetaDto.dataInicio,
+      status: StatusMeta.EM_ANDAMENTO,
       transacao,
     });
   }
@@ -55,10 +56,31 @@ export class MetaService {
       .getMany();
   }
 
-  async updateProgresso(id: string, progresso: number) {
-    const meta = await this.metaRepository.findOne(id);
+  async findMetaByTransacao(transacaoId: string) {
+    return this.metaRepository
+      .createQueryBuilder('meta')
+      .innerJoin('meta.transacao', 'transacao')
+      .where('transacao.id = :id', { id: transacaoId })
+      .getOne();
+  }
 
-    await this.metaRepository.save({ ...meta, progresso });
+  async updateProgresso(id: string, progresso: number) {
+    const meta = await this.metaRepository.findOne(id, {
+      relations: ['transacao'],
+    });
+
+    if (progresso === 100) {
+      await this.metaRepository.save({
+        ...meta,
+        progresso,
+        status: StatusMeta.FINALIZADA,
+      });
+    } else {
+      await this.metaRepository.save({
+        ...meta,
+        progresso,
+      });
+    }
   }
 
   async findMeta(idTransacao: string) {
@@ -89,6 +111,16 @@ export class MetaService {
       valor: meta.valor,
       dataInicio: meta.dataInicio,
     });
+  }
+
+  async finishMeta(idMeta: string) {
+    const meta = await this.metaRepository.findOne(idMeta, {
+      relations: ['transacao'],
+    });
+
+    await this.transacaoService.finishTransacao(meta.transacao.id);
+
+    await this.updateProgresso(meta.id, 100);
   }
 
   async deleteMeta(idMeta: string) {

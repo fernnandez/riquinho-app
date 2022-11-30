@@ -59,4 +59,8 @@ export class ParcelaService {
           : Status.EFETIVADA,
     });
   }
+
+  async saveParcelas(parcelas: Parcela[]) {
+    await this.parcelaRepository.save(parcelas);
+  }
 }
