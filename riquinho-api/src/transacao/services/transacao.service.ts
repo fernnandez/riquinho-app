@@ -1,4 +1,9 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  forwardRef,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DateTime } from 'luxon';
 import { Repository } from 'typeorm';
@@ -237,12 +242,31 @@ export class TransacaoService {
   async finishTransacao(idTransacao: string) {
     const today = DateTime.now();
 
-    const transacao = await this.transacaoRepository.findOne(idTransacao, {
-      relations: ['parcelas'],
-    });
+    const transacao = await this.transacaoRepository
+      .createQueryBuilder('transacao')
+      .leftJoinAndSelect('transacao.parcelas', 'parcelas')
+      .orderBy('parcelas.data', 'ASC')
+      .where('transacao.id = :id', { id: idTransacao })
+      .getOne();
 
     const newParcelas = new Array<Parcela>();
     let lastParcela = {} as Parcela;
+
+    const mesPrimeiraParcela = DateTime.fromJSDate(
+      new Date(transacao.parcelas[0].data),
+    ).month;
+    const anoPrimeiraParcela = DateTime.fromJSDate(
+      new Date(transacao.parcelas[0].data),
+    ).year;
+
+    if (
+      anoPrimeiraParcela > today.year ||
+      (anoPrimeiraParcela === today.year && mesPrimeiraParcela > today.month)
+    ) {
+      throw new ConflictException(
+        'Não é possivel finalizar uma meta cuja primeira parcela é maior que a data atual',
+      );
+    }
 
     transacao.parcelas.forEach((parcela) => {
       const dataParcela = DateTime.fromJSDate(new Date(parcela.data));
