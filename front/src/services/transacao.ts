@@ -102,3 +102,15 @@ export const updateStatus = async (
     headers: { Authorization: `Bearer ${token}` },
   });
 };
+
+export const findCompareLastMonth = async (
+  token: string,
+  tipo: TipoTransacaoEnum
+) => {
+  return api.get<{ value: number; diff: number }>(
+    `/transacao/compare/${tipo}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+};

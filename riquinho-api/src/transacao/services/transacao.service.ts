@@ -299,4 +299,67 @@ export class TransacaoService {
     await this.parcelaService.removeParcelas(transacao.id);
     await this.parcelaService.saveParcelas(newParcelas);
   }
+
+  async findMedia(user: User, tipo: TipoTransacao) {
+    const transacoes = await this.transacaoRepository
+      .createQueryBuilder('transacao')
+      .where('transacao.user = :id', { id: user.id })
+      .andWhere('transacao.tipo = :tipo', { tipo })
+      .innerJoinAndSelect('transacao.categoria', 'categoria')
+      .leftJoinAndSelect('transacao.parcelas', 'parcelas')
+      .orderBy('parcelas.data', 'DESC')
+      .getMany();
+
+    console.log(transacoes);
+  }
+
+  async compareLastMonth(user: User, tipo: TipoTransacao) {
+    const transacoes = await this.transacaoRepository
+      .createQueryBuilder('transacao')
+      .where('transacao.user = :id', { id: user.id })
+      .andWhere('transacao.tipo = :tipo', { tipo })
+      .innerJoinAndSelect('transacao.categoria', 'categoria')
+      .leftJoinAndSelect('transacao.parcelas', 'parcelas')
+      .getMany();
+
+    let lastMonthValue = 0;
+
+    let currentValue = 0;
+
+    const today = DateTime.now();
+
+    transacoes.forEach((transacao) => {
+      transacao.parcelas.forEach((parcela) => {
+        // VERIFICAR DATAS
+        const dataParcela = DateTime.fromJSDate(new Date(parcela.data));
+
+        if (
+          dataParcela.year === today.year &&
+          dataParcela.month === today.month
+        ) {
+          currentValue += Number(parcela.valor);
+        } else if (
+          // Mes anterior
+          dataParcela.year === today.year &&
+          dataParcela.month === today.month - 1
+        ) {
+          lastMonthValue += Number(parcela.valor);
+        }
+      });
+    });
+
+    if (currentValue === 0 && lastMonthValue === 0) {
+      return {
+        value: 0,
+        diff: 0,
+      };
+    }
+
+    const percent = ((currentValue - lastMonthValue) / lastMonthValue) * 100;
+
+    return {
+      value: currentValue,
+      diff: percent,
+    };
+  }
 }

@@ -8,6 +8,8 @@ import { MonthProvider } from '../../context/MonthContext/MonthContext';
 import { findAllTransacao } from '../../services/transacao';
 import { Charts } from '../Home/components/Charts';
 import { SeletorMes } from '../Home/components/SeletorMes';
+import { Compare } from './components/Compare';
+import { Resumo } from './components/Resumo';
 
 export function DashboardPage() {
   const { token } = useContext(AuthContext);
@@ -30,13 +32,25 @@ export function DashboardPage() {
 
           <Group align="center" mt="2rem">
             <Title order={2} align="center">
-              Dashboards
+              Valores Categorizados
             </Title>
             <ThemeIcon size={30}>
               <BiChart size={30} />
             </ThemeIcon>
           </Group>
           <Charts transacoes={transacoes?.data} isLoading={isLoading} />
+
+          <Group align="center" mt="2rem">
+            <Title order={2} align="center">
+              Historico
+            </Title>
+            <ThemeIcon size={30}>
+              <BiChart size={30} />
+            </ThemeIcon>
+          </Group>
+
+          <Compare />
+          <Resumo />
         </Box>
       </MonthProvider>
     </Navigation>

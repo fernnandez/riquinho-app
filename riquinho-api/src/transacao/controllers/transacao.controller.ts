@@ -83,4 +83,9 @@ export class TransacaoController {
   ): Promise<void> {
     return this.transacaoService.updateStatus(idTransacao, idParcela);
   }
+
+  @Get('/compare/:tipo')
+  async findMedia(@Request() req, @Param('tipo') tipo: TipoTransacao) {
+    return this.transacaoService.compareLastMonth(req.user, tipo);
+  }
 }
