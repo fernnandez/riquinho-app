@@ -114,3 +114,15 @@ export const findCompareLastMonth = async (
     }
   );
 };
+
+export const findMainCategory = async (
+  token: string,
+  tipo: TipoTransacaoEnum
+) => {
+  return api.get<{ percent: number; categoriaName: string; periodo: number }>(
+    `/transacao/main-category/${tipo}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+};

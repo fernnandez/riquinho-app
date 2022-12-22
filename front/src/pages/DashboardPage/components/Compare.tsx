@@ -119,7 +119,7 @@ interface CompareCardProps {
 export function CompareCard({ icon, diff, title, value }: CompareCardProps) {
   const { classes } = useStyles();
   const DiffIcon =
-    diff === 0 ? BsArrowRepeat : diff > 0 ? BsArrowDownLeft : BsArrowDownLeft;
+    diff === 0 ? BsArrowRepeat : diff > 0 ? BsArrowUpRight : BsArrowDownLeft;
 
   return (
     <Paper withBorder p="md" radius="md" key={title} shadow="md">

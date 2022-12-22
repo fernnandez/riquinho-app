@@ -1,11 +1,12 @@
-import { Box, Group, ThemeIcon, Title } from '@mantine/core';
+import { Box, Button, Group, ThemeIcon, Title } from '@mantine/core';
 import { useContext } from 'react';
 import { BiChart } from 'react-icons/bi';
 import { useQuery } from 'react-query';
 import { Navigation } from '../../components/Navigation';
 import AuthContext from '../../context/AuthContext/AuthContext';
 import { MonthProvider } from '../../context/MonthContext/MonthContext';
-import { findAllTransacao } from '../../services/transacao';
+import { findAllTransacao, findMainCategory } from '../../services/transacao';
+import { TipoTransacaoEnum } from '../../utils/constants';
 import { Charts } from '../Home/components/Charts';
 import { SeletorMes } from '../Home/components/SeletorMes';
 import { Compare } from './components/Compare';
@@ -29,6 +30,14 @@ export function DashboardPage() {
           >
             <SeletorMes />
           </Group>
+
+          {/* <Button
+            onClick={() => {
+              findMainCategory(token.token, TipoTransacaoEnum.RECEITA);
+            }}
+          >
+            T
+          </Button> */}
 
           <Group align="center" mt="2rem">
             <Title order={2} align="center">

@@ -85,7 +85,12 @@ export class TransacaoController {
   }
 
   @Get('/compare/:tipo')
-  async findMedia(@Request() req, @Param('tipo') tipo: TipoTransacao) {
+  async findLastMonth(@Request() req, @Param('tipo') tipo: TipoTransacao) {
     return this.transacaoService.compareLastMonth(req.user, tipo);
+  }
+
+  @Get('/main-category/:tipo')
+  async findMainCateogry(@Request() req, @Param('tipo') tipo: TipoTransacao) {
+    return this.transacaoService.findMainCategory(req.user, tipo);
   }
 }

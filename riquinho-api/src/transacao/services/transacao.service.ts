@@ -300,19 +300,6 @@ export class TransacaoService {
     await this.parcelaService.saveParcelas(newParcelas);
   }
 
-  async findMedia(user: User, tipo: TipoTransacao) {
-    const transacoes = await this.transacaoRepository
-      .createQueryBuilder('transacao')
-      .where('transacao.user = :id', { id: user.id })
-      .andWhere('transacao.tipo = :tipo', { tipo })
-      .innerJoinAndSelect('transacao.categoria', 'categoria')
-      .leftJoinAndSelect('transacao.parcelas', 'parcelas')
-      .orderBy('parcelas.data', 'DESC')
-      .getMany();
-
-    console.log(transacoes);
-  }
-
   async compareLastMonth(user: User, tipo: TipoTransacao) {
     const transacoes = await this.transacaoRepository
       .createQueryBuilder('transacao')
@@ -361,5 +348,99 @@ export class TransacaoService {
       value: currentValue,
       diff: percent,
     };
+  }
+
+  async findMainCategory(user: User, tipo: TipoTransacao) {
+    const transacoes = await this.transacaoRepository
+      .createQueryBuilder('transacao')
+      .innerJoinAndSelect('transacao.categoria', 'categoria')
+      .leftJoinAndSelect('transacao.parcelas', 'parcelas')
+      .where('transacao.user = :id', { id: user.id })
+      .andWhere('transacao.tipo = :tipo', { tipo })
+      .orderBy('parcelas.data', 'ASC')
+      .getMany();
+
+    const today = DateTime.now();
+
+    let lessDate = DateTime.now();
+
+    const test: { value: number; categoriaName: string }[] = [];
+
+    transacoes.forEach((transacao) => {
+      const categoriaName = transacao.categoria.icon;
+
+      const index = test.findIndex((el) => el.categoriaName === categoriaName);
+
+      if (index === -1) {
+        transacao.parcelas.forEach((parcela) => {
+          const dataParcela = DateTime.fromJSDate(new Date(parcela.data));
+
+          if (
+            dataParcela.year <= lessDate.year &&
+            dataParcela.month <= lessDate.month
+          ) {
+            lessDate = dataParcela;
+          }
+
+          if (
+            dataParcela.year <= today.year &&
+            dataParcela.month <= today.month
+          ) {
+            test.push({ value: Number(parcela.valor), categoriaName });
+          }
+        });
+      } else {
+        transacao.parcelas.forEach((parcela) => {
+          const dataParcela = DateTime.fromJSDate(new Date(parcela.data));
+
+          if (
+            dataParcela.year <= lessDate.year &&
+            dataParcela.month <= lessDate.month
+          ) {
+            lessDate = dataParcela;
+          }
+
+          if (
+            dataParcela.year <= today.year &&
+            dataParcela.month <= today.month
+          ) {
+            test[index].value += Number(parcela.valor);
+          }
+        });
+      }
+    });
+
+    const mainCategory: { value: number | null; categoriaName: string | null } =
+      { value: null, categoriaName: null };
+
+    let totalValue = 0;
+
+    test.forEach((el) => {
+      totalValue += el.value;
+
+      if (!mainCategory.value === null || mainCategory.value < el.value) {
+        mainCategory.value = el.value;
+        mainCategory.categoriaName = el.categoriaName;
+      }
+    });
+
+    const periodo = today.diff(lessDate, ['month']);
+
+    if (totalValue === mainCategory.value) {
+      return {
+        periodo: Math.ceil(periodo.months),
+        percent: 100,
+        categoriaName: mainCategory.categoriaName,
+      };
+    } else {
+      const percent =
+        ((totalValue - mainCategory.value) / mainCategory.value) * 100;
+
+      return {
+        periodo: Math.ceil(periodo.months),
+        percent,
+        categoriaName: mainCategory.categoriaName,
+      };
+    }
   }
 }

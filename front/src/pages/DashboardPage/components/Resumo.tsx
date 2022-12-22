@@ -7,10 +7,29 @@ import {
   Badge,
   Paper,
 } from '@mantine/core';
-import { ReactNode } from 'react';
-import { getSimpleIcon } from '../../../utils/constants';
+import { ReactNode, useContext } from 'react';
+import { useQuery } from 'react-query';
+import AuthContext from '../../../context/AuthContext/AuthContext';
+import { findMainCategory } from '../../../services/transacao';
+import { getSimpleIcon, TipoTransacaoEnum } from '../../../utils/constants';
 
 export function Resumo() {
+  const { token } = useContext(AuthContext);
+
+  const { data: receitas, isLoading: isLoadingReceitas } = useQuery(
+    ['categoria-receita'],
+    () => {
+      return findMainCategory(token.token, TipoTransacaoEnum.RECEITA);
+    }
+  );
+
+  const { data: despesas, isLoading: isLoadingDespesas } = useQuery(
+    ['categoria-despesa'],
+    () => {
+      return findMainCategory(token.token, TipoTransacaoEnum.DESPESA);
+    }
+  );
+
   return (
     <Group
       mt={'4rem'}
@@ -21,16 +40,25 @@ export function Resumo() {
         gap: '4rem',
       }}
     >
-      <ResumoCard
-        icon={getSimpleIcon('ALIMENTACAO', 'white', 25)}
-        color={'red'}
-        tipo="despesa"
-      />
-      <ResumoCard
-        icon={getSimpleIcon('PAGAMENTO', 'white', 25)}
-        color={'green'}
-        tipo="receita"
-      />
+      {receitas && receitas.data.categoriaName && (
+        <ResumoCard
+          icon={getSimpleIcon(receitas.data.categoriaName, 'white', 25)}
+          color={'green'}
+          tipo="receita"
+          percent={receitas.data.percent}
+          periodo={receitas.data.periodo}
+        />
+      )}
+
+      {despesas && despesas.data.categoriaName && (
+        <ResumoCard
+          icon={getSimpleIcon(despesas.data.categoriaName, 'white', 25)}
+          color={'red'}
+          tipo="despesa"
+          percent={despesas.data.percent}
+          periodo={despesas.data.periodo}
+        />
+      )}
     </Group>
   );
 }
@@ -61,9 +89,11 @@ interface ResumoProps {
   icon: ReactNode;
   color: string;
   tipo: string;
+  percent: number;
+  periodo: number;
 }
 
-function ResumoCard({ icon, color, tipo }: ResumoProps) {
+function ResumoCard({ icon, color, tipo, percent, periodo }: ResumoProps) {
   const { classes } = useStyles();
 
   return (
@@ -90,14 +120,15 @@ function ResumoCard({ icon, color, tipo }: ResumoProps) {
 
       <Group position="center" mt="md">
         <Text size="sm" color="dimmed">
-          62% das {tipo === 'receita' ? 'receitas' : 'despesas'} nesse periodo
+          {Number(percent.toFixed(2))}% das{' '}
+          {tipo === 'receita' ? 'receitas' : 'despesas'} nesse periodo
         </Text>
       </Group>
 
-      <Progress value={62} mt={5} />
+      <Progress value={Number(percent.toFixed(2))} mt={5} />
 
       <Group position="center" mt="md">
-        <Badge size="md">3 meses</Badge>
+        <Badge size="md">{periodo} meses</Badge>
       </Group>
     </Paper>
   );
