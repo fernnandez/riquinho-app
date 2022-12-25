@@ -433,8 +433,9 @@ export class TransacaoService {
         categoriaName: mainCategory.categoriaName,
       };
     } else {
-      const percent =
-        ((totalValue - mainCategory.value) / mainCategory.value) * 100;
+      const onePercent = totalValue / 100;
+
+      const percent = mainCategory.value / onePercent;
 
       return {
         periodo: Math.ceil(periodo.months),
