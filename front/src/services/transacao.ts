@@ -102,3 +102,27 @@ export const updateStatus = async (
     headers: { Authorization: `Bearer ${token}` },
   });
 };
+
+export const findCompareLastMonth = async (
+  token: string,
+  tipo: TipoTransacaoEnum
+) => {
+  return api.get<{ value: number; diff: number }>(
+    `/transacao/compare/${tipo}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+};
+
+export const findMainCategory = async (
+  token: string,
+  tipo: TipoTransacaoEnum
+) => {
+  return api.get<{ percent: number; categoriaName: string; periodo: number }>(
+    `/transacao/main-category/${tipo}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+};

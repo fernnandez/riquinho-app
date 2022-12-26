@@ -83,4 +83,14 @@ export class TransacaoController {
   ): Promise<void> {
     return this.transacaoService.updateStatus(idTransacao, idParcela);
   }
+
+  @Get('/compare/:tipo')
+  async findLastMonth(@Request() req, @Param('tipo') tipo: TipoTransacao) {
+    return this.transacaoService.compareLastMonth(req.user, tipo);
+  }
+
+  @Get('/main-category/:tipo')
+  async findMainCateogry(@Request() req, @Param('tipo') tipo: TipoTransacao) {
+    return this.transacaoService.findMainCategory(req.user, tipo);
+  }
 }
