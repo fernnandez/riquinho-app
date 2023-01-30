@@ -313,22 +313,20 @@ export class TransacaoService {
 
     let currentValue = 0;
 
-    const today = DateTime.now();
+    const today = DateTime.now().startOf('month');
 
     transacoes.forEach((transacao) => {
       transacao.parcelas.forEach((parcela) => {
         // VERIFICAR DATAS
-        const dataParcela = DateTime.fromJSDate(new Date(parcela.data));
+        const dataParcela = DateTime.fromJSDate(new Date(parcela.data)).startOf(
+          'month',
+        );
 
-        if (
-          dataParcela.year === today.year &&
-          dataParcela.month === today.month
-        ) {
+        if (dataParcela.toISODate() === today.toISODate()) {
           currentValue += Number(parcela.valor);
         } else if (
           // Mes anterior
-          dataParcela.year === today.year &&
-          dataParcela.month === today.month - 1
+          dataParcela.plus({ month: 1 }).toISODate() === today.toISODate()
         ) {
           lastMonthValue += Number(parcela.valor);
         }
@@ -360,9 +358,9 @@ export class TransacaoService {
       .orderBy('parcelas.data', 'ASC')
       .getMany();
 
-    const today = DateTime.now();
+    const today = DateTime.now().startOf('month');
 
-    let lessDate = DateTime.now();
+    let lessDate = DateTime.now().startOf('month');
 
     const test: { value: number; categoriaName: string }[] = [];
 
@@ -373,37 +371,29 @@ export class TransacaoService {
 
       if (index === -1) {
         transacao.parcelas.forEach((parcela) => {
-          const dataParcela = DateTime.fromJSDate(new Date(parcela.data));
+          const dataParcela = DateTime.fromJSDate(
+            new Date(parcela.data),
+          ).startOf('month');
 
-          if (
-            dataParcela.year <= lessDate.year &&
-            dataParcela.month <= lessDate.month
-          ) {
+          if (dataParcela <= lessDate) {
             lessDate = dataParcela;
           }
 
-          if (
-            dataParcela.year <= today.year &&
-            dataParcela.month <= today.month
-          ) {
+          if (dataParcela <= today) {
             test.push({ value: Number(parcela.valor), categoriaName });
           }
         });
       } else {
         transacao.parcelas.forEach((parcela) => {
-          const dataParcela = DateTime.fromJSDate(new Date(parcela.data));
+          const dataParcela = DateTime.fromJSDate(
+            new Date(parcela.data),
+          ).startOf('month');
 
-          if (
-            dataParcela.year <= lessDate.year &&
-            dataParcela.month <= lessDate.month
-          ) {
+          if (dataParcela <= lessDate) {
             lessDate = dataParcela;
           }
 
-          if (
-            dataParcela.year <= today.year &&
-            dataParcela.month <= today.month
-          ) {
+          if (dataParcela <= today) {
             test[index].value += Number(parcela.valor);
           }
         });
@@ -428,7 +418,7 @@ export class TransacaoService {
 
     if (totalValue === mainCategory.value) {
       return {
-        periodo: Math.ceil(periodo.months),
+        periodo: Math.ceil(periodo.months) + 1,
         percent: 100,
         categoriaName: mainCategory.categoriaName,
       };
@@ -438,7 +428,7 @@ export class TransacaoService {
       const percent = mainCategory.value / onePercent;
 
       return {
-        periodo: Math.ceil(periodo.months),
+        periodo: Math.ceil(periodo.months) + 1,
         percent,
         categoriaName: mainCategory.categoriaName,
       };
